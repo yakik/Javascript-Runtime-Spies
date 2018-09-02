@@ -55,6 +55,15 @@ mocha.describe('IdentifyParameters Tests', function () {
     
       expect(identifiedParametersString).equals('var a = 2;\nvar b = true;\nvar c = 5;\n')
     })
+    
+    mocha. it('test three numbers, one is undefined', function () {
+      var undefinedVariable
+      var identifiedParametersString = (function (a, b, c) {
+      return IdentifyParameters.identifyParameters('a,b,c',arguments)
+    })(2,undefinedVariable,5)
+    
+      expect(identifiedParametersString).equals('var a = 2;\nvar b = undefined;\nvar c = 5;\n')
+    })
 
 
 
