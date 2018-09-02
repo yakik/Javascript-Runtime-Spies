@@ -48,6 +48,13 @@ mocha.describe('IdentifyParameters Tests', function () {
       expect(identifiedParametersString).equals('var a = 2;\nvar b = \'yaki\';\nvar c = 5;\n')
     })
 
+    mocha. it('test three numbers, one is boolean', function () {
+      var identifiedParametersString = (function(a,b,c) {
+      return IdentifyParameters.identifyParameters('a,b,c',arguments)
+    })(2,true,5)
+    
+      expect(identifiedParametersString).equals('var a = 2;\nvar b = true;\nvar c = 5;\n')
+    })
 
 
 

@@ -14,6 +14,8 @@ var getArgumentInCorrectFormat = function(theArgument){
 			return theArgument
 		case 'string':
 			return '\'' + theArgument + '\''
+		case 'boolean':
+			return theArgument ? 'true' : 'false'
 		default:
 			return 'ERROR!!'
 	}
