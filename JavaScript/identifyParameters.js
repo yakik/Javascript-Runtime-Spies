@@ -1,10 +1,9 @@
 module.exports.identifyParameters = function(parametersString,arguments){
 	parametersArray = parametersString.split(',')
-	var returnString =  'var ' + parametersArray[0] +' = ' + arguments[0] + ';\n';
-	if (parametersArray.length == 2)
-		returnString += 'var ' + parametersArray[1] +' = ' + arguments[1] + ';\n';
+	var returnString = ''
+		for (var argumentNumber = 0; argumentNumber<arguments.length;argumentNumber++){
+			returnString +=  'var ' + parametersArray[argumentNumber] +
+				' = ' + arguments[argumentNumber] + ';\n';
+		}
 	return returnString
-}
-
-
-
+	}
