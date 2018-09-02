@@ -31,6 +31,23 @@ mocha.describe('IdentifyParameters Tests', function () {
       expect(identifiedParametersString).equals('var a = 2;\nvar b = 3;\nvar c = 5;\n')
     })
 
+	mocha. it('test three numbers, one is a variable', function () {
+    var d = 3
+    var identifiedParametersString = (function(a,b,c) {
+      return IdentifyParameters.identifyParameters('a,b,c',arguments)
+    })(2,d,5)
+    
+      expect(identifiedParametersString).equals('var a = 2;\nvar b = 3;\nvar c = 5;\n')
+  })
+  
+  mocha. it('test three numbers, one is string', function () {
+      var identifiedParametersString = (function(a,b,c) {
+      return IdentifyParameters.identifyParameters('a,b,c',arguments)
+    })(2,'yaki',5)
+    
+      expect(identifiedParametersString).equals('var a = 2;\nvar b = \'yaki\';\nvar c = 5;\n')
+    })
+
 
 
 
