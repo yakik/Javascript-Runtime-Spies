@@ -18,6 +18,8 @@ var getArgumentLiteral = function(theArgument){
 			return 'undefined'
 		case 'object':
 			return getObjectLiteral(theArgument)
+		case 'function':
+			return 'function(){}'
 		case 'boolean':
 			return theArgument ? 'true' : 'false'
 	
@@ -36,7 +38,17 @@ var getObjectLiteral = function (theArgument) {
 
 var getNonArrayObjectLiteral = function(object){
 
-	return null;
+	var literal = '{'
+	var objectProperties = Object.getOwnPropertyNames(object)
+	var objectValues = Object.values(object)
+	for (var objectPropertyIndex = 0; objectPropertyIndex < objectProperties.length; objectPropertyIndex++){
+		if (objectPropertyIndex>0) literal += ','
+		literal += objectProperties[objectPropertyIndex] + ':' +
+			getArgumentLiteral(objectValues[objectPropertyIndex])
+	}
+		
+	literal += '}'
+	return literal
 }
 
 var getArrayLiteral = function (array) {

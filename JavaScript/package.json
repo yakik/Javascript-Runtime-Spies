@@ -4,12 +4,13 @@
   "description": "",
   "main": "identifyParametersTest.js",
   "scripts": {
-    "tests": "mocha ./*Tests.js"
+    "test": "mocha ./*Tests.js"
   },
   "author": "Yaki Koren",
   "license": "ISC",
   "dependencies": {
     "chai": "^4.1.2",
+    "escope": "^3.6.0",
     "mocha": "^5.2.0"
   }
 }
