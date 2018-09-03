@@ -6,7 +6,7 @@ var expect = chai.expect
 var IdentifyParameters = require('./identifyParameters.js')
 
 
-mocha.describe('IdentifyParameters Tests', function () {
+mocha.describe('IdentifyParameters Object Tests', function () {
  
 	mocha. it('test three items, one is an object', function () {
 
