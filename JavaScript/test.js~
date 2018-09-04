@@ -1,0 +1,4 @@
+a = console.log
+console.log=x=>{a(x) + a(x)}
+console.log(2)
+
