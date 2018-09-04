@@ -31,6 +31,10 @@ var getArgumentLiteral = function (theArgument) {
 			return 'ERROR!!'
 	}
 }
+module.exports.getArgumentLiteral = function (theArgument) {
+	allObjects = []
+	return getArgumentLiteral(theArgument)
+}
 
 var getObjectLiteral = function (theArgument) {
 
@@ -39,7 +43,7 @@ var getObjectLiteral = function (theArgument) {
 	else
 		return getNonArrayObjectLiteral(theArgument)
 }
-module.exports.getObjectLiteral = getObjectLiteral
+
 
 var isCircularReference = function(object){
 	for (var objectIndex = 0; objectIndex < allObjects.length; objectIndex++)

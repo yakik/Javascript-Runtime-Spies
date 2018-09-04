@@ -13,7 +13,7 @@ module.exports.getAnalyzedFunctions = function (code) {
     var functions = []
     scopeManager.scopes.forEach(scope => {
         if (scope.type == 'function') {
-            console.log('__left:  '+ IdentifyParameters.getObjectLiteral(scope.__left))
+           
             functions.push({
                 params: getParams(scope),
                 nonFunctionScopeVariables: getNonFunctionScopeVariables(scope)

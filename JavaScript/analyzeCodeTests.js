@@ -23,22 +23,9 @@ mocha.describe('get all functions', function () {
       }
     
 `)
-console.log(IdentifyParameters.getObjectLiteral(functions))
-
-
-    /*  console.log(Object.getOwnPropertyNames(fileElements))
-    // console.log(fileElements.__declaredVariables)
-    fileElements.scopes[0].implicit.set.forEach(function(value, key) {
-     console.log(key + ' = ' + value);
-     });
-     console.log(fileElements.scopes.length) */
-   // console.log(IdentifyParameters.identifyParameters('a', [suspiciousVariables]))
-   /* console.log('********escope*******')
-   console.log(Object.getOwnPropertyNames(suspiciousVariables))
-    console.log('********each scope*******')
-    console.log(Object.getOwnPropertyNames(suspiciousVariables.scopes[0])) */
-   /* expect(suspiciousVariables).
-      to.be.equalTo(['console', 'd']);*/
+    
+   expect(IdentifyParameters.getArgumentLiteral(functions)).
+   equals('[{params:[\'theArgument\',\'a\'],nonFunctionScopeVariables:[\'console\']},{params:[\'a\',\'b\',\'c\'],nonFunctionScopeVariables:[\'chai\',\'f\',\'chai\']}]');
   })
 
 
