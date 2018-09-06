@@ -1,13 +1,13 @@
 var escope = require('escope');
 var esprima = require('esprima');
-var estraverse = require('estraverse');
-var IdentifyParameters = require('./identifyParameters.js')
+
 
 //var currentScope = scopeManager.acquire(ast);   // global scope
 
 module.exports.getAnalyzedFunctions = function (code) {
 
     var ast = esprima.parse(code);
+   
 
     var scopeManager = escope.analyze(ast);
     var functions = []

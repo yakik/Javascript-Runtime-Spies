@@ -1,18 +1,18 @@
 
 var allObjects = []
 
-module.exports.identifyParameters = function (parametersString, arguments) {
+module.exports.parametersToLiteral = function (parametersString, arguments) {
 	allObjects = []
 	parametersArray = parametersString.split(',')
 	var returnString = ''
 	for (var argumentNumber = 0; argumentNumber < arguments.length; argumentNumber++) {
 		returnString += 'var ' + parametersArray[argumentNumber] +
-			' = ' + getArgumentLiteral(arguments[argumentNumber]) + ';\n'
+			' = ' + toLiteral(arguments[argumentNumber]) + ';\n'
 	}
 	return returnString
 }
 
-var getArgumentLiteral = function (theArgument) {
+var toLiteral = function (theArgument) {
 	switch (typeof theArgument) {
 		case 'number':
 			return theArgument
@@ -31,9 +31,9 @@ var getArgumentLiteral = function (theArgument) {
 			return 'ERROR!!'
 	}
 }
-module.exports.getArgumentLiteral = function (theArgument) {
+module.exports.toLiteral = function (theArgument) {
 	allObjects = []
-	return getArgumentLiteral(theArgument)
+	return toLiteral(theArgument)
 }
 
 var getObjectLiteral = function (theArgument) {
@@ -65,7 +65,7 @@ var getNonArrayObjectLiteral = function (object) {
 		for (var objectPropertyIndex = 0; objectPropertyIndex < objectProperties.length; objectPropertyIndex++) {
 			if (objectPropertyIndex > 0) literal += ','
 			literal += objectProperties[objectPropertyIndex] + ':' +
-				getArgumentLiteral(objectValues[objectPropertyIndex])
+				toLiteral(objectValues[objectPropertyIndex])
 		}
 
 		literal += '}'
@@ -81,7 +81,7 @@ var getArrayLiteral = function (array) {
 	var literal = '['
 	for (var arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
 		if (arrayIndex > 0) literal += ','
-		literal += getArgumentLiteral(array[arrayIndex])
+		literal += toLiteral(array[arrayIndex])
 	}
 
 	literal += ']'

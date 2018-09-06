@@ -4,7 +4,7 @@
   "description": "",
   "main": "identifyParametersTest.js",
   "scripts": {
-    "test": "mocha ./*Tests.js"
+    "test": "mocha ./test/*Tests.js"
   },
   "author": "Yaki Koren",
   "license": "ISC",
