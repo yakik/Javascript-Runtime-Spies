@@ -5,8 +5,8 @@ var expect = chai.expect
 const assertArrays = require('chai-arrays');
 chai.use(assertArrays);
 
-var IdentifyParameters = require('./identifyParameters.js')
-var analyzeCode = require('./analyzeCode.js')
+var ToLiteral = require('../src/toLiteral')
+var analyzeCode = require('../src/analyzeCode')
 
 mocha.describe('get all functions', function () {
   mocha.it('should return all undeclared variables', function () {
@@ -24,7 +24,7 @@ mocha.describe('get all functions', function () {
     
 `)
     
-   expect(IdentifyParameters.getArgumentLiteral(functions)).
+   expect(ToLiteral.toLiteral(functions)).
    equals('[{params:[\'theArgument\',\'a\'],nonFunctionScopeVariables:[\'console\']},{params:[\'a\',\'b\',\'c\'],nonFunctionScopeVariables:[\'chai\',\'f\',\'chai\']}]');
   })
 
