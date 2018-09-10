@@ -1,89 +1,81 @@
 
-var allObjects = []
 
-module.exports.parametersToLiteral = function (parametersString, arguments) {
-	allObjects = []
-	parametersArray = parametersString.split(',')
-	var returnString = ''
-	for (var argumentNumber = 0; argumentNumber < arguments.length; argumentNumber++) {
-		returnString += 'var ' + parametersArray[argumentNumber] +
-			' = ' + toLiteral(arguments[argumentNumber]) + ';\n'
-	}
-	return returnString
-}
+var toLiteral = function (theVariable, objectsAnalyzed) {
+	
+	if (objectsAnalyzed === undefined) 
+		objectsAnalyzed = []
 
-var toLiteral = function (theArgument) {
-	switch (typeof theArgument) {
+	switch (typeof theVariable) {
 		case 'number':
-			return theArgument
+			return theVariable.toString()
 		case 'string':
-			return '\'' + theArgument + '\''
+			return '\'' + theVariable + '\''
 		case 'undefined':
 			return 'undefined'
 		case 'object':
-			return getObjectLiteral(theArgument)
+			if (!isCircularReference(theVariable, objectsAnalyzed)) {
+				objectsAnalyzed.push(theVariable)
+				return getObjectLiteral(theVariable, objectsAnalyzed)
+			}
+			else
+				return 'CIRCULAR'
 		case 'function':
 			return 'function(){}'
 		case 'boolean':
-			return theArgument ? 'true' : 'false'
-
+			return theVariable ? 'true' : 'false'
 		default:
 			return 'ERROR!!'
 	}
 }
-module.exports.toLiteral = function (theArgument) {
-	allObjects = []
-	return toLiteral(theArgument)
-}
 
-var getObjectLiteral = function (theArgument) {
 
-	if (Array.isArray(theArgument))
-		return getArrayLiteral(theArgument)
+var getObjectLiteral = function (theVariable, objectsAnalyzed) {
+
+	if (Array.isArray(theVariable))
+		return getArrayLiteral(theVariable, objectsAnalyzed)
 	else
-		return getNonArrayObjectLiteral(theArgument)
+		return getNonArrayObjectLiteral(theVariable, objectsAnalyzed)
 }
 
 
-var isCircularReference = function(object){
-	for (var objectIndex = 0; objectIndex < allObjects.length; objectIndex++)
-		if (allObjects[objectIndex] === object)
+var isCircularReference = function(theVariable,objectsAnalyzed){
+
+	for (var objectsAnalyzedIndex = 0; objectsAnalyzedIndex < objectsAnalyzed.length; objectsAnalyzedIndex++) {
+		
+		if (objectsAnalyzed[objectsAnalyzedIndex] === theVariable)
 			return true
+	}
 	return false
 }
 
 
-var getNonArrayObjectLiteral = function (object) {
+var getNonArrayObjectLiteral = function (theVariable, objectsAnalyzed) {
 
-	if (object == null) return 'null'
-	if (object == undefined) return 'undefined'
-	if (!isCircularReference(object)) {
-		allObjects.push(object)
-		var literal = '{'
-		var objectProperties = Object.getOwnPropertyNames(object)
-		var objectValues = Object.values(object)
-		for (var objectPropertyIndex = 0; objectPropertyIndex < objectProperties.length; objectPropertyIndex++) {
-			if (objectPropertyIndex > 0) literal += ','
-			literal += objectProperties[objectPropertyIndex] + ':' +
-				toLiteral(objectValues[objectPropertyIndex])
-		}
-
-		literal += '}'
-		return literal
+	if (theVariable == null) return 'null'
+	if (theVariable == undefined) return 'undefined'
+	
+	var literal = '{'
+	var objectProperties = Object.getOwnPropertyNames(theVariable)
+	var objectValues = Object.values(theVariable)
+	for (var objectPropertyIndex = 0; objectPropertyIndex < objectProperties.length; objectPropertyIndex++) {
+		if (objectPropertyIndex > 0) literal += ','
+		literal += objectProperties[objectPropertyIndex] + ':' +
+			toLiteral(objectValues[objectPropertyIndex], objectsAnalyzed)
 	}
-	else
-	{
-		return 'CIRCULAR'
-		}
+	literal += '}'
+	return literal
 }
 
-var getArrayLiteral = function (array) {
+var getArrayLiteral = function (array, objectsAnalyzed) {
+
 	var literal = '['
 	for (var arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
 		if (arrayIndex > 0) literal += ','
-		literal += toLiteral(array[arrayIndex])
+		literal += toLiteral(array[arrayIndex], objectsAnalyzed)
 	}
 
 	literal += ']'
 	return literal
 }
+
+module.exports.toLiteral = toLiteral
