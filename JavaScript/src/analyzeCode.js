@@ -10,19 +10,14 @@ module.exports.getAnalyzedFunctions = function (code) {
    
 
     var scopeManager = escope.analyze(ast);
-    var functions = []
-    scopeManager.scopes.forEach(scope => {
-        if (scope.type == 'function') {
-           
-            functions.push({
-                params: getParams(scope),
-                nonFunctionScopeVariables: getNonFunctionScopeVariables(scope)
-            })
-
-        }
+    var functions = getAnalysisObject(scopeManager)
+    var analysisText = 'Analysis of the code:\n'
+    functions.forEach(functionAnalysis => {
+        analysisText +='Function name:\n '
+        analysisText += getFunctionParametersText(functionAnalysis);
+        analysisText += getFunctionExternalVariablesText(functionAnalysis);
     })
-
-    return functions
+    return analysisText
 }
 
 var getParams = function (scope) {
@@ -41,7 +36,41 @@ var getNonFunctionScopeVariables = function (scope) {
     return nonFunctionScopeVariables
 }
 
+function getFunctionExternalVariablesText(functionAnalysis) {
+    var analysisText = '\tExternal Variables:\n';
+    functionAnalysis.nonFunctionScopeVariables.forEach(function (variable) {
+        analysisText += '\tVariable: ' + variable + '\n';
+        
+    });
+    analysisText += '\n';
+    return analysisText;
+}
 
+function getFunctionParametersText(functionAnalysis) {
+    var analysisText = '\tParameters:(';
+    functionAnalysis.params.forEach(function (param, paramIndex) {
+        if (paramIndex > 0)
+            analysisText += ', ';
+        analysisText += param;
+    });
+    analysisText += ')\n';
+    return analysisText;
+}
+
+module.exports.getFunctionParametersText =getFunctionParametersText
+
+function getAnalysisObject(scopeManager) {
+    var functions = []
+    scopeManager.scopes.forEach(scope => {
+        if (scope.type == 'function') {
+            functions.push({
+                params: getParams(scope),
+                nonFunctionScopeVariables: getNonFunctionScopeVariables(scope)
+            })
+        }
+    })
+    return functions
+}
 /****************************************************************
  * 
  * ********escope*******

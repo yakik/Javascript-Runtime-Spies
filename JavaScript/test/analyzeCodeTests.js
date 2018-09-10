@@ -2,8 +2,7 @@ var mocha = require('mocha')
 var chai = require('chai')
 //chai.use(require('chai-as-promised'))
 var expect = chai.expect
-const assertArrays = require('chai-arrays');
-chai.use(assertArrays);
+
 
 var ToLiteral = require('../src/toLiteral')
 var analyzeCode = require('../src/analyzeCode')
