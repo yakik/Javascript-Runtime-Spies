@@ -39,7 +39,7 @@ var argumentsToString = function (theArguments) {
 
 var getSpyTextForFunction = function (functionName, newNameOfOriginalFunction, trafficCaptureVariable) {
 	var theString = 'var ' + functionName + ' = function(){\n' +
-		'checkSpyCameraReadiness(\'' + functionName + '\','+trafficCaptureVariable+')\n' +
+		'checkSpyDataReadiness(\'' + functionName + '\','+trafficCaptureVariable+')\n' +
 		'trafficCapture=captureInput(\'' + functionName + '\',arguments,'+trafficCaptureVariable+')\n' +
 		'var paramsString = argumentsToString(arguments)\n' +
 		'var returnValue = eval(\''+newNameOfOriginalFunction+'(\'+paramsString+\')\')\n' +
@@ -49,7 +49,7 @@ var getSpyTextForFunction = function (functionName, newNameOfOriginalFunction, t
 	return theString
 }
 
-var checkSpyCameraReadiness = function (functionName,trafficCapture) {
+var checkSpyDataReadiness = function (functionName,trafficCapture) {
 	if (trafficCapture[functionName]==undefined) 
 		trafficCapture[functionName]={input:[],output:[]}
 	return trafficCapture
@@ -64,7 +64,7 @@ var captureOutput = function (functionName, output,trafficCapture) {
 	return trafficCapture
  }
 
-module.exports.checkSpyCameraReadiness = checkSpyCameraReadiness
+module.exports.checkSpyDataReadiness = checkSpyDataReadiness
 module.exports.captureInput = captureInput
 module.exports.captureOutput = captureOutput
 module.exports.getSpyTextForFunction = getSpyTextForFunction

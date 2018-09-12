@@ -9,7 +9,7 @@ var toLiteral = require('../src/toLiteral').toLiteral
         captureInput = Spies.captureInput
         captureOutput = Spies.captureOutput
         argumentsToString = Spies.argumentsToString
-checkSpyCameraReadiness = Spies.checkSpyCameraReadiness
+        checkSpyDataReadiness = Spies.checkSpyDataReadiness
         
 getMockTextForFunction = Mocks.getMockTextForFunction
 checkMockDataReadiness = Mocks.checkMockDataReadiness
