@@ -29,28 +29,26 @@ var getParamName = function (functionName, paramString, paramIndex) {
 		
 }
 
-var argumentsToString = function (theArguments) {
+/*var argumentsToString = function (theArguments) {
 	var argumentsArrayString = []
 	for (var index = 0; index < Array.from(theArguments).length; index++) {
 		argumentsArrayString.push('arguments['+index+']')
 	}
 	return argumentsArrayString.join(',')
-}
+}*/
 
-var getSpyTextForFunction = function (functionName, newNameOfOriginalFunction, trafficCaptureVariable) {
-	var theString = 'var ' + functionName + ' = function(){\n' +
-		'checkSpyDataReadiness(\'' + functionName + '\','+trafficCaptureVariable+')\n' +
-		'trafficCapture=captureInput(\'' + functionName + '\',arguments,'+trafficCaptureVariable+')\n' +
-		'var paramsString = argumentsToString(arguments)\n' +
-		'var returnValue = eval(\''+newNameOfOriginalFunction+'(\'+paramsString+\')\')\n' +
-		'trafficCapture=captureOutput(\'' + functionName + '\',returnValue,'+trafficCaptureVariable+')\n' +
-		'return returnValue\n' +
-		'}'
-	return theString
+var getSpyFunction = function (originalContext,functionName, originalFunction, trafficCaptureVariable) {
+	return function () {
+		checkSpyDataReadiness(functionName,trafficCaptureVariable)
+		trafficCapture=captureInput(functionName,arguments,trafficCaptureVariable)
+		var returnValue = originalFunction.apply(originalContext,arguments)
+		trafficCapture=captureOutput(functionName,returnValue,trafficCaptureVariable)
+		return returnValue
+		}
 }
 
 var checkSpyDataReadiness = function (functionName,trafficCapture) {
-	if (trafficCapture[functionName]==undefined) 
+	if (trafficCapture[functionName] == undefined) 
 		trafficCapture[functionName]={input:[],output:[]}
 	return trafficCapture
 }
@@ -67,6 +65,5 @@ var captureOutput = function (functionName, output,trafficCapture) {
 module.exports.checkSpyDataReadiness = checkSpyDataReadiness
 module.exports.captureInput = captureInput
 module.exports.captureOutput = captureOutput
-module.exports.getSpyTextForFunction = getSpyTextForFunction
-module.exports.argumentsToString = argumentsToString
+module.exports.getSpyFunction = getSpyFunction
 module.exports.getDefinitionAndCallingStringSpy = getDefinitionAndCallingStringSpy
