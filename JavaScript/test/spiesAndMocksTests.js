@@ -11,9 +11,10 @@ captureOutput = Spies.captureOutput
 argumentsToString = Spies.argumentsToString
 checkSpyDataReadiness = Spies.checkSpyDataReadiness
 getSpyFunction = Spies.getSpyFunction
+getDefinitionAndCallingStringSpy = Spies.getDefinitionAndCallingStringSpy
 
 
-getMockTextForFunction = Mocks.getMockTextForFunction
+getMockFunction = Mocks.getMockFunction
 checkMockDataReadiness = Mocks.checkMockDataReadiness
 assertInput = Mocks.assertInput
 getOutput = Mocks.getOutput
@@ -27,7 +28,7 @@ mocha.describe('Spies and Mocks', function () {
         var b = { q: 1, w: a }
         var callString = ''
         var testFunction = function () {
-            callString = Spies.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
+            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
@@ -41,7 +42,7 @@ mocha.describe('Spies and Mocks', function () {
         var b = { q: 1, w: a }
         var callString = ''
         var testFunction = function (A, B, C) {
-            callString = Spies.getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
+            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
@@ -61,7 +62,7 @@ mocha.describe('Spies and Mocks', function () {
             return A[0] + B.q
         }
 
-        testFunction = getSpyFunction(this,'testFunction', testFunction, trafficCapture)
+        testFunction = getSpyFunction(this, 'testFunction', testFunction, trafficCapture)
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
         expect(toLiteral(trafficCapture.testFunction.input[0])).
@@ -85,8 +86,8 @@ mocha.describe('Spies and Mocks', function () {
         /* Spy */
         var trafficCapture = {}
 
-        helper1 = getSpyFunction(this,'helper1', helper1, trafficCapture)
-        helper2 = getSpyFunction(this,'helper2', helper2, trafficCapture)
+        helper1 = getSpyFunction(this, 'helper1', helper1, trafficCapture)
+        helper2 = getSpyFunction(this, 'helper2', helper2, trafficCapture)
 
         expect(testFunction(5)).equals(25)
         /*delete original functions, we don't need them anymore*/
@@ -95,8 +96,8 @@ mocha.describe('Spies and Mocks', function () {
 
         /*mock*/
         eval('var mockDataSource = ' + toLiteral(trafficCapture))
-        helper1 = getMockTextForFunction('helper1', mockDataSource)
-        helper2 = Mocks.getMockTextForFunction('helper2', mockDataSource)
+        helper1 = getMockFunction('helper1', mockDataSource)
+        helper2 = getMockFunction('helper2', mockDataSource)
         expect(testFunction(5)).equals(25)
     })
 })

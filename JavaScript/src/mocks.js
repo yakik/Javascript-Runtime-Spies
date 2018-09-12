@@ -2,7 +2,7 @@ var chai = require('chai')
 var expect = chai.expect
 var toLiteral = require('./toLiteral').toLiteral
 
-var getMockTextForFunction = function (functionName, mockDataSourceVariable) {
+var getMockFunction = function (functionName, mockDataSourceVariable) {
 	return function(){
 		checkMockDataReadiness(functionName,mockDataSourceVariable)
 		mockDataSource=assertInput(functionName,arguments,mockDataSourceVariable)
@@ -32,7 +32,7 @@ var getOutput = function (functionName,mockDataSource) {
     return { mockDataSource: mockDataSource, output: output }
 }
  
-module.exports.getMockTextForFunction = getMockTextForFunction
+module.exports.getMockFunction = getMockFunction
 module.exports.checkMockDataReadiness = checkMockDataReadiness
 module.exports.assertInput = assertInput
 module.exports.getOutput = getOutput
