@@ -95,13 +95,8 @@ mocha.describe('Spies and Mocks', function () {
 
         /*mock*/
         eval('var mockDataSource = ' + toLiteral(trafficCapture))
-        mockFunctionDefinition = getMockTextForFunction('helper1', 'mockDataSource')
-        eval(mockFunctionDefinition)
-        mockFunctionDefinition = Mocks.
-            getMockTextForFunction('helper2', 'mockDataSource')
-        eval(mockFunctionDefinition)
+        helper1 = getMockTextForFunction('helper1', mockDataSource)
+        helper2 = Mocks.getMockTextForFunction('helper2', mockDataSource)
         expect(testFunction(5)).equals(25)
-
-
     })
 })

@@ -3,14 +3,13 @@ var expect = chai.expect
 var toLiteral = require('./toLiteral').toLiteral
 
 var getMockTextForFunction = function (functionName, mockDataSourceVariable) {
-	var theString = 'var ' + functionName + ' = function(){\n' +
-		'checkMockDataReadiness(\'' + functionName + '\','+mockDataSourceVariable+')\n' +
-		'mockDataSource=assertInput(\'' + functionName + '\',arguments,'+mockDataSourceVariable+')\n' +
-        'var output=getOutput(\'' + functionName + '\',' + mockDataSourceVariable + ')\n' +
-        'mockDataSource = output.mockDataSource\n' +
-		'return output.output\n' +
-		'}'
-	return theString
+	return function(){
+		checkMockDataReadiness(functionName,mockDataSourceVariable)
+		mockDataSource=assertInput(functionName,arguments,mockDataSourceVariable)
+        var output=getOutput(functionName,mockDataSourceVariable)
+        mockDataSource = output.mockDataSource
+		return output.output
+		}
 }
 
 var checkMockDataReadiness = function (functionName,mockDataSource) {
