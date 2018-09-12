@@ -78,8 +78,11 @@ mocha.describe('Spies and Mocks', function () {
 
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
-        helper1(4)
+        
+        var callString = ''
+
         var testFunction = function (A) {
+            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return helper1(A) + helper2(A)
         }
         expect(testFunction(5)).equals(25)
@@ -90,7 +93,8 @@ mocha.describe('Spies and Mocks', function () {
         helper2 = getSpyFunction(this, 'helper2', helper2, trafficCapture)
 
         expect(testFunction(5)).equals(25)
-        /*delete original functions, we don't need them anymore*/
+
+        /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
 
@@ -98,6 +102,6 @@ mocha.describe('Spies and Mocks', function () {
         eval('var mockDataSource = ' + toLiteral(trafficCapture))
         helper1 = getMockFunction('helper1', mockDataSource)
         helper2 = getMockFunction('helper2', mockDataSource)
-        expect(testFunction(5)).equals(25)
+        expect(eval(callString)).equals(25)
     })
 })
