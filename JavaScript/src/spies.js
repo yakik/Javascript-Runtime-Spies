@@ -38,8 +38,7 @@ var argumentsToString = function (theArguments) {
 }
 
 var getSpyTextForFunction = function (functionName, newNameOfOriginalFunction, trafficCaptureVariable) {
-	var theString = 'var ' + newNameOfOriginalFunction + ' = ' + functionName + '\n'
-	theString += 'var ' + functionName + ' = function(){\n' +
+	var theString = 'var ' + functionName + ' = function(){\n' +
 		'checkSpyCameraReadiness(\'' + functionName + '\','+trafficCaptureVariable+')\n' +
 		'trafficCapture=captureInput(\'' + functionName + '\',arguments,'+trafficCaptureVariable+')\n' +
 		'var paramsString = argumentsToString(arguments)\n' +

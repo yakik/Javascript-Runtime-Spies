@@ -30,15 +30,6 @@ mocha.describe('Spies and Mocks', function () {
         }
         testFunction(a, b, 2)
         
-
-        expect(callString)
-            .equals('/****** Prep/Call Function testFunction ********/\n'+
-                    'var testFunction_param0 = [1,2,3]\n' +
-                    'var testFunction_param1 = {q:1,w:[1,2,3]}\n' +
-                    'var testFunction_param2 = 2\n' +
-                    '\n' +
-                    'testFunction(testFunction_param0, testFunction_param1, testFunction_param2)\n' +
-            '\n')
         expect (eval(callString)).equals(2)
     })
 
@@ -53,14 +44,6 @@ mocha.describe('Spies and Mocks', function () {
         }
         testFunction(a, b, 2)
         
-        expect(callString)
-            .equals('/****** Prep/Call Function testFunction ********/\n'+
-                    'var A = [1,2,3]\n' +
-                    'var B = {q:1,w:[1,2,3]}\n' +
-                    'var C = 2\n' +
-                    '\n' +
-                    'testFunction(A, B, C)\n' +
-            '\n')
         expect (eval(callString)).equals(2)
     })
 
@@ -76,6 +59,7 @@ mocha.describe('Spies and Mocks', function () {
             return A[0]+B.q
         }
 
+        var originaltestFunction = testFunction
         spyFunctionDefinition = Spies.
             getSpyTextForFunction('testFunction', 'originaltestFunction', 'trafficCapture')
         eval(spyFunctionDefinition)
@@ -102,25 +86,23 @@ mocha.describe('Spies and Mocks', function () {
 /* Spy */
         var trafficCapture = {}
 
+        var originalhelper1 = helper1
         spyFunctionDefinition = Spies.
             getSpyTextForFunction('helper1', 'originalhelper1', 'trafficCapture')
         eval(spyFunctionDefinition)
+        var originalhelper2 = helper2
         spyFunctionDefinition = Spies.
             getSpyTextForFunction('helper2', 'originalhelper2', 'trafficCapture')
         eval(spyFunctionDefinition)
 
         expect(testFunction(5)).equals(25)
 /*delete original functions, we don't need them anymore*/
-      //  helper1 = null
-      //  helper2 = null
+        helper1 = function (x) { return 2  }
+        helper2 = function (x) { return 2  }
 
         /*mock*/
         eval ('var mockDataSource = '+toLiteral(trafficCapture))
-        //console.log( toLiteral(trafficCapture))
-        //console.log(mockDataSource.helper1)
-        //console.log(toLiteral(mockDataSource))
         mockFunctionDefinition = getMockTextForFunction('helper1', 'mockDataSource')
-     // console.log(mockFunctionDefinition)
         eval(mockFunctionDefinition)
         mockFunctionDefinition = Mocks.
         getMockTextForFunction('helper2', 'mockDataSource')
