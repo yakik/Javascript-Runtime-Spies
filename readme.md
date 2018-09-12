@@ -1,7 +1,7 @@
 ### Runtime Spies - Javascript
 A set of tools to harness javascript legacy code into a unit test.
 
-#### Overview
+### Overview
 This set of tools (runtime spies) can help when trying to harness legacy code into a unit test. The main problem here is how to capture all the data coming into the unit and going out of it. See the example below to understand the tools.
 
 ### example
@@ -36,7 +36,7 @@ This set of tools (runtime spies) can help when trying to harness legacy code in
 
 ```
 
-##### Explanation - Spies
+### Explanation - Spies
 
 We would like to write a unit test for testFunction (the original function does not include the statement starting with "callString...").
 testFunction is using two functions, helper1 and helper2.
@@ -50,7 +50,7 @@ To track helper1 and helper 2 we turn them into spy functions using (getSpyFunct
 
 Now we can run the function.
 
-##### Explanation - Mocks
+### Explanation - Mocks
 
 Now we can run a unit test of our function.
 First we 'eval('var mockDataSource...' to build our repository of data. In a real example we would probably write the data to the log in the previous stage (e.g. console.log(toLiteral(trafficCapture))  ) and in this stage we would copy the literal and use it to define mockDataSource.
@@ -64,7 +64,7 @@ Good luck :-)
 Contact me for any querie or comment yaki.koren@gmail.com
 
 
-### copyright notice
+#### copyright notice
 
 Copyright (C) 2018 [Yaki Koren](http://github.com/Yakik)
  
