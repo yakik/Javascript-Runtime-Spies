@@ -2,7 +2,7 @@
 A set of tools to harness javascript legacy code into a unit test.
 The main idea is to run the system in an integrative environment after adding some code. The added code captures the data going to the unit and out of it and generates code that will harness the unit in a unit test environment.
 
-### example
+### example (see explanation below)
 
 ```js
         var helper1 = function (x) { return 2 * x }
@@ -34,7 +34,7 @@ The main idea is to run the system in an integrative environment after adding so
 
 ```
 
-### Explanation - Spies
+### Example Explanation - Spies
 
 We would like to write a unit test for testFunction (the original function does not include the statement starting with "callString...").
 testFunction is using two functions, helper1 and helper2.
@@ -48,7 +48,7 @@ To track helper1 and helper 2 we turn them into spy functions using (getSpyFunct
 
 Now we can run the function.
 
-### Explanation - Mocks
+### Example Explanation - Mocks
 
 Now we can run a unit test of our function.
 First we 'eval('var mockDataSource...' to build our repository of data. In a real example we would probably write the data to the log in the previous stage (e.g. console.log(toLiteral(trafficCapture))  ) and in this stage we would copy the literal and use it to define mockDataSource.
