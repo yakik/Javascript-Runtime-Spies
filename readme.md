@@ -59,7 +59,19 @@ Finally, we can run the unit using eval(callString) (again, in a real environmen
 
 Good luck :-)
 
-Contact me for any querie or comment yaki.koren@gmail.com
+Contact me for any querie or comment: yaki.koren@gmail.com
+
+#### APIs
+**toLiteral(variable, array of variables)** (@toLiteral.js): returns the literal string of the variable. In case it detects a circular reference it writes CIRCULAR. It also indicates whether it stumbled upon a FUNCTION, NULL or UNDEFINED.
+The parameter "array of variables" is optional. It is used to detect circular reference (it should hold variables that were already analyzed for the top most variable.
+
+**getDefinitionAndCallingStringSpy(callingFunctionArguments, functionName, paramString)** (@spies.js): returns a string that defines and initializes the variables to be used when calling functionName. Initialization is done according to callingFunctionArguments (an array). ParamString is a comma separated string of parameter names, it is optional. If it is sent, the variables names will be according to this, otherwise the variables will get default names. The string should be eval()'ed in the unit test.
+
+**getSpyFunction (originalContext,functionName, originalFunction, trafficCaptureVariable)** (@spies.js): returns a function that wraps originalFunction and logs the arguments sent and the output returned using trafficCaptureVariable. originalContext should be the "this" of the original context of the function (probably the "this" wrapping the unit tested functioins.
+
+**getMockFunction(functionName, mockDataSourceVariable)** (@mocks.js): returns a function to be used at the unit test. The function asserts the input sent against what's logged at mockDataSourceVariable (will usually be taken from trafficCaptureVariable used at the spy function) and returns the return values indicated there.
+
+
 
 
 #### copyright notice
