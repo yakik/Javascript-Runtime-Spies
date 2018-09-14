@@ -9,25 +9,25 @@ var CodeDefinition = require('../src/CodeDefinition')
 mocha.describe('IdentifyParameters Primitive Tests', function () {
 
   mocha.it('test three numbers', function () {
-      expect((new CodeDefinition(3)).getLiteral()).equals('3')
+      expect((CodeDefinition.getCodeDefinition(3)).getLiteral()).equals('3')
   })
 
   mocha.it('test three numbers, one is a variable', function () {
     var d = 3
-    expect((new CodeDefinition(d)).getLiteral()).equals('3')
+    expect((CodeDefinition.getCodeDefinition(d)).getLiteral()).equals('3')
   })
 
   mocha.it('test three numbers, one is string', function () {
-    expect((new CodeDefinition('yaki')).getLiteral()).equals('\'yaki\'')
+    expect((CodeDefinition.getCodeDefinition('yaki')).getLiteral()).equals('\'yaki\'')
   })
 
   mocha.it('test three numbers, one is boolean', function () {
-    expect((new CodeDefinition(true)).getLiteral()).equals('true')
+    expect((CodeDefinition.getCodeDefinition(true)).getLiteral()).equals('true')
   })
 
   mocha.it('test three numbers, one is undefined', function () {
     var undefinedVariable
-    expect((new CodeDefinition(undefinedVariable)).getLiteral()).equals('undefined')
+    expect((CodeDefinition.getCodeDefinition(undefinedVariable)).getLiteral()).equals('undefined')
   })
 
 

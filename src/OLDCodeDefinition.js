@@ -63,14 +63,7 @@ var isCircularReference = function (theVariable, objectsAnalyzed) {
 var getNonArrayObjectLiteral = function (theVariable, objectsAnalyzed) {
 	var variableDefinition = { literal: '', circularReferences:[], functionSpies:[] }
 
-	if (theVariable == null) {
-		variableDefinition.literal = 'null'
-		return variableDefinition
-	}
-	if (theVariable == undefined) {
-		variableDefinition.literal = 'undefined'
-		return variableDefinition
-	} 
+	
 
 	variableDefinition.literal = '{'
 	var objectProperties = Object.getOwnPropertyNames(theVariable)
