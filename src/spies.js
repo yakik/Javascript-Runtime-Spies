@@ -1,10 +1,10 @@
-var ToLiteral = require('./toLiteral')
+var ToLiteral = require('./toCodeDefinition')
 
 var getDefinitionAndCallingStringSpy = 
 function (callingFunctionArguments, functionName, paramString) {
 	var theString = '/****** Prep/Call Function ' + functionName +' ********/\n'
 	Array.from(callingFunctionArguments).forEach((argument,index) => {
-		theString+='var '+getParamName(functionName,paramString,index)+' = '+ToLiteral.toLiteral(argument)+'\n'
+		theString+='var '+getParamName(functionName,paramString,index)+' = '+ToLiteral.toCodeDefinition(argument).literal+'\n'
 	})
 	theString += '\n'
 	theString += functionName + '('

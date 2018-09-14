@@ -5,7 +5,7 @@ var expect = chai.expect
 var Spies = require('../src/spies')
 var Mocks = require('../src/mocks')
 
-var toLiteral = require('../src/toLiteral').toLiteral
+var toLiteral = require('../src/toCodeDefinition').toCodeDefinition
 captureInput = Spies.captureInput
 captureOutput = Spies.captureOutput
 argumentsToString = Spies.argumentsToString
@@ -65,10 +65,10 @@ mocha.describe('Spies and Mocks', function () {
         testFunction = getSpyFunction(this, 'testFunction', testFunction, trafficCapture)
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
-        expect(toLiteral(trafficCapture.testFunction.input[0])).
-            equals(toLiteral([[1, 2, 3], { q: 1, w: [1, 2, 3] }]))
-        expect(toLiteral(trafficCapture.testFunction.input[1])).
-            equals(toLiteral([[6, 2, 3], { q: 5, w: [1, 2, 3] }]))
+        expect(toLiteral(trafficCapture.testFunction.input[0]).literal).
+            equals(toLiteral([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).literal)
+        expect(toLiteral(trafficCapture.testFunction.input[1]).literal).
+            equals(toLiteral([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).literal)
         expect(trafficCapture.testFunction.output[0]).equals(2)
         expect(trafficCapture.testFunction.output[1]).equals(11)
     })
@@ -99,7 +99,7 @@ mocha.describe('Spies and Mocks', function () {
         helper2 = function (x) { return 2 }
 
         /*mock*/
-        eval('var mockDataSource = ' + toLiteral(trafficCapture))
+        eval('var mockDataSource = ' + toLiteral(trafficCapture).literal)
         helper1 = getMockFunction('helper1', mockDataSource)
         helper2 = getMockFunction('helper2', mockDataSource)
         expect(eval(callString)).equals(25)
