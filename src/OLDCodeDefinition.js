@@ -84,17 +84,16 @@ var getNonArrayObjectLiteral = function (theVariable, objectsAnalyzed) {
 	return variableDefinition
 }
 
-var getArrayLiteral = function (array, objectsAnalyzed) {
+var getArrayLiteral = function (theVariable, objectsAnalyzed) {
 	var variableDefinition = { literal: '', circularReferences:[], functionSpies:[] }
 
 	variableDefinition.literal = '['
-	for (var arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
+	for (var arrayIndex = 0; arrayIndex < theVariable.length; arrayIndex++) {
 		if (arrayIndex > 0) variableDefinition.literal += ','
-		variableDefinition.literal += toCodeDefinition(array[arrayIndex], objectsAnalyzed).literal
+		variableDefinition.literal += toCodeDefinition(theVariable[arrayIndex], objectsAnalyzed).literal
 	}
 
 	variableDefinition.literal += ']'
 	return variableDefinition
 }
 
-module.exports.toCodeDefinition = toCodeDefinition

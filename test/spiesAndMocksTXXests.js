@@ -5,7 +5,7 @@ var expect = chai.expect
 var Spies = require('../src/spies')
 var Mocks = require('../src/mocks')
 
-var ToCodeDefinition = require('../src/toCodeDefinition').toCodeDefinition
+var ToCodeDefinition = require('../src/CodeDefinition').toCodeDefinition
 captureInput = Spies.captureInput
 captureOutput = Spies.captureOutput
 argumentsToString = Spies.argumentsToString

@@ -1,6 +1,6 @@
 var chai = require('chai')
 var expect = chai.expect
-var toLiteral = require('./toCodeDefinition').toCodeDefinition
+var toLiteral = require('./CodeDefinition').toCodeDefinition
 
 var getMockFunction = function (functionName, mockDataSourceVariable) {
 	return function(){

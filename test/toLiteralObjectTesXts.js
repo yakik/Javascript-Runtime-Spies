@@ -2,7 +2,7 @@ var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
 
-var ToCodeDefinition = require('../src/toCodeDefinition')
+var ToCodeDefinition = require('../src/CodeDefinition')
 
 
 mocha.describe('IdentifyParameters Object Tests', function () {

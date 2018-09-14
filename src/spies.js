@@ -1,4 +1,4 @@
-var ToLiteral = require('./toCodeDefinition')
+var ToLiteral = require('./CodeDefinition')
 
 var getDefinitionAndCallingStringSpy = 
 function (callingFunctionArguments, functionName, paramString) {
