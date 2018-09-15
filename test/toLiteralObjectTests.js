@@ -28,7 +28,7 @@ mocha.describe('IdentifyParameters Object Tests', function () {
     var b = { 1: a }
     a.y = b
     expect(CodeDefinition.getCodeDefinition(a).getLiteral())
-      .equals('{1:1,2:2,3:3,y:{1:CIRCULAR}}')
+      .equals('{1:1,2:2,3:3,y:{}}')
   })
 
 })

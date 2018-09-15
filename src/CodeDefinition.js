@@ -1,36 +1,42 @@
 class CodeDefinition {
 
 
-	constructor(variable) {
+	constructor(variable, ancestors, propertyName) {
 		this.variable = variable
+		this.setAncestors(ancestors)
+
+		this.setPropertyName(propertyName)
 	}
 
 	setPropertyName(propertyName) {
-		this.propertyName = propertyName
+		this.propertyName = ''
+		if (propertyName != undefined)
+			this.propertyName = propertyName
 	}
 
 	setAncestors(ancestors) {
-		this.ancestors = ancestors
+		this.ancestors = []
+		if (ancestors != undefined) {
+			this.ancestors=ancestors.slice()
+		}
+		this.ancestors.push(this.variable)
 	}
 
 	static getCodeDefinition(variable, ancestors, propertyName) {
 		var newCodeDefinition
 		if (Array.isArray(variable))
-			newCodeDefinition = new ArrayCodeDefinition(variable)
+			newCodeDefinition = new ArrayCodeDefinition(variable, ancestors, propertyName)
 		else {
 			if (typeof variable == 'object')
-				newCodeDefinition = new ObjectCodeDefinition(variable)
+				newCodeDefinition = new ObjectCodeDefinition(variable, ancestors, propertyName)
 			else {
 				if (typeof variable == 'function')
-					newCodeDefinition = new FunctionCodeDefinition(variable)
+					newCodeDefinition = new FunctionCodeDefinition(variable, ancestors, propertyName)
 				else
-					newCodeDefinition = new PrimitiveCodeDefinition(variable)
+					newCodeDefinition = new PrimitiveCodeDefinition(variable, ancestors, propertyName)
 			}
 		}
-		if (ancestors != undefined)
-			newCodeDefinition.setAncestors(propertyName)
-		if (propertyName != undefined)
-			newCodeDefinition.setPropertyName(propertyName)
+
 
 
 		return newCodeDefinition
@@ -38,7 +44,7 @@ class CodeDefinition {
 
 	getLiteral() {
 		var literal = ''
-		if (this.propertyName != undefined)
+		if (this.propertyName != '')
 			literal += this.propertyName + ':'
 		return literal += this.getValueLiteral()
 	}
@@ -48,8 +54,8 @@ class CodeDefinition {
 }
 
 class PrimitiveCodeDefinition extends CodeDefinition {
-	constructor(variable) {
-		super(variable)
+	constructor(variable, ancestors, propertyName) {
+		super(variable, ancestors, propertyName)
 	}
 
 	getValueLiteral() {
@@ -70,15 +76,9 @@ class PrimitiveCodeDefinition extends CodeDefinition {
 }
 
 class ArrayCodeDefinition extends CodeDefinition {
-	constructor(variable, ancestors) {
-		super(variable)
+	constructor(variable, ancestors, propertyName) {
+		super(variable, ancestors, propertyName)
 
-		if (this.ancestors == undefined)
-			this.ancestors = []
-		if (ancestors != undefined)
-			this.ancestors.push.apply(ancestors)
-		this.ancestors.push(variable)
-		this.children = []
 		this.addChildren()
 	}
 
@@ -95,6 +95,7 @@ class ArrayCodeDefinition extends CodeDefinition {
 	}
 
 	addChildren() {
+		this.children = []
 		var upperThis = this
 		this.variable.forEach((item) => {
 			if (!upperThis.ancestors.includes(item)) {
@@ -107,17 +108,12 @@ class ArrayCodeDefinition extends CodeDefinition {
 
 class ObjectCodeDefinition extends CodeDefinition {
 	constructor(variable, ancestors, propertyName) {
-		super(variable)
-		if (this.ancestors == undefined)
-			this.ancestors = []
-		if (ancestors != undefined)
-			this.ancestors.push.apply(ancestors)
-		this.ancestors.push(variable)
-		this.children = []
+		super(variable, ancestors, propertyName)
 		this.addChildren()
 	}
 
 	addChildren() {
+		this.children = []
 		var upperThis = this
 		var objectProperties = Object.getOwnPropertyNames(this.variable)
 		Object.values(this.variable).forEach((item, index) => {
@@ -150,12 +146,12 @@ class ObjectCodeDefinition extends CodeDefinition {
 
 class FunctionCodeDefinition extends CodeDefinition {
 	constructor(variable, ancestors, propertyName) {
-		super(variable)
+		super(variable, ancestors, propertyName)
 	}
 
 
 	getValueLiteral() {
-			return 'function(){}'
+		return 'function(){}'
 	}
 
 }

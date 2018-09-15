@@ -1,10 +1,11 @@
-var ToLiteral = require('./CodeDefinition')
+var CodeDefinition = require('../src/CodeDefinition')
 
 var getDefinitionAndCallingStringSpy = 
 function (callingFunctionArguments, functionName, paramString) {
 	var theString = '/****** Prep/Call Function ' + functionName +' ********/\n'
 	Array.from(callingFunctionArguments).forEach((argument,index) => {
-		theString+='var '+getParamName(functionName,paramString,index)+' = '+ToLiteral.toCodeDefinition(argument).literal+'\n'
+		theString += 'var ' + getParamName(functionName, paramString, index) +
+			' = ' + CodeDefinition.getCodeDefinition(argument).getLiteral() + '\n'
 	})
 	theString += '\n'
 	theString += functionName + '('
@@ -29,13 +30,6 @@ var getParamName = function (functionName, paramString, paramIndex) {
 		
 }
 
-/*var argumentsToString = function (theArguments) {
-	var argumentsArrayString = []
-	for (var index = 0; index < Array.from(theArguments).length; index++) {
-		argumentsArrayString.push('arguments['+index+']')
-	}
-	return argumentsArrayString.join(',')
-}*/
 
 var getSpyFunction = function (originalContext,functionName, originalFunction, trafficCaptureVariable) {
 	return function () {
