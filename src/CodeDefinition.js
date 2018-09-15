@@ -1,13 +1,27 @@
 class CodeDefinition {
 
 
-	constructor(variable, ancestors, propertyName) {
+	constructor(variable, ancestors, propertyName, path) {
 		this.variable = variable
-		this.setAncestors(ancestors)
+		
 
 		this.setPropertyName(propertyName)
+		this.setPath(path)
+		/*console.log('AA')
+		console.log(this.path)
+		console.log('BB')*/
+		this.setAncestors(ancestors)
 	}
 
+	setPath(path) {
+		if (path == undefined)
+			this.path = ''
+		else
+			this.path = path
+		if (this.propertyName != '')
+			this.path += '.'+this.propertyName
+	}
+	
 	setPropertyName(propertyName) {
 		this.propertyName = ''
 		if (propertyName != undefined)
@@ -15,30 +29,33 @@ class CodeDefinition {
 	}
 
 	setAncestors(ancestors) {
-		this.ancestors = []
-		if (ancestors != undefined) {
-			this.ancestors=ancestors.slice()
-		}
-		this.ancestors.push(this.variable)
+		if (ancestors != undefined)
+			this.ancestors = new Map(ancestors)
+		else
+			this.ancestors = new Map()
+		this.ancestors.set(this.variable, this.path)
 	}
 
-	static getCodeDefinition(variable, ancestors, propertyName) {
+	static getCodeDefinition(variable, ancestors, propertyName,path) {
 		var newCodeDefinition
 		if (Array.isArray(variable))
-			newCodeDefinition = new ArrayCodeDefinition(variable, ancestors, propertyName)
+			newCodeDefinition = new ArrayCodeDefinition(variable, ancestors, propertyName,path)
 		else {
 			if (typeof variable == 'object')
-				newCodeDefinition = new ObjectCodeDefinition(variable, ancestors, propertyName)
+				newCodeDefinition = new ObjectCodeDefinition(variable, ancestors, propertyName,path)
 			else {
 				if (typeof variable == 'function')
-					newCodeDefinition = new FunctionCodeDefinition(variable, ancestors, propertyName)
+					newCodeDefinition = new FunctionCodeDefinition(variable, ancestors, propertyName,path)
 				else
-					newCodeDefinition = new PrimitiveCodeDefinition(variable, ancestors, propertyName)
+					newCodeDefinition = new PrimitiveCodeDefinition(variable, ancestors, propertyName,path)
 			}
 		}
+		return newCodeDefinition
+	}
 
-
-
+	static getCircularCodeDefinition(variable, ancestors, propertyName, path, duplicateAncestorPath) {
+		var newCodeDefinition = new CircularCodeDefinition(variable, ancestors, propertyName, path)
+		newCodeDefinition.setDuplicateAncestorPath(duplicateAncestorPath)
 		return newCodeDefinition
 	}
 
@@ -51,11 +68,15 @@ class CodeDefinition {
 
 	getValueLiteral() { }
 
+	getCircularDefinitions(newVariableName) {
+		return []
+	}
+
 }
 
 class PrimitiveCodeDefinition extends CodeDefinition {
-	constructor(variable, ancestors, propertyName) {
-		super(variable, ancestors, propertyName)
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
 	}
 
 	getValueLiteral() {
@@ -75,20 +96,38 @@ class PrimitiveCodeDefinition extends CodeDefinition {
 	}
 }
 
-class ArrayCodeDefinition extends CodeDefinition {
-	constructor(variable, ancestors, propertyName) {
-		super(variable, ancestors, propertyName)
-
+class CollectionCodeDefinition extends CodeDefinition{
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
 		this.addChildren()
 	}
 
+	getCircularDefinitions(newVariableName) {
+		var circularDefinitions = []
+	
+		this.children.forEach((child) => {
+			circularDefinitions = circularDefinitions.
+				concat(child.getCircularDefinitions(newVariableName))
+		})
+		return circularDefinitions	
+	}
+}
+
+class ArrayCodeDefinition extends CollectionCodeDefinition {
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
+		this.addChildren()
+	}
 
 	getValueLiteral() {
 		var literal = '['
 		this.children.forEach((child, index) => {
-			if (index > 0)
-				literal += ','
-			literal += child.getLiteral()
+			var childLiteral = child.getLiteral()
+			if (childLiteral != '') {
+				if (index > 0)
+					literal += ','
+				literal += childLiteral
+			}
 		})
 		literal += ']'
 		return literal
@@ -97,29 +136,41 @@ class ArrayCodeDefinition extends CodeDefinition {
 	addChildren() {
 		this.children = []
 		var upperThis = this
-		this.variable.forEach((item) => {
-			if (!upperThis.ancestors.includes(item)) {
+		this.variable.forEach((item,index) => {
+			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(CodeDefinition.getCodeDefinition(item, upperThis.ancestors))
+					push(CodeDefinition.getCodeDefinition(
+						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']'))
+			}
+			else {
+				upperThis.children.
+					push(CodeDefinition.getCircularCodeDefinition(
+						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']',upperThis.ancestors.get(item)))
 			}
 		})
 	}
+
+	
+
+	
 }
 
-class ObjectCodeDefinition extends CodeDefinition {
-	constructor(variable, ancestors, propertyName) {
-		super(variable, ancestors, propertyName)
-		this.addChildren()
-	}
 
+class ObjectCodeDefinition extends CollectionCodeDefinition {
+	
 	addChildren() {
 		this.children = []
 		var upperThis = this
 		var objectProperties = Object.getOwnPropertyNames(this.variable)
 		Object.values(this.variable).forEach((item, index) => {
-			if (!upperThis.ancestors.includes(item)) {
+			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(CodeDefinition.getCodeDefinition(item, upperThis.ancestors, objectProperties[index]))
+					push(CodeDefinition.getCodeDefinition(item, upperThis.ancestors, objectProperties[index],upperThis.path))
+			}
+			else {
+				upperThis.children.
+					push(CodeDefinition.getCircularCodeDefinition(
+						item, upperThis.ancestors, objectProperties[index],this.path,upperThis.ancestors.get(item)))
 			}
 		})
 	}
@@ -142,16 +193,40 @@ class ObjectCodeDefinition extends CodeDefinition {
 		return literal
 	}
 
+	
+
 }
 
 class FunctionCodeDefinition extends CodeDefinition {
-	constructor(variable, ancestors, propertyName) {
-		super(variable, ancestors, propertyName)
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
 	}
 
 
 	getValueLiteral() {
 		return 'function(){}'
+	}
+
+}
+
+class CircularCodeDefinition extends CodeDefinition {
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
+	}
+
+
+	getLiteral() {
+		return ''
+	}
+
+	getCircularDefinitions(newVariableName) {
+
+		var circularDefinition = newVariableName + this.path + '=' + newVariableName + this.duplicateAncestorPath
+		return [circularDefinition]
+	}
+
+	setDuplicateAncestorPath(duplicateAncestorPath) {
+		this.duplicateAncestorPath = duplicateAncestorPath
 	}
 
 }
