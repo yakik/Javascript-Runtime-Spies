@@ -8,6 +8,10 @@ var CodeDefinition = require('../src/CodeDefinition')
 
 mocha.describe('IdentifyParameters Primitive Tests', function () {
 
+  mocha.it('null', function () {
+    var a = null
+    expect((CodeDefinition.getCodeDefinition(a)).getLiteral()).equals('null')
+})
   mocha.it('test three numbers', function () {
       expect((CodeDefinition.getCodeDefinition(3)).getLiteral()).equals('3')
   })

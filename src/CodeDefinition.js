@@ -38,16 +38,22 @@ class CodeDefinition {
 
 	static getCodeDefinition(variable, ancestors, propertyName,path) {
 		var newCodeDefinition
-		if (Array.isArray(variable))
-			newCodeDefinition = new ArrayCodeDefinition(variable, ancestors, propertyName,path)
+		if (variable === null) {
+			newCodeDefinition = new NullCodeDefinition(variable, ancestors, propertyName, path)
+		}
 		else {
-			if (typeof variable == 'object')
-				newCodeDefinition = new ObjectCodeDefinition(variable, ancestors, propertyName,path)
+			
+			if (Array.isArray(variable))
+				newCodeDefinition = new ArrayCodeDefinition(variable, ancestors, propertyName, path)
 			else {
-				if (typeof variable == 'function')
-					newCodeDefinition = new FunctionCodeDefinition(variable, ancestors, propertyName,path)
-				else
-					newCodeDefinition = new PrimitiveCodeDefinition(variable, ancestors, propertyName,path)
+				if (typeof variable == 'object')
+					newCodeDefinition = new ObjectCodeDefinition(variable, ancestors, propertyName, path)
+				else {
+					if (typeof variable == 'function')
+						newCodeDefinition = new FunctionCodeDefinition(variable, ancestors, propertyName, path)
+					else
+						newCodeDefinition = new PrimitiveCodeDefinition(variable, ancestors, propertyName, path)
+				}
 			}
 		}
 		return newCodeDefinition
@@ -205,6 +211,18 @@ class FunctionCodeDefinition extends CodeDefinition {
 
 	getValueLiteral() {
 		return 'function(){}'
+	}
+
+}
+
+class NullCodeDefinition extends CodeDefinition {
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
+	}
+
+
+	getValueLiteral() {
+		return 'null'
 	}
 
 }
