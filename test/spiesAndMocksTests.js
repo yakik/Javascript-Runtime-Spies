@@ -2,8 +2,8 @@ var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
 
-var Spies = require('../src/spies')
-var Mocks = require('../src/mocks')
+var Spies = require('../src/runtimeSpies')
+var Mocks = require('../src/smartMocks')
 
 var CodeDefinition = require('../src/CodeDefinition')
 captureInput = Spies.captureInput

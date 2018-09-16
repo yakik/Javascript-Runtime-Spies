@@ -1,4 +1,4 @@
-var CodeDefinition = require('../src/CodeDefinition')
+var CodeDefinition = require('./CodeDefinition')
 
 var getDefinitionAndCallingStringSpy = 
 function (callingFunctionArguments, functionName, paramString) {
