@@ -19,7 +19,7 @@ class CodeDefinition {
 		else
 			this.path = path
 		if (this.propertyName != '')
-			this.path += '.'+this.propertyName
+			this.path += '[\''+this.propertyName+'\']'
 	}
 	
 	setPropertyName(propertyName) {
