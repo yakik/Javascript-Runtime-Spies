@@ -24,7 +24,7 @@ mocha.describe('ToLiteral Array Tests', function () {
     a.y = b
     expect(CodeDefinition.getCodeDefinition(a).getLiteral())
       .equals('{1:1,2:2,3:3,y:[1]}')
-    expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions('myVar')[0])
+    expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions()[0].getCircularDefinition('myVar'))
       .equals('myVar.y[1]=myVar')
   })
   mocha.it('identifies circular reference internal', function () {
@@ -36,7 +36,7 @@ mocha.describe('ToLiteral Array Tests', function () {
     a.a4 = b
     expect(CodeDefinition.getCodeDefinition(a).getLiteral())
       .equals('{1:1,2:2,3:3,a4:[1,[]]}')
-    expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions('myVar')[0])
+    expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions()[0].getCircularDefinition('myVar'))
       .equals('myVar.a4[1][0]=myVar.a4')
   })
 
@@ -50,11 +50,11 @@ mocha.describe('ToLiteral Array Tests', function () {
     a.a5 = b
     expect(CodeDefinition.getCodeDefinition(a).getLiteral())
       .equals('{1:1,2:2,3:3,a4:[1,[]],a5:[1,[]]}')
-      expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions('myVar').length)
+      expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions().length)
       .equals(2)
-    expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions('myVar')[0])
+    expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions()[0].getCircularDefinition('myVar'))
       .equals('myVar.a4[1][0]=myVar.a4')
-      expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions('myVar')[1])
+      expect(CodeDefinition.getCodeDefinition(a).getCircularDefinitions()[1].getCircularDefinition('myVar'))
       .equals('myVar.a5[1][0]=myVar.a5')
   })
 

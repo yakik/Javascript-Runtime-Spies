@@ -74,7 +74,7 @@ class CodeDefinition {
 
 	getValueLiteral() { }
 
-	getCircularDefinitions(newVariableName) {
+	getCircularDefinitions() {
 		return []
 	}
 
@@ -108,12 +108,12 @@ class CollectionCodeDefinition extends CodeDefinition{
 		this.addChildren()
 	}
 
-	getCircularDefinitions(newVariableName) {
+	getCircularDefinitions() {
 		var circularDefinitions = []
 	
 		this.children.forEach((child) => {
 			circularDefinitions = circularDefinitions.
-				concat(child.getCircularDefinitions(newVariableName))
+				concat(child.getCircularDefinitions())
 		})
 		return circularDefinitions	
 	}
@@ -237,10 +237,15 @@ class CircularCodeDefinition extends CodeDefinition {
 		return ''
 	}
 
-	getCircularDefinitions(newVariableName) {
+	getCircularDefinitions() {
+
+		return [this]
+	}
+
+	getCircularDefinition(newVariableName) {
 
 		var circularDefinition = newVariableName + this.path + '=' + newVariableName + this.duplicateAncestorPath
-		return [circularDefinition]
+		return circularDefinition
 	}
 
 	setDuplicateAncestorPath(duplicateAncestorPath) {
