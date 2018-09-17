@@ -7,12 +7,12 @@ class CodeDefinition {
 
 		this.setPropertyName(propertyName)
 		this.setPath(path)
-		/*console.log('AA')
-		console.log(this.path)
-		console.log('BB')*/
 		this.setAncestors(ancestors)
 	}
 
+	getPath() {
+		return this.path
+	}
 	setPath(path) {
 		if (path == undefined)
 			this.path = ''
@@ -78,6 +78,10 @@ class CodeDefinition {
 		return []
 	}
 
+	getFunctionsDefinitions() {
+		return []
+	}
+
 }
 
 class PrimitiveCodeDefinition extends CodeDefinition {
@@ -116,6 +120,16 @@ class CollectionCodeDefinition extends CodeDefinition{
 				concat(child.getCircularDefinitions())
 		})
 		return circularDefinitions	
+	}
+
+	getFunctionsDefinitions() {
+		var functionDefinitions = []
+	
+		this.children.forEach((child) => {
+			functionDefinitions = functionDefinitions.
+				concat(child.getFunctionsDefinitions())
+		})
+		return functionDefinitions	
 	}
 }
 
@@ -191,9 +205,18 @@ class ObjectCodeDefinition extends CollectionCodeDefinition {
 
 		var literal = '{'
 		this.children.forEach((child, index) => {
+			var childLiteral = child.getLiteral()
+			if (childLiteral != '') {
+				if (index > 0)
+					literal += ','
+				literal += childLiteral
+			}
+
+
+	/*	this.children.forEach((child, index) => {
 			if (index > 0)
 				literal += ','
-			literal += child.getLiteral()
+			literal += child.getLiteral()*/
 		})
 		literal += '}'
 		return literal
@@ -209,8 +232,18 @@ class FunctionCodeDefinition extends CodeDefinition {
 	}
 
 
-	getValueLiteral() {
-		return 'function(){}'
+	getLiteral() {
+		return ''
+	}
+
+	getFunctionsDefinitions() {
+
+		return [this]
+	}
+
+	getFunctionDefinition() {
+
+		return this.variable
 	}
 
 }
