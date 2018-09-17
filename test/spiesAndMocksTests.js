@@ -2,22 +2,22 @@ var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
 
-var Spies = require('../src/RuntimeSpies')
-var Mocks = require('../src/SmartMocks')
+var RuntimeSpy = require('../src/RuntimeSpy')
+var SmartMock = require('../src/SmartMock')
 
-var CodeDefinition = require('../src/CodeDefinition')
-captureInput = Spies.captureInput
-captureOutput = Spies.captureOutput
-argumentsToString = Spies.argumentsToString
-checkSpyDataReadiness = Spies.checkSpyDataReadiness
-getSpyFunction = Spies.getSpyFunction
-getDefinitionAndCallingStringSpy = Spies.getDefinitionAndCallingStringSpy
+var CodeDefinition = require('../src/Variable')
+captureInput = RuntimeSpy.captureInput
+captureOutput = RuntimeSpy.captureOutput
+argumentsToString = RuntimeSpy.argumentsToString
+checkSpyDataReadiness = RuntimeSpy.checkSpyDataReadiness
+getSpyFunction = RuntimeSpy.getSpyFunction
+getDefinitionAndCallingStringSpy = RuntimeSpy.getDefinitionAndCallingStringSpy
 
 
-getMockFunction = Mocks.getMockFunction
-checkMockDataReadiness = Mocks.checkMockDataReadiness
-assertInput = Mocks.assertInput
-getOutput = Mocks.getOutput
+getMockFunction = SmartMock.getMockFunction
+checkMockDataReadiness = SmartMock.checkMockDataReadiness
+assertInput = SmartMock.assertInput
+getOutput = SmartMock.getOutput
 
 
 mocha.describe('Spies and Mocks', function () {
@@ -65,10 +65,10 @@ mocha.describe('Spies and Mocks', function () {
         testFunction = getSpyFunction(this, 'testFunction', testFunction, trafficCapture)
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
-        expect(CodeDefinition.getCodeDefinition(trafficCapture.testFunction.input[0]).getLiteral()).
-            equals(CodeDefinition.getCodeDefinition([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).getLiteral())
-        expect(CodeDefinition.getCodeDefinition(trafficCapture.testFunction.input[1]).getLiteral()).
-            equals(CodeDefinition.getCodeDefinition([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).getLiteral())
+        expect(CodeDefinition.getVariable(trafficCapture.testFunction.input[0]).getLiteral()).
+            equals(CodeDefinition.getVariable([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).getLiteral())
+        expect(CodeDefinition.getVariable(trafficCapture.testFunction.input[1]).getLiteral()).
+            equals(CodeDefinition.getVariable([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).getLiteral())
         expect(trafficCapture.testFunction.output[0]).equals(2)
         expect(trafficCapture.testFunction.output[1]).equals(11)
     })
@@ -99,7 +99,7 @@ mocha.describe('Spies and Mocks', function () {
         helper2 = function (x) { return 2 }
 
         /*mock*/
-        eval('var mockDataSource = ' + CodeDefinition.getCodeDefinition(trafficCapture).getLiteral())
+        eval('var mockDataSource = ' + CodeDefinition.getVariable(trafficCapture).getLiteral())
         helper1 = getMockFunction('helper1', mockDataSource)
         helper2 = getMockFunction('helper2', mockDataSource)
         expect(eval(callString)).equals(25)

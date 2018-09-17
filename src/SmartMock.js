@@ -1,6 +1,6 @@
 var chai = require('chai')
 var expect = chai.expect
-var CodeDefinition = require('./CodeDefinition')
+var CodeDefinition = require('./Variable')
 
 var getMockFunction = function (functionName, mockDataSourceVariable) {
 	return function(){
@@ -21,9 +21,9 @@ var checkMockDataReadiness = function (functionName,mockDataSource) {
 }
 
 var assertInput = function (functionName, callArguments,mockDataSource) {
-    expect(CodeDefinition.getCodeDefinition(mockDataSource[functionName].
+    expect(CodeDefinition.getVariable(mockDataSource[functionName].
         input[mockDataSource[functionName].inputIndex]).getLiteral()).
-        equals(CodeDefinition.getCodeDefinition(Array.from(callArguments)).getLiteral())
+        equals(CodeDefinition.getVariable(Array.from(callArguments)).getLiteral())
     mockDataSource[functionName].inputIndex++
     return mockDataSource
  }

@@ -3,35 +3,35 @@ var chai = require('chai')
 //chai.use(require('chai-as-promised'))
 var expect = chai.expect
 
-var CodeDefinition = require('../src/CodeDefinition')
+var Variable = require('../src/Variable')
 
 
 mocha.describe('IdentifyParameters Primitive Tests', function () {
 
   mocha.it('null', function () {
     var a = null
-    expect((CodeDefinition.getCodeDefinition(a)).getLiteral()).equals('null')
+    expect((Variable.getVariable(a)).getLiteral()).equals('null')
 })
   mocha.it('test three numbers', function () {
-      expect((CodeDefinition.getCodeDefinition(3)).getLiteral()).equals('3')
+      expect((Variable.getVariable(3)).getLiteral()).equals('3')
   })
 
   mocha.it('test three numbers, one is a variable', function () {
     var d = 3
-    expect((CodeDefinition.getCodeDefinition(d)).getLiteral()).equals('3')
+    expect((Variable.getVariable(d)).getLiteral()).equals('3')
   })
 
   mocha.it('test three numbers, one is string', function () {
-    expect((CodeDefinition.getCodeDefinition('yaki')).getLiteral()).equals('\'yaki\'')
+    expect((Variable.getVariable('yaki')).getLiteral()).equals('\'yaki\'')
   })
 
   mocha.it('test three numbers, one is boolean', function () {
-    expect((CodeDefinition.getCodeDefinition(true)).getLiteral()).equals('true')
+    expect((Variable.getVariable(true)).getLiteral()).equals('true')
   })
 
   mocha.it('test three numbers, one is undefined', function () {
     var undefinedVariable
-    expect((CodeDefinition.getCodeDefinition(undefinedVariable)).getLiteral()).equals('undefined')
+    expect((Variable.getVariable(undefinedVariable)).getLiteral()).equals('undefined')
   })
 
 

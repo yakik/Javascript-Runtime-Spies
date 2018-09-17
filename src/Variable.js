@@ -1,4 +1,4 @@
-class CodeDefinition {
+class Variable {
 
 
 	constructor(variable, ancestors, propertyName, path) {
@@ -36,31 +36,31 @@ class CodeDefinition {
 		this.ancestors.set(this.variable, this.path)
 	}
 
-	static getCodeDefinition(variable, ancestors, propertyName,path) {
+	static getVariable(variable, ancestors, propertyName,path) {
 		var newCodeDefinition
 		if (variable === null) {
-			newCodeDefinition = new NullCodeDefinition(variable, ancestors, propertyName, path)
+			newCodeDefinition = new NullVariable(variable, ancestors, propertyName, path)
 		}
 		else {
 			
 			if (Array.isArray(variable))
-				newCodeDefinition = new ArrayCodeDefinition(variable, ancestors, propertyName, path)
+				newCodeDefinition = new ArrayVariable(variable, ancestors, propertyName, path)
 			else {
 				if (typeof variable == 'object')
-					newCodeDefinition = new ObjectCodeDefinition(variable, ancestors, propertyName, path)
+					newCodeDefinition = new ObjectVariable(variable, ancestors, propertyName, path)
 				else {
 					if (typeof variable == 'function')
-						newCodeDefinition = new FunctionCodeDefinition(variable, ancestors, propertyName, path)
+						newCodeDefinition = new FunctionVariable(variable, ancestors, propertyName, path)
 					else
-						newCodeDefinition = new PrimitiveCodeDefinition(variable, ancestors, propertyName, path)
+						newCodeDefinition = new PrimitiveVariable(variable, ancestors, propertyName, path)
 				}
 			}
 		}
 		return newCodeDefinition
 	}
 
-	static getCircularCodeDefinition(variable, ancestors, propertyName, path, duplicateAncestorPath) {
-		var newCodeDefinition = new CircularCodeDefinition(variable, ancestors, propertyName, path)
+	static getCircularVariable(variable, ancestors, propertyName, path, duplicateAncestorPath) {
+		var newCodeDefinition = new CircularVariable(variable, ancestors, propertyName, path)
 		newCodeDefinition.setDuplicateAncestorPath(duplicateAncestorPath)
 		return newCodeDefinition
 	}
@@ -84,7 +84,7 @@ class CodeDefinition {
 
 }
 
-class PrimitiveCodeDefinition extends CodeDefinition {
+class PrimitiveVariable extends Variable {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -106,7 +106,7 @@ class PrimitiveCodeDefinition extends CodeDefinition {
 	}
 }
 
-class CollectionCodeDefinition extends CodeDefinition{
+class CollectionVariable extends Variable{
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 		this.addChildren()
@@ -133,7 +133,7 @@ class CollectionCodeDefinition extends CodeDefinition{
 	}
 }
 
-class ArrayCodeDefinition extends CollectionCodeDefinition {
+class ArrayVariable extends CollectionVariable {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 		this.addChildren()
@@ -159,12 +159,12 @@ class ArrayCodeDefinition extends CollectionCodeDefinition {
 		this.variable.forEach((item,index) => {
 			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(CodeDefinition.getCodeDefinition(
+					push(Variable.getVariable(
 						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']'))
 			}
 			else {
 				upperThis.children.
-					push(CodeDefinition.getCircularCodeDefinition(
+					push(Variable.getCircularVariable(
 						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']',upperThis.ancestors.get(item)))
 			}
 		})
@@ -176,7 +176,7 @@ class ArrayCodeDefinition extends CollectionCodeDefinition {
 }
 
 
-class ObjectCodeDefinition extends CollectionCodeDefinition {
+class ObjectVariable extends CollectionVariable {
 	
 	addChildren() {
 		this.children = []
@@ -185,11 +185,11 @@ class ObjectCodeDefinition extends CollectionCodeDefinition {
 		Object.values(this.variable).forEach((item, index) => {
 			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(CodeDefinition.getCodeDefinition(item, upperThis.ancestors, objectProperties[index],upperThis.path))
+					push(Variable.getVariable(item, upperThis.ancestors, objectProperties[index],upperThis.path))
 			}
 			else {
 				upperThis.children.
-					push(CodeDefinition.getCircularCodeDefinition(
+					push(Variable.getCircularVariable(
 						item, upperThis.ancestors, objectProperties[index],this.path,upperThis.ancestors.get(item)))
 			}
 		})
@@ -226,7 +226,7 @@ class ObjectCodeDefinition extends CollectionCodeDefinition {
 
 }
 
-class FunctionCodeDefinition extends CodeDefinition {
+class FunctionVariable extends Variable {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -248,7 +248,7 @@ class FunctionCodeDefinition extends CodeDefinition {
 
 }
 
-class NullCodeDefinition extends CodeDefinition {
+class NullVariable extends Variable {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -260,7 +260,7 @@ class NullCodeDefinition extends CodeDefinition {
 
 }
 
-class CircularCodeDefinition extends CodeDefinition {
+class CircularVariable extends Variable {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -287,5 +287,5 @@ class CircularCodeDefinition extends CodeDefinition {
 
 }
 
-module.exports = CodeDefinition
+module.exports = Variable
 

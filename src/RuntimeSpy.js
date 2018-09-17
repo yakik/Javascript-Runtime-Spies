@@ -1,11 +1,11 @@
-var CodeDefinition = require('./CodeDefinition')
+var CodeDefinition = require('./Variable')
 
 var getDefinitionAndCallingStringSpy = 
 function (callingFunctionArguments, functionName, paramString) {
 	var theString = '/****** Prep/Call Function ' + functionName +' ********/\n'
 	Array.from(callingFunctionArguments).forEach((argument,index) => {
 		theString += 'var ' + getParamName(functionName, paramString, index) +
-			' = ' + CodeDefinition.getCodeDefinition(argument).getLiteral() + '\n'
+			' = ' + CodeDefinition.getVariable(argument).getLiteral() + '\n'
 	})
 	theString += '\n'
 	theString += functionName + '('
