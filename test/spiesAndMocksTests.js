@@ -16,7 +16,7 @@ mocha.describe('Spies and Mocks', function () {
 
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var mySpy = new RuntimeSpy()
+        var mySpy = new RuntimeSpy('mySpy')
         var testFunction = function () {
             mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return a[0] + b.q
@@ -30,7 +30,7 @@ mocha.describe('Spies and Mocks', function () {
 
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var mySpy = new RuntimeSpy()
+        var mySpy = new RuntimeSpy('mySpy')
         var testFunction = function (A, B, C) {
             mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
             return a[0] + b.q
@@ -43,7 +43,7 @@ mocha.describe('Spies and Mocks', function () {
     mocha.it('should return spy method', function () {
 
 
-        var mySpy = new RuntimeSpy()
+        var mySpy = new RuntimeSpy('mySpy')
 
         var a = [1, 2, 3]
         var b = { q: 1, w: [1, 2, 3] }
@@ -52,7 +52,8 @@ mocha.describe('Spies and Mocks', function () {
             return A[0] + B.q
         }
 
-        testFunction = mySpy.getSpyFunction(this, 'testFunction', testFunction)
+        eval(mySpy.getCodeToEvalToSpyOnFunctions('testFunction'))
+        
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
         expect(Variable.getVariable(mySpy.getTrafficData().testFunction.input[0]).getLiteral()).
@@ -69,7 +70,7 @@ mocha.describe('Spies and Mocks', function () {
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
         
-        var mySpy = new RuntimeSpy()
+        var mySpy = new RuntimeSpy('mySpy')
         var testFunction = function (A) {
             mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return helper1(A) + helper2(A)
@@ -78,8 +79,7 @@ mocha.describe('Spies and Mocks', function () {
         /* Spy */
         
 
-        helper1 = mySpy.getSpyFunction(this, 'helper1', helper1)
-        helper2 = mySpy.getSpyFunction(this, 'helper2', helper2)
+        eval(mySpy.getCodeToEvalToSpyOnFunctions('helper1','helper2'))
 
         expect(testFunction(5)).equals(25)
 
