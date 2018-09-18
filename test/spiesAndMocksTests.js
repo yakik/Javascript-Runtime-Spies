@@ -16,30 +16,28 @@ mocha.describe('Spies and Mocks', function () {
 
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var callString = ''
         var mySpy = new RuntimeSpy()
         var testFunction = function () {
-            callString = mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
+            mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
 
-        expect(eval(callString)).equals(2)
+        expect(eval(mySpy.getFunctionCallString())).equals(2)
     })
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
 
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var callString = ''
         var mySpy = new RuntimeSpy()
         var testFunction = function (A, B, C) {
-            callString = mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
+            mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
 
-        expect(eval(callString)).equals(2)
+        expect(eval(mySpy.getFunctionCallString())).equals(2)
     })
 
     mocha.it('should return spy method', function () {
@@ -71,10 +69,9 @@ mocha.describe('Spies and Mocks', function () {
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
         
-        var callString = ''
         var mySpy = new RuntimeSpy()
         var testFunction = function (A) {
-            callString = mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
+            mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return helper1(A) + helper2(A)
         }
         expect(testFunction(5)).equals(25)
@@ -93,6 +90,6 @@ mocha.describe('Spies and Mocks', function () {
         /*mock*/
         helper1 = getMockFunction('helper1', mySpy.getTrafficData())
         helper2 = getMockFunction('helper2', mySpy.getTrafficData())
-        expect(eval(callString)).equals(25)
+        expect(eval(mySpy.getFunctionCallString())).equals(25)
     })
 })
