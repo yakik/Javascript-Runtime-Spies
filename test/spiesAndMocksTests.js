@@ -71,13 +71,12 @@ mocha.describe('Spies and Mocks', function () {
         var helper2 = function (x) { return 3 * x }
         
         var mySpy = new RuntimeSpy('mySpy')
+
         var testFunction = function (A) {
             mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
-            return helper1(A) + helper2(A)
+            var result = helper1(A) + helper2(A)
+            return result
         }
-        expect(testFunction(5)).equals(25)
-        /* Spy */
-        
 
         eval(mySpy.getCodeToEvalToSpyOnFunctions('helper1','helper2'))
 
