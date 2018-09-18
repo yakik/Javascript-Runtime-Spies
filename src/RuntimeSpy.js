@@ -8,7 +8,7 @@ class RuntimeSpy {
 	getTrafficData() {
 		return this.trafficData
 	}
-	getDefinitionAndCallingStringSpy(callingFunctionArguments, functionName, paramString) {
+	captureFunctionCall(callingFunctionArguments, functionName, paramString) {
 		var theString = '/****** Prep/Call Function ' + functionName + ' ********/\n'
 		var runtimeSpyThis = this
 		Array.from(callingFunctionArguments).forEach((argument, index) => {

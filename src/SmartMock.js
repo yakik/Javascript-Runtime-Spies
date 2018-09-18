@@ -3,9 +3,13 @@ var expect = chai.expect
 var CodeDefinition = require('./Variable')
 
 class SmartMock {
-    constructor() { }
+    constructor(smartSpy) {
+        this.smartSpy = smartSpy
+     }
 
-
+     getFunctionCallString() {
+		return this.smartSpy.getFunctionCallString()
+	}
     getMockFunction(functionName, mockDataSourceVariable) {
        var upperThis = this
         return function () {
