@@ -30,28 +30,34 @@ var getParamName = function (functionName, paramString, paramIndex) {
 		
 }
 
+class RuntimeSpy {
+	constructor() {
+		this.trafficCapture = {}
+	}
 
-var getSpyFunction = function (originalContext,functionName, originalFunction, trafficCaptureVariable) {
-	return function () {
-		SpyDataSetup(functionName,trafficCaptureVariable)
-		captureFunctionInput(functionName,arguments,trafficCaptureVariable)
-		var returnValue = originalFunction.apply(originalContext,arguments)
-		captureFunctionOutput(functionName,returnValue,trafficCaptureVariable)
-		return returnValue
+	getSpyFunction(originalContext, functionName, originalFunction, trafficCapture) {
+		var runtimeSpyThis = this
+		return function () {
+			runtimeSpyThis.SpyDataSetup(functionName, trafficCapture)
+			runtimeSpyThis.captureFunctionInput(functionName, arguments, trafficCapture)
+			var returnValue = originalFunction.apply(originalContext, arguments)
+			runtimeSpyThis.captureFunctionOutput(functionName, returnValue, trafficCapture)
+			return returnValue
 		}
+	}
+
+	SpyDataSetup(functionName, trafficCapture) {
+		if (trafficCapture[functionName] == undefined)
+			trafficCapture[functionName] = { input: [], output: [] }
+	}
+
+	captureFunctionInput(functionName, callArguments, trafficCapture) {
+		trafficCapture[functionName].input.push(Array.from(callArguments))
+	}
+	captureFunctionOutput (functionName, output, trafficCapture) {
+		trafficCapture[functionName].output.push(output)
+	}
 }
 
-var SpyDataSetup = function (functionName,trafficCapture) {
-	if (trafficCapture[functionName] == undefined) 
-		trafficCapture[functionName]={input:[],output:[]}
-}
-
-var captureFunctionInput = function (functionName, callArguments,trafficCapture) {
-	trafficCapture[functionName].input.push(Array.from(callArguments))
- }
-var captureFunctionOutput = function (functionName, output,trafficCapture) {
-	trafficCapture[functionName].output.push(output)
- }
-
-module.exports.getSpyFunction = getSpyFunction
+module.exports.RuntimeSpy = RuntimeSpy
 module.exports.getDefinitionAndCallingStringSpy = getDefinitionAndCallingStringSpy
