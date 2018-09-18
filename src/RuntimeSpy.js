@@ -53,8 +53,5 @@ var captureFunctionOutput = function (functionName, output,trafficCapture) {
 	trafficCapture[functionName].output.push(output)
  }
 
-module.exports.checkSpyDataReadiness = SpyDataSetup
-module.exports.captureInput = captureFunctionInput
-module.exports.captureOutput = captureFunctionOutput
 module.exports.getSpyFunction = getSpyFunction
 module.exports.getDefinitionAndCallingStringSpy = getDefinitionAndCallingStringSpy
