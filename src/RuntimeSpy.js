@@ -32,30 +32,34 @@ var getParamName = function (functionName, paramString, paramIndex) {
 
 class RuntimeSpy {
 	constructor() {
-		this.trafficCapture = {}
+		this.trafficData = {}
+	}
+
+	getTrafficData() {
+		return this.trafficData
 	}
 
 	getSpyFunction(originalContext, functionName, originalFunction) {
 		var runtimeSpyThis = this
 		return function () {
-			runtimeSpyThis.SpyDataSetup(functionName, runtimeSpyThis.trafficCapture)
-			runtimeSpyThis.captureFunctionInput(functionName, arguments,runtimeSpyThis.trafficCapture)
+			runtimeSpyThis.SpyDataSetup(functionName, runtimeSpyThis.trafficData)
+			runtimeSpyThis.captureFunctionInput(functionName, arguments,runtimeSpyThis.trafficData)
 			var returnValue = originalFunction.apply(originalContext, arguments)
-			runtimeSpyThis.captureFunctionOutput(functionName, returnValue, runtimeSpyThis.trafficCapture)
+			runtimeSpyThis.captureFunctionOutput(functionName, returnValue, runtimeSpyThis.trafficData)
 			return returnValue
 		}
 	}
 
 	SpyDataSetup(functionName) {
-		if (this.trafficCapture[functionName] == undefined)
-			this.trafficCapture[functionName] = { input: [], output: [] }
+		if (this.trafficData[functionName] == undefined)
+			this.trafficData[functionName] = { input: [], output: [] }
 	}
 
 	captureFunctionInput(functionName, callArguments) {
-		this.trafficCapture[functionName].input.push(Array.from(callArguments))
+		this.trafficData[functionName].input.push(Array.from(callArguments))
 	}
 	captureFunctionOutput (functionName, output) {
-		this.trafficCapture[functionName].output.push(output)
+		this.trafficData[functionName].output.push(output)
 	}
 }
 

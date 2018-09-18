@@ -57,12 +57,12 @@ mocha.describe('Spies and Mocks', function () {
         testFunction = mySpy.getSpyFunction(this, 'testFunction', testFunction)
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
-        expect(Variable.getVariable(mySpy.trafficCapture.testFunction.input[0]).getLiteral()).
+        expect(Variable.getVariable(mySpy.getTrafficData().testFunction.input[0]).getLiteral()).
             equals(Variable.getVariable([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).getLiteral())
-        expect(Variable.getVariable(mySpy.trafficCapture.testFunction.input[1]).getLiteral()).
+        expect(Variable.getVariable(mySpy.getTrafficData().testFunction.input[1]).getLiteral()).
             equals(Variable.getVariable([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).getLiteral())
-        expect(mySpy.trafficCapture.testFunction.output[0]).equals(2)
-        expect(mySpy.trafficCapture.testFunction.output[1]).equals(11)
+        expect(mySpy.getTrafficData().testFunction.output[0]).equals(2)
+        expect(mySpy.getTrafficData().testFunction.output[1]).equals(11)
     })
 
 
@@ -91,9 +91,8 @@ mocha.describe('Spies and Mocks', function () {
         helper2 = function (x) { return 2 }
 
         /*mock*/
-        eval('var mockDataSource = ' + Variable.getVariable(mySpy.trafficCapture).getLiteral())
-        helper1 = getMockFunction('helper1', mockDataSource)
-        helper2 = getMockFunction('helper2', mockDataSource)
+        helper1 = getMockFunction('helper1', mySpy.getTrafficData())
+        helper2 = getMockFunction('helper2', mySpy.getTrafficData())
         expect(eval(callString)).equals(25)
     })
 })
