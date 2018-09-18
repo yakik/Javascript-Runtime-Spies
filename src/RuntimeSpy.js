@@ -33,31 +33,28 @@ var getParamName = function (functionName, paramString, paramIndex) {
 
 var getSpyFunction = function (originalContext,functionName, originalFunction, trafficCaptureVariable) {
 	return function () {
-		checkSpyDataReadiness(functionName,trafficCaptureVariable)
-		trafficCapture=captureInput(functionName,arguments,trafficCaptureVariable)
+		SpyDataSetup(functionName,trafficCaptureVariable)
+		captureFunctionInput(functionName,arguments,trafficCaptureVariable)
 		var returnValue = originalFunction.apply(originalContext,arguments)
-		trafficCapture=captureOutput(functionName,returnValue,trafficCaptureVariable)
+		captureFunctionOutput(functionName,returnValue,trafficCaptureVariable)
 		return returnValue
 		}
 }
 
-var checkSpyDataReadiness = function (functionName,trafficCapture) {
+var SpyDataSetup = function (functionName,trafficCapture) {
 	if (trafficCapture[functionName] == undefined) 
 		trafficCapture[functionName]={input:[],output:[]}
-	return trafficCapture
 }
 
-var captureInput = function (functionName, callArguments,trafficCapture) {
+var captureFunctionInput = function (functionName, callArguments,trafficCapture) {
 	trafficCapture[functionName].input.push(Array.from(callArguments))
-	return trafficCapture
  }
-var captureOutput = function (functionName, output,trafficCapture) {
+var captureFunctionOutput = function (functionName, output,trafficCapture) {
 	trafficCapture[functionName].output.push(output)
-	return trafficCapture
  }
 
-module.exports.checkSpyDataReadiness = checkSpyDataReadiness
-module.exports.captureInput = captureInput
-module.exports.captureOutput = captureOutput
+module.exports.checkSpyDataReadiness = SpyDataSetup
+module.exports.captureInput = captureFunctionInput
+module.exports.captureOutput = captureFunctionOutput
 module.exports.getSpyFunction = getSpyFunction
 module.exports.getDefinitionAndCallingStringSpy = getDefinitionAndCallingStringSpy

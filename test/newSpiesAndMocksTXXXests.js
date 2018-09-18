@@ -3,16 +3,11 @@ var chai = require('chai')
 var expect = chai.expect
 
 var RuntimeSpy = require('../src/RuntimeSpy')
-var SmartMock = require('../src/SmartMock')
+var SmartMock = require('../src/SmartMock').SmartMock
 
 var Variable = require('../src/Variable')
-var Writers = require('../src/Writers')
-captureInput = RuntimeSpy.captureFunctionInput
-captureOutput = RuntimeSpy.captureFunctionOutput
-argumentsToString = RuntimeSpy.argumentsToString
-checkSpyDataReadiness = RuntimeSpy.SpyDataSetup
-getSpyFunction = RuntimeSpy.getSpyFunction
-getDefinitionAndCallingStringSpy = RuntimeSpy.getDefinitionAndCallingStringSpy
+var FileWriter = require('../src/Writers').FileWriter
+
 
 
 getMockFunction = SmartMock.getMockFunction
@@ -20,7 +15,6 @@ checkMockDataReadiness = SmartMock.checkMockDataReadiness
 assertInput = SmartMock.assertInput
 getOutput = SmartMock.getOutput
 
-FileWriter = Writers.fileWriter
 
 var testedFunction = function (a, b, c) {
 
@@ -37,23 +31,24 @@ mocha.describe('Spies and Mocks', function () {
     var globalVariable1 = { 1: 1, 2: 2, 3: { a: 1, b: 2 } }
     var globalVariable2 = { 1: 1, 2: 2, 3: { a: 1, b: 2 } }
     globalVariable2['4'] = globalVariable2
+
     var testFunction = function (param1, param2, param3) {
         //Spy setup
-        mySpy = new Spy()
+        mySpy = new RuntimeSpy()
         mySpy.setInitialMethodCall('tetFunction', arguments, 'param1, param2, param3')
-        mySpy.addGlobalVariablesToTrack(globalVariable['1'])
+        mySpy.addGlobalVariablesToTrack(globalVariable1['1'])
         mySpy.addGlobalFunctionsToTrack(globalFunction2)
         mySpy.startTracking()
         //end Spy setup
         globalFunction2(param1)
-        var toReturn = globalVariable['1']+param2.getPI()+param3['1']['0']['2']
+        var toReturn = globalVariable1['1']+param2.getPI()+param3['1']['0']['2']
         //set assertion and finish
         mySpy.setEndValue(toReturn)
         mySpy.endTracking()
-        var myMock = new Mock(mySpy)
+        var myMock = new SmartMock(mySpy)
         var myWriter = new FileWriter()
         myWriter.setFileName('test001')
-        myMock.createHarness(MyWriter.write())
+        myMock.createHarness(myWriter.write())
         //*******/
         return toReturn
     }
@@ -61,7 +56,10 @@ mocha.describe('Spies and Mocks', function () {
     
 
     mocha.it('End to End', function () {
-//testFunction(1,2,3)
+        var p2 = { getPI: function () { return 3.1415927 } }
+        p3 = { 1: {} ,2:2}
+        p3['1']['0'] = p3
+testFunction(1,p2,p3)
 
         
     })

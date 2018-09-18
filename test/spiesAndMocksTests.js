@@ -6,18 +6,8 @@ var RuntimeSpy = require('../src/RuntimeSpy')
 var SmartMock = require('../src/SmartMock')
 
 var CodeDefinition = require('../src/Variable')
-captureInput = RuntimeSpy.captureInput
-captureOutput = RuntimeSpy.captureOutput
-argumentsToString = RuntimeSpy.argumentsToString
-checkSpyDataReadiness = RuntimeSpy.checkSpyDataReadiness
-getSpyFunction = RuntimeSpy.getSpyFunction
 getDefinitionAndCallingStringSpy = RuntimeSpy.getDefinitionAndCallingStringSpy
-
-
 getMockFunction = SmartMock.getMockFunction
-checkMockDataReadiness = SmartMock.checkMockDataReadiness
-assertInput = SmartMock.assertInput
-getOutput = SmartMock.getOutput
 
 
 mocha.describe('Spies and Mocks', function () {
