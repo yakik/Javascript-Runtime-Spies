@@ -4,8 +4,6 @@ var expect = chai.expect
 
 var RuntimeSpy = require('../src/RuntimeSpy')
 var SmartMock = require('../src/SmartMock')
-
-
 var Variable = require('../src/Variable')
 getMockFunction = SmartMock.getMockFunction
 
@@ -85,10 +83,10 @@ mocha.describe('Spies and Mocks', function () {
         /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
-
+var myMock = new SmartMock()
         /*mock*/
-        helper1 = getMockFunction('helper1', mySpy.getTrafficData())
-        helper2 = getMockFunction('helper2', mySpy.getTrafficData())
+        helper1 = myMock.getMockFunction('helper1', mySpy.getTrafficData())
+        helper2 = myMock.getMockFunction('helper2', mySpy.getTrafficData())
         expect(eval(mySpy.getFunctionCallString())).equals(25)
     })
 })
