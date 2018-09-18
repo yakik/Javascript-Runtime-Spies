@@ -2,13 +2,11 @@ var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
 
-var myRuntimeSpy = require('../src/RuntimeSpy')
+var RuntimeSpy = require('../src/RuntimeSpy')
 var SmartMock = require('../src/SmartMock')
 
-RuntimeSpy = myRuntimeSpy.RuntimeSpy
 
 var Variable = require('../src/Variable')
-getDefinitionAndCallingStringSpy = myRuntimeSpy.getDefinitionAndCallingStringSpy
 getMockFunction = SmartMock.getMockFunction
 
 
@@ -19,8 +17,9 @@ mocha.describe('Spies and Mocks', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
         var callString = ''
+        var mySpy = new RuntimeSpy()
         var testFunction = function () {
-            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction')
+            callString = mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
@@ -33,8 +32,9 @@ mocha.describe('Spies and Mocks', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
         var callString = ''
+        var mySpy = new RuntimeSpy()
         var testFunction = function (A, B, C) {
-            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
+            callString = mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction', 'A,B ,C')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
@@ -72,14 +72,14 @@ mocha.describe('Spies and Mocks', function () {
         var helper2 = function (x) { return 3 * x }
         
         var callString = ''
-
+        var mySpy = new RuntimeSpy()
         var testFunction = function (A) {
-            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction')
+            callString = mySpy.getDefinitionAndCallingStringSpy(arguments, 'testFunction')
             return helper1(A) + helper2(A)
         }
         expect(testFunction(5)).equals(25)
         /* Spy */
-        var mySpy = new RuntimeSpy()
+        
 
         helper1 = mySpy.getSpyFunction(this, 'helper1', helper1)
         helper2 = mySpy.getSpyFunction(this, 'helper2', helper2)

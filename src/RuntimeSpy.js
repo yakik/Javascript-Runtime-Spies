@@ -1,17 +1,24 @@
 var CodeDefinition = require('./Variable')
+class RuntimeSpy {
+	constructor() {
+		this.trafficData = {}
+	}
 
-var getDefinitionAndCallingStringSpy = 
-function (callingFunctionArguments, functionName, paramString) {
+	getTrafficData() {
+		return this.trafficData
+	}
+ getDefinitionAndCallingStringSpy (callingFunctionArguments, functionName, paramString) {
 	var theString = '/****** Prep/Call Function ' + functionName +' ********/\n'
-	Array.from(callingFunctionArguments).forEach((argument,index) => {
-		theString += 'var ' + getParamName(functionName, paramString, index) +
+	var runtimeSpyThis = this
+	 Array.from(callingFunctionArguments).forEach((argument, index) => {
+		theString += 'var ' + runtimeSpyThis.getParamName(functionName, paramString, index) +
 			' = ' + CodeDefinition.getVariable(argument).getLiteral() + '\n'
 	})
 	theString += '\n'
 	theString += functionName + '('
 	Array.from(callingFunctionArguments).forEach((argument, index) => {
 		if (index>0) theString+=', '
-		theString+=getParamName(functionName,paramString,index)
+		theString+=runtimeSpyThis.getParamName(functionName,paramString,index)
 	})
 	theString += ')\n\n'
 
@@ -19,7 +26,7 @@ function (callingFunctionArguments, functionName, paramString) {
 
 	}
 
-var getParamName = function (functionName, paramString, paramIndex) {
+ getParamName (functionName, paramString, paramIndex) {
 	
 	if (paramString === undefined)
 		return functionName + '_param' + paramIndex
@@ -30,14 +37,7 @@ var getParamName = function (functionName, paramString, paramIndex) {
 		
 }
 
-class RuntimeSpy {
-	constructor() {
-		this.trafficData = {}
-	}
 
-	getTrafficData() {
-		return this.trafficData
-	}
 
 	getSpyFunction(originalContext, functionName, originalFunction) {
 		var runtimeSpyThis = this
@@ -63,5 +63,4 @@ class RuntimeSpy {
 	}
 }
 
-module.exports.RuntimeSpy = RuntimeSpy
-module.exports.getDefinitionAndCallingStringSpy = getDefinitionAndCallingStringSpy
+module.exports = RuntimeSpy
