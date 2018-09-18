@@ -7,7 +7,7 @@ var SmartMock = require('../src/SmartMock')
 
 RuntimeSpy = myRuntimeSpy.RuntimeSpy
 
-var CodeDefinition = require('../src/Variable')
+var Variable = require('../src/Variable')
 getDefinitionAndCallingStringSpy = myRuntimeSpy.getDefinitionAndCallingStringSpy
 getMockFunction = SmartMock.getMockFunction
 
@@ -45,7 +45,6 @@ mocha.describe('Spies and Mocks', function () {
     mocha.it('should return spy method', function () {
 
 
-        var trafficCapture = {}
         var mySpy = new RuntimeSpy()
 
         var a = [1, 2, 3]
@@ -55,15 +54,15 @@ mocha.describe('Spies and Mocks', function () {
             return A[0] + B.q
         }
 
-        testFunction = mySpy.getSpyFunction(this, 'testFunction', testFunction, trafficCapture)
+        testFunction = mySpy.getSpyFunction(this, 'testFunction', testFunction)
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
-        expect(CodeDefinition.getVariable(trafficCapture.testFunction.input[0]).getLiteral()).
-            equals(CodeDefinition.getVariable([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).getLiteral())
-        expect(CodeDefinition.getVariable(trafficCapture.testFunction.input[1]).getLiteral()).
-            equals(CodeDefinition.getVariable([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).getLiteral())
-        expect(trafficCapture.testFunction.output[0]).equals(2)
-        expect(trafficCapture.testFunction.output[1]).equals(11)
+        expect(Variable.getVariable(mySpy.trafficCapture.testFunction.input[0]).getLiteral()).
+            equals(Variable.getVariable([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).getLiteral())
+        expect(Variable.getVariable(mySpy.trafficCapture.testFunction.input[1]).getLiteral()).
+            equals(Variable.getVariable([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).getLiteral())
+        expect(mySpy.trafficCapture.testFunction.output[0]).equals(2)
+        expect(mySpy.trafficCapture.testFunction.output[1]).equals(11)
     })
 
 
@@ -80,11 +79,10 @@ mocha.describe('Spies and Mocks', function () {
         }
         expect(testFunction(5)).equals(25)
         /* Spy */
-        var trafficCapture = {}
         var mySpy = new RuntimeSpy()
 
-        helper1 = mySpy.getSpyFunction(this, 'helper1', helper1, trafficCapture)
-        helper2 = mySpy.getSpyFunction(this, 'helper2', helper2, trafficCapture)
+        helper1 = mySpy.getSpyFunction(this, 'helper1', helper1)
+        helper2 = mySpy.getSpyFunction(this, 'helper2', helper2)
 
         expect(testFunction(5)).equals(25)
 
@@ -93,7 +91,7 @@ mocha.describe('Spies and Mocks', function () {
         helper2 = function (x) { return 2 }
 
         /*mock*/
-        eval('var mockDataSource = ' + CodeDefinition.getVariable(trafficCapture).getLiteral())
+        eval('var mockDataSource = ' + Variable.getVariable(mySpy.trafficCapture).getLiteral())
         helper1 = getMockFunction('helper1', mockDataSource)
         helper2 = getMockFunction('helper2', mockDataSource)
         expect(eval(callString)).equals(25)
