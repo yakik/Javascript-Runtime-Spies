@@ -1,16 +1,15 @@
+var RuntimeSpy = require('../src/RuntimeSpy')
+var SmartMock = require('../src/SmartMock')
 var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
 
-var RuntimeSpy = require('../src/RuntimeSpy')
-var SmartMock = require('../src/SmartMock')
-getMockFunction = SmartMock.getMockFunction
+
 
 
 mocha.describe('Spies and Mocks', function () {
 
     mocha.it('should return definitions/calling statements (no param names)', function () {
-
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
         var mySpy = new RuntimeSpy('mySpy')
@@ -23,7 +22,6 @@ mocha.describe('Spies and Mocks', function () {
     })
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
-
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
         var mySpy = new RuntimeSpy('mySpy')
@@ -38,7 +36,7 @@ mocha.describe('Spies and Mocks', function () {
 
 
     mocha.it('Mocks', function () {
-
+        
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
         var globalVar = 5
@@ -49,6 +47,8 @@ mocha.describe('Spies and Mocks', function () {
         var mySpy = new RuntimeSpy('mySpy')
 
         var testFunction = function (A) {
+            
+            
             mySpy.setStartFunctionCall(arguments, 'testFunction')
             eval(mySpy.addVariableSpies('globalVar','globalVar2').getCodeToEvalToSpyOnVariables())
             eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())

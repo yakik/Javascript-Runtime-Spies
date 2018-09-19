@@ -1,5 +1,8 @@
-var FunctionSpy = require('./FunctionSpy')
-var VariableSpy = require('./VariableSpy')
+var isNode = new Function("try {return this===global;}catch(e){return false;}");
+if (isNode()) {
+	var FunctionSpy = require('./FunctionSpy')
+	var VariableSpy = require('./VariableSpy')
+}
 const mockRepositoryDataName = 'mockRepositoryData'
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
@@ -125,5 +128,5 @@ class RuntimeSpy {
 
 
 }
-
+if (isNode())
 module.exports = RuntimeSpy

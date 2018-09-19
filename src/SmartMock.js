@@ -1,3 +1,4 @@
+
 var chai = require('chai')
 var expect = chai.expect
 var VariableLiteral = require('./VariableLiteral')
@@ -34,5 +35,7 @@ class SmartMock {
     }
 
 }
+var isNode = new Function("try {return this===global;}catch(e){return false;}");
 
+if (isNode())
 module.exports = SmartMock

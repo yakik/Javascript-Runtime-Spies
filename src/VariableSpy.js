@@ -1,10 +1,14 @@
-var VariableLiteral = require('./VariableLiteral')
+var isNode = new Function("try {return this===global;}catch(e){return false;}");
+if (isNode())
+    var VariableLiteral = require('./VariableLiteral')
 class VariableSpy {
     constructor(variableName, variable) {
         this.variableName = variableName
         this.trafficData = { input: [], output: [] }
         if (variable != undefined)
             this.variable = variable
+      /*  else
+            this.variable = eval(this.variableName)*/
     }
 
 
@@ -32,5 +36,5 @@ class VariableSpy {
 
 
 }
-
+if (isNode())
 module.exports = VariableSpy
