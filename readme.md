@@ -1,3 +1,5 @@
+## This is still work in progress, undergoing refactoring and redesign
+
 ### Runtime Spies - Javascript
 A set of tools to harness javascript legacy code into a unit test.
 The main idea is to run the system in an integrative environment after adding some code. The added code captures the data going to the unit and out of it and generates code that will harness the unit in a unit test environment.
