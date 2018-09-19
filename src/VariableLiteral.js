@@ -1,4 +1,4 @@
-class Variable {
+class VariableLiteral {
 
 
 	constructor(variable, ancestors, propertyName, path) {
@@ -36,7 +36,7 @@ class Variable {
 		this.ancestors.set(this.variable, this.path)
 	}
 
-	static getVariable(variable, ancestors, propertyName,path) {
+	static getVariableLiteral(variable, ancestors, propertyName,path) {
 		var newCodeDefinition
 		if (variable === null) {
 			newCodeDefinition = new NullVariable(variable, ancestors, propertyName, path)
@@ -86,7 +86,7 @@ class Variable {
 
 }
 
-class PrimitiveVariable extends Variable {
+class PrimitiveVariable extends VariableLiteral {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -108,7 +108,7 @@ class PrimitiveVariable extends Variable {
 	}
 }
 
-class CollectionVariable extends Variable{
+class CollectionVariable extends VariableLiteral{
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 		this.addChildren()
@@ -161,12 +161,12 @@ class ArrayVariable extends CollectionVariable {
 		this.variable.forEach((item,index) => {
 			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(Variable.getVariable(
+					push(VariableLiteral.getVariableLiteral(
 						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']'))
 			}
 			else {
 				upperThis.children.
-					push(Variable.getCircularVariable(
+					push(VariableLiteral.getCircularVariable(
 						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']',upperThis.ancestors.get(item)))
 			}
 		})
@@ -187,11 +187,11 @@ class ObjectVariable extends CollectionVariable {
 		Object.values(this.variable).forEach((item, index) => {
 			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(Variable.getVariable(item, upperThis.ancestors, objectProperties[index],upperThis.path))
+					push(VariableLiteral.getVariableLiteral(item, upperThis.ancestors, objectProperties[index],upperThis.path))
 			}
 			else {
 				upperThis.children.
-					push(Variable.getCircularVariable(
+					push(VariableLiteral.getCircularVariable(
 						item, upperThis.ancestors, objectProperties[index],this.path,upperThis.ancestors.get(item)))
 			}
 		})
@@ -228,7 +228,7 @@ class ObjectVariable extends CollectionVariable {
 
 }
 
-class FunctionVariable extends Variable {
+class FunctionVariable extends VariableLiteral {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -250,7 +250,7 @@ class FunctionVariable extends Variable {
 
 }
 
-class NullVariable extends Variable {
+class NullVariable extends VariableLiteral {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -262,7 +262,7 @@ class NullVariable extends Variable {
 
 }
 
-class CircularVariable extends Variable {
+class CircularVariable extends VariableLiteral {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 	}
@@ -289,5 +289,5 @@ class CircularVariable extends Variable {
 
 }
 
-module.exports = Variable
+module.exports = VariableLiteral
 

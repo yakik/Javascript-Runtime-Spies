@@ -1,4 +1,3 @@
-var Variable = require('./Variable')
 var FunctionSpy = require('./FunctionSpy')
 var VariableSpy = require('./VariableSpy')
 const mockRepositoryDataName = 'mockRepositoryData'

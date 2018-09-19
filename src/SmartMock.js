@@ -1,6 +1,6 @@
 var chai = require('chai')
 var expect = chai.expect
-var Variable = require('./Variable')
+var VariableLiteral = require('./VariableLiteral')
 
 class SmartMock {
     constructor(functionName, mockDataSource) {
@@ -25,8 +25,8 @@ class SmartMock {
     }
 
     assertInput(callArguments, callIndex) {
-        expect(Variable.getVariable(this.mockDataSource.input[callIndex]).getLiteral()).
-            equals(Variable.getVariable(Array.from(callArguments)).getLiteral())
+        expect(VariableLiteral.getVariableLiteral(this.mockDataSource.input[callIndex]).getLiteral()).
+            equals(VariableLiteral.getVariableLiteral(Array.from(callArguments)).getLiteral())
     }
 
     getOutput(callIndex) {

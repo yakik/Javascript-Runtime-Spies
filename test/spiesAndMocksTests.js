@@ -4,7 +4,6 @@ var expect = chai.expect
 
 var RuntimeSpy = require('../src/RuntimeSpy')
 var SmartMock = require('../src/SmartMock')
-var Variable = require('../src/Variable')
 getMockFunction = SmartMock.getMockFunction
 
 

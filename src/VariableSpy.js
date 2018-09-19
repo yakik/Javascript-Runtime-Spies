@@ -1,4 +1,4 @@
-var Variable = require('./Variable')
+var VariableLiteral = require('./VariableLiteral')
 class VariableSpy {
     constructor(variableName, variable) {
         this.variableName = variableName
@@ -10,9 +10,9 @@ class VariableSpy {
 
     getMockText() {
         var returnString = 'var ' + this.variableName + ' = ' +
-            Variable.getVariable(this.variable).getLiteral() + '\n'
+            VariableLiteral.getVariableLiteral(this.variable).getLiteral() + '\n'
 
-        Variable.getVariable(this.variable).getCircularDefinitions().forEach(definition => {
+        VariableLiteral.getVariableLiteral(this.variable).getCircularDefinitions().forEach(definition => {
             returnString += definition.getCircularDefinition(this.variableName) + '\n'
 
         })

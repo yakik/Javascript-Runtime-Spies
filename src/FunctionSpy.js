@@ -1,4 +1,4 @@
-var Variable = require('./Variable')
+var VariableLiteral = require('./VariableLiteral')
 class FunctionSpy {
 	constructor(functionName) {
         this.functionName = functionName
@@ -20,7 +20,7 @@ class FunctionSpy {
     }
     
     getDataRepositoryText() {
-        return Variable.getVariable(this.trafficData).getLiteral()
+        return VariableLiteral.getVariableLiteral(this.trafficData).getLiteral()
     }
 
     getMockText() {
