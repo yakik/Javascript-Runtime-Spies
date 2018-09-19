@@ -52,11 +52,12 @@ mocha.describe('Spies and Mocks', function () {
         var testFunction = function (A) {
             mySpy.setStartFunctionCall(arguments, 'testFunction')
             eval(mySpy.addVariableSpies('globalVar','globalVar2').getCodeToEvalToSpyOnVariables())
-            var result = helper1(A) + helper2(A) +globalVar+globalVar2['3']['2']['1']
+            eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
+            var result = helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1']
             return result
         }
 
-        eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
+       
 
         expect(testFunction(5)).equals(36)
 
