@@ -19,7 +19,6 @@ class SmartMock {
         return function () {
             upperThis.assertInput(arguments, upperThis.callIndex)
             var output = upperThis.getOutput(upperThis.callIndex)
-            // upperThis.mockDataSource = output.mockDataSource
             upperThis.callIndex++
             return output
         }
