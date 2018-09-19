@@ -72,6 +72,8 @@ class Variable {
 		return literal += this.getValueLiteral()
 	}
 
+	
+
 	getValueLiteral() { }
 
 	getCircularDefinitions() {

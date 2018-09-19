@@ -43,24 +43,27 @@ mocha.describe('Spies and Mocks', function () {
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
         var globalVar = 5
+        var globalVar2 = { 1: 6, 2: 2 }
+        var b = { 1: 1, 2: globalVar2 }
+        globalVar2['3']=b
 
         var mySpy = new RuntimeSpy('mySpy')
 
         var testFunction = function (A) {
             mySpy.setStartFunctionCall(arguments, 'testFunction')
-            eval(mySpy.addVariableSpies('globalVar').getCodeToEvalToSpyOnVariables())
-            var result = helper1(A) + helper2(A) +globalVar
+            eval(mySpy.addVariableSpies('globalVar','globalVar2').getCodeToEvalToSpyOnVariables())
+            var result = helper1(A) + helper2(A) +globalVar+globalVar2['3']['2']['1']
             return result
         }
 
         eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
 
-        expect(testFunction(5)).equals(30)
+        expect(testFunction(5)).equals(36)
 
         /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-        expect(eval(mySpy.getHarness())).equals(30)
+        expect(eval(mySpy.getHarness())).equals(36)
     })
 })

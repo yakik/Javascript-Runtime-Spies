@@ -1,16 +1,25 @@
 var Variable = require('./Variable')
 class VariableSpy {
-	constructor(variableName,variable) {
+    constructor(variableName, variable) {
         this.variableName = variableName
         this.trafficData = { input: [], output: [] }
         if (variable != undefined)
             this.variable = variable
     }
-    
+
 
     getMockText() {
-        return 'var ' + this.variableName +' = ' + Variable.getVariable(this.variable).getLiteral()+'\n'
-        
+        var returnString = 'var ' + this.variableName + ' = ' +
+            Variable.getVariable(this.variable).getLiteral() + '\n'
+
+        Variable.getVariable(this.variable).getCircularDefinitions().forEach(definition => {
+            returnString += definition.getCircularDefinition(this.variableName) + '\n'
+
+        })
+
+        return returnString
+
+
     }
 
     getVariableName() {

@@ -40,6 +40,7 @@ mocha.describe('IdentifyParameters Object Tests', function () {
       .equals('myVar[\'y\'][\'1\']=myVar')
   })
 
+
   mocha.it('test complete object', function () {
 
     var a = { 1: 1, 2: 2, 3: 3 }
