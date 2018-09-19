@@ -16,12 +16,12 @@ mocha.describe('Spies and Mocks', function () {
         var b = { q: 1, w: a }
         var mySpy = new RuntimeSpy('mySpy')
         var testFunction = function () {
-            mySpy.captureFunctionCall(arguments, 'testFunction')
+            mySpy.setStartFunctionCall(arguments, 'testFunction')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-
-        expect(eval(mySpy.getFunctionCallString())).equals(2)
+        eval(mySpy.getHarness())
+        expect(eval(mySpy.getStartFunctionCallString())).equals(2)
     })
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
@@ -30,12 +30,12 @@ mocha.describe('Spies and Mocks', function () {
         var b = { q: 1, w: a }
         var mySpy = new RuntimeSpy('mySpy')
         var testFunction = function (A, B, C) {
-            mySpy.captureFunctionCall(arguments, 'testFunction', 'A,B ,C')
+            mySpy.setStartFunctionCall(arguments, 'testFunction', 'A,B ,C')
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-
-        expect(eval(mySpy.getFunctionCallString())).equals(2)
+        eval(mySpy.getHarness())
+        expect(eval(mySpy.getStartFunctionCallString())).equals(2)
     })
 
 
@@ -48,7 +48,7 @@ mocha.describe('Spies and Mocks', function () {
         var mySpy = new RuntimeSpy('mySpy')
 
         var testFunction = function (A) {
-            mySpy.captureFunctionCall(arguments, 'testFunction')
+            mySpy.setStartFunctionCall(arguments, 'testFunction')
             var result = helper1(A) + helper2(A)
             return result
         }
@@ -63,6 +63,6 @@ mocha.describe('Spies and Mocks', function () {
 
         eval(mySpy.getHarness())
 
-        expect(eval(mySpy.getFunctionCallString())).equals(25)
+        expect(eval(mySpy.getStartFunctionCallString())).equals(25)
     })
 })
