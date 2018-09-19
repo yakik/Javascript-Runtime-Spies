@@ -51,7 +51,7 @@ mocha.describe('Spies and Mocks', function () {
             return A[0] + B.q
         }
 
-        eval(mySpy.getCodeToEvalToSpyOnFunctions('testFunction'))
+        eval(mySpy.addFunctionSpies('testFunction').getCodeToEvalToSpyOnFunctions())
 
         expect(testFunction(a, b)).equals(2)
         expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
@@ -77,7 +77,7 @@ mocha.describe('Spies and Mocks', function () {
             return result
         }
 
-        eval(mySpy.getCodeToEvalToSpyOnFunctions('helper1', 'helper2'))
+        eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
 
         expect(testFunction(5)).equals(25)
 

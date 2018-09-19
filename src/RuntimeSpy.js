@@ -1,8 +1,10 @@
-var CodeDefinition = require('./Variable')
+var Variable = require('./Variable')
+var FunctionSpy = require('./FunctionSpy')
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
+		this.functionSpies = []
 	}
 
 	getTrafficData() {
@@ -13,7 +15,7 @@ class RuntimeSpy {
 		var runtimeSpyThis = this
 		Array.from(callingFunctionArguments).forEach((argument, index) => {
 			theString += 'var ' + runtimeSpyThis.getParamName(functionName, paramString, index) +
-				' = ' + CodeDefinition.getVariable(argument).getLiteral() + '\n'
+				' = ' + Variable.getVariable(argument).getLiteral() + '\n'
 		})
 		theString += '\n'
 		theString += functionName + '('
@@ -41,10 +43,17 @@ class RuntimeSpy {
 
 	}
 
+	addFunctionSpies() {
+		Array.from(arguments).forEach(functionToSpyOn => {
+			this.functionSpies.push(functionToSpyOn)
+		})
+		return this
+}
+
 	getCodeToEvalToSpyOnFunctions() {
 		//parameters are string names of functions
 		var returnString = ''
-		Array.from(arguments).forEach(functionToSpyOn=>{
+		this.functionSpies.forEach(functionToSpyOn=>{
 			returnString += functionToSpyOn + '=' + this.runtimeSpyName + '.getSpyFunction(this,' +
 			'\''+functionToSpyOn+'\','+functionToSpyOn+')\n'
 		})
