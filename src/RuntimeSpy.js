@@ -1,5 +1,6 @@
 var Variable = require('./Variable')
 var FunctionSpy = require('./FunctionSpy')
+const mockRepositoryDataName = 'mockRepositoryData'
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
@@ -73,9 +74,9 @@ class RuntimeSpy {
 	}
 
 	getDataRepositoryText() {
-		var repositoryText = 'var mockRepositoryData = {}\n'
+		var repositoryText = 'var '+mockRepositoryDataName+' = {}\n'
 		this.functionSpies.forEach((functionSpy,functionSpyName) => {
-			repositoryText += 'mockRepositoryData[\'' + functionSpyName + '\']' +
+			repositoryText += mockRepositoryDataName+'[\'' + functionSpyName + '\']' +
 				' = ' + functionSpy.getDataRepositoryText() + '\n'
 		})
 		return repositoryText
@@ -83,7 +84,7 @@ class RuntimeSpy {
 
 	getFunctionMocksText() {
 		var mocksText = ''
-		this.functionSpies.forEach((functionSpy,functionSpyName) => {
+		this.functionSpies.forEach((functionSpy) => {
 			mocksText += functionSpy.getMockText() + '\n'
 		})
 		return mocksText
