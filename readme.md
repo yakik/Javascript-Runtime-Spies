@@ -1,4 +1,3 @@
-## This is still work in progress, undergoing refactoring and redesign
 
 ### Runtime Spies - Javascript
 A set of tools to harness javascript legacy code into a unit test.
@@ -9,40 +8,39 @@ The main idea is to run the system in an integrative environment after adding so
 ```js
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
-        
-        var callString = '' //string to be used by one spy
+        var globalVar = 5
+        var globalVar2 = { 1: 6, 2: 2 }
+        var b = { 1: 1, 2: globalVar2 } //variable with circular reference
+        globalVar2['3']=b
+
+        var mySpy = new RuntimeSpy('mySpy')
 
         var testFunction = function (A) {
-            callString = getDefinitionAndCallingStringSpy(arguments, 'testFunction') //spy
-            return helper1(A) + helper2(A)
+            mySpy.setStartFunctionCall(arguments, 'testFunction') //code you add to spy
+            eval(mySpy.addVariableSpies('globalVar','globalVar2').getCodeToEvalToSpyOnVariables()) //code to spy on global variables
+             eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions()) // code to spy on global functions
+            var result = helper1(A) + helper2(A) +globalVar+globalVar2['3']['2']['1']
+            return result
         }
-        
-        var trafficCapture = {} //captures data from the spies
 
-        helper1 = getSpyFunction(this, 'helper1', helper1, trafficCapture) //creating wrapper functions (spies) to track ingoing
-        helper2 = getSpyFunction(this, 'helper2', helper2, trafficCapture) // and out going data
+        expect(testFunction(5)).equals(36) //we run the function with the spies
 
-        expect(testFunction(5)).equals(25) //running the function after spies were created
-
-        /*change original functions, we don't need them anymore for our test. We do this to make sure the spies work...*/
+        /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
-
-        /*mocking */
-        eval('var mockDataSource = ' + toLiteral(trafficCapture)) //creating the data, using the output of the previous run
-        helper1 = getMockFunction('helper1', mockDataSource)
-        helper2 = getMockFunction('helper2', mockDataSource)
-        expect(eval(callString)).equals(25)
-
+        globalVar = 8
+        
+        expect(eval(mySpy.getHarness())).equals(36) //mySpy.getHarness() provides the harness (a text to be put in the unit test)
 ```
 
 ### Example Explanation - Spies
 
-We would like to write a unit test for testFunction (the original function does not include the statement starting with "callString...").
+We would like to write a unit test for testFunction 
 testFunction is using two functions, helper1 and helper2.
 We need to spy on two things:
 * The parameters testFunction is called with
 * Data going in and out through the global functions (helper1, helper2)
+* value of global variables
 
 To track the parameters, we add the line "callString...". In run time, getDefinitionAndCallingStringSpy() will return a string that eval()'ing it will run testFunction with the same parameters we run them now.
 
@@ -63,15 +61,8 @@ Good luck :-)
 
 Contact me for any querie or comment: yaki.koren@gmail.com
 
-#### APIs
-**toLiteral(variable, array of variables)** (@toLiteral.js): returns the literal string of the variable. In case it detects a circular reference it writes CIRCULAR. It also indicates whether it stumbled upon a FUNCTION, NULL or UNDEFINED.
-The parameter "array of variables" is optional. It is used to detect circular reference (it should hold variables that were already analyzed for the top most variable.
 
-**getDefinitionAndCallingStringSpy(callingFunctionArguments, functionName, paramString)** (@spies.js): returns a string that defines and initializes the variables to be used when calling functionName. Initialization is done according to callingFunctionArguments (an array). ParamString is a comma separated string of parameter names, it is optional. If it is sent, the variables names will be according to this, otherwise the variables will get default names. The string should be eval()'ed in the unit test.
 
-**getSpyFunction (originalContext,functionName, originalFunction, trafficCaptureVariable)** (@spies.js): returns a function that wraps originalFunction and logs the arguments sent and the output returned using trafficCaptureVariable. originalContext should be the "this" of the original context of the function (probably the "this" wrapping the unit tested functioins.
-
-**getMockFunction(functionName, mockDataSourceVariable)** (@mocks.js): returns a function to be used at the unit test. The function asserts the input sent against what's logged at mockDataSourceVariable (will usually be taken from trafficCaptureVariable used at the spy function) and returns the return values indicated there.
 
 
 
