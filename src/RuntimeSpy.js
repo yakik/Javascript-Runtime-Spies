@@ -4,7 +4,7 @@ class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
-		this.functionSpies = []
+		this.functionSpies = new Map()
 	}
 
 	getTrafficData() {
@@ -45,44 +45,52 @@ class RuntimeSpy {
 
 	addFunctionSpies() {
 		Array.from(arguments).forEach(functionToSpyOn => {
-			this.functionSpies.push(functionToSpyOn)
+			this.functionSpies.set(functionToSpyOn, new FunctionSpy(functionToSpyOn))
 		})
 		return this
-}
+	}
+
+	getFunctionSpy(functionName) {
+		return this.functionSpies.get(functionName)
+	}
 
 	getCodeToEvalToSpyOnFunctions() {
 		//parameters are string names of functions
 		var returnString = ''
-		this.functionSpies.forEach(functionToSpyOn=>{
-			returnString += functionToSpyOn + '=' + this.runtimeSpyName + '.getSpyFunction(this,' +
-			'\''+functionToSpyOn+'\','+functionToSpyOn+')\n'
+		this.functionSpies.forEach(functionToSpyOn => {
+			returnString += functionToSpyOn.getFunctionName() + '=' + this.runtimeSpyName + '.getFunctionSpy(\'' +
+				functionToSpyOn.getFunctionName() + '\').getSpyFunction(this, ' +
+				functionToSpyOn.getFunctionName() + ')\n'
 		})
 		return returnString
-	
-}
-
-	getSpyFunction(originalContext, functionName, originalFunction) {
-		var runtimeSpyThis = this
-		return function () {
-			runtimeSpyThis.SpyDataSetup(functionName, runtimeSpyThis.trafficData)
-			runtimeSpyThis.captureFunctionInput(functionName, arguments, runtimeSpyThis.trafficData)
-			var returnValue = originalFunction.apply(originalContext, arguments)
-			runtimeSpyThis.captureFunctionOutput(functionName, returnValue, runtimeSpyThis.trafficData)
-			return returnValue
-		}
 	}
 
-	SpyDataSetup(functionName) {
-		if (this.trafficData[functionName] == undefined)
-			this.trafficData[functionName] = { input: [], output: [] }
+	getHarness() {
+		var harnessText = ''
+		harnessText += this.getDataRepositoryText()
+		harnessText += this.getFunctionMocksText()
+		return harnessText
 	}
 
-	captureFunctionInput(functionName, callArguments) {
-		this.trafficData[functionName].input.push(Array.from(callArguments))
+	getDataRepositoryText() {
+		var repositoryText = 'var mockRepositoryData = {}\n'
+		this.functionSpies.forEach((functionSpy,functionSpyName) => {
+			repositoryText += 'mockRepositoryData[\'' + functionSpyName + '\']' +
+				' = ' + functionSpy.getDataRepositoryText() + '\n'
+		})
+		return repositoryText
 	}
-	captureFunctionOutput(functionName, output) {
-		this.trafficData[functionName].output.push(output)
+
+	getFunctionMocksText() {
+		var mocksText = ''
+		this.functionSpies.forEach((functionSpy,functionSpyName) => {
+			mocksText += functionSpy.getMockText() + '\n'
+		})
+		return mocksText
+		
 	}
+
+
 }
 
 module.exports = RuntimeSpy

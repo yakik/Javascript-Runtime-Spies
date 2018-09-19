@@ -1,45 +1,37 @@
 var chai = require('chai')
 var expect = chai.expect
-var CodeDefinition = require('./Variable')
+var Variable = require('./Variable')
 
 class SmartMock {
-    constructor(smartSpy) {
-        this.smartSpy = smartSpy
-     }
+    constructor(functionName, mockDataSource) {
+        this.functionName = functionName
+        this.mockDataSource = mockDataSource
+        this.callIndex = 0
+    }
 
-     getFunctionCallString() {
-		return this.smartSpy.getFunctionCallString()
-	}
-    getMockFunction(functionName, mockDataSourceVariable) {
-       var upperThis = this
+    static getSmartMock(functionName, mockDataSource) {
+        var mock = new SmartMock(functionName, mockDataSource)
+        return mock
+    }
+
+    getSmartMockFunction() {
+        var upperThis = this
         return function () {
-            upperThis.checkMockDataReadiness(functionName, mockDataSourceVariable)
-            upperThis.mockDataSource = upperThis.assertInput(functionName, arguments, mockDataSourceVariable)
-            var output = upperThis.getOutput(functionName, mockDataSourceVariable)
-            upperThis.mockDataSource = output.mockDataSource
-            return output.output
+            upperThis.assertInput(arguments, upperThis.callIndex)
+            var output = upperThis.getOutput(upperThis.callIndex)
+            // upperThis.mockDataSource = output.mockDataSource
+            upperThis.callIndex++
+            return output
         }
     }
 
-    checkMockDataReadiness(functionName, mockDataSource) {
-        if (mockDataSource[functionName].inputIndex == undefined)
-            mockDataSource[functionName].inputIndex = 0
-        if (mockDataSource[functionName].outputIndex == undefined)
-            mockDataSource[functionName].outputIndex = 0
-        return mockDataSource
+    assertInput(callArguments, callIndex) {
+        expect(Variable.getVariable(this.mockDataSource.input[callIndex]).getLiteral()).
+            equals(Variable.getVariable(Array.from(callArguments)).getLiteral())
     }
 
-    assertInput(functionName, callArguments, mockDataSource) {
-        expect(CodeDefinition.getVariable(mockDataSource[functionName].
-            input[mockDataSource[functionName].inputIndex]).getLiteral()).
-            equals(CodeDefinition.getVariable(Array.from(callArguments)).getLiteral())
-        mockDataSource[functionName].inputIndex++
-        return mockDataSource
-    }
-    getOutput(functionName, mockDataSource) {
-        var output = mockDataSource[functionName].output[mockDataSource[functionName].outputIndex]
-        mockDataSource[functionName].outputIndex++
-        return { mockDataSource: mockDataSource, output: output }
+    getOutput(callIndex) {
+        return this.mockDataSource.output[callIndex]
     }
 
 }

@@ -20,9 +20,8 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        var myMock = new SmartMock(mySpy)
 
-        expect(eval(myMock.getFunctionCallString())).equals(2)
+        expect(eval(mySpy.getFunctionCallString())).equals(2)
     })
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
@@ -39,29 +38,6 @@ mocha.describe('Spies and Mocks', function () {
         expect(eval(mySpy.getFunctionCallString())).equals(2)
     })
 
-    mocha.it('should return spy method', function () {
-
-
-        var mySpy = new RuntimeSpy('mySpy')
-
-        var a = [1, 2, 3]
-        var b = { q: 1, w: [1, 2, 3] }
-
-        var testFunction = function (A, B) {
-            return A[0] + B.q
-        }
-
-        eval(mySpy.addFunctionSpies('testFunction').getCodeToEvalToSpyOnFunctions())
-
-        expect(testFunction(a, b)).equals(2)
-        expect(testFunction([6, 2, 3], { q: 5, w: a })).equals(11)
-        expect(Variable.getVariable(mySpy.getTrafficData().testFunction.input[0]).getLiteral()).
-            equals(Variable.getVariable([[1, 2, 3], { q: 1, w: [1, 2, 3] }]).getLiteral())
-        expect(Variable.getVariable(mySpy.getTrafficData().testFunction.input[1]).getLiteral()).
-            equals(Variable.getVariable([[6, 2, 3], { q: 5, w: [1, 2, 3] }]).getLiteral())
-        expect(mySpy.getTrafficData().testFunction.output[0]).equals(2)
-        expect(mySpy.getTrafficData().testFunction.output[1]).equals(11)
-    })
 
 
     mocha.it('Mocks', function () {
@@ -84,10 +60,9 @@ mocha.describe('Spies and Mocks', function () {
         /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
-        var myMock = new SmartMock(mySpy)
-        /*mock*/
-        helper1 = myMock.getMockFunction('helper1', mySpy.getTrafficData())
-        helper2 = myMock.getMockFunction('helper2', mySpy.getTrafficData())
+
+        eval(mySpy.getHarness())
+
         expect(eval(mySpy.getFunctionCallString())).equals(25)
     })
 })
