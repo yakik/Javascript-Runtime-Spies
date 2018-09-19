@@ -20,8 +20,7 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        eval(mySpy.getHarness())
-        expect(eval(mySpy.getStartFunctionCallString())).equals(2)
+        expect(eval(mySpy.getHarness())).equals(2)
     })
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
@@ -34,8 +33,7 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        eval(mySpy.getHarness())
-        expect(eval(mySpy.getStartFunctionCallString())).equals(2)
+        expect(eval(mySpy.getHarness())).equals(2)
     })
 
 
@@ -44,25 +42,25 @@ mocha.describe('Spies and Mocks', function () {
 
         var helper1 = function (x) { return 2 * x }
         var helper2 = function (x) { return 3 * x }
+        var globalVar = 5
 
         var mySpy = new RuntimeSpy('mySpy')
 
         var testFunction = function (A) {
             mySpy.setStartFunctionCall(arguments, 'testFunction')
-            var result = helper1(A) + helper2(A)
+            eval(mySpy.addVariableSpies('globalVar').getCodeToEvalToSpyOnVariables())
+            var result = helper1(A) + helper2(A) +globalVar
             return result
         }
 
         eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
 
-        expect(testFunction(5)).equals(25)
+        expect(testFunction(5)).equals(30)
 
         /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
-
-        eval(mySpy.getHarness())
-
-        expect(eval(mySpy.getStartFunctionCallString())).equals(25)
+        globalVar = 8
+        expect(eval(mySpy.getHarness())).equals(30)
     })
 })

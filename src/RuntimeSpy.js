@@ -63,8 +63,11 @@ class RuntimeSpy {
 		return this.functionSpies.get(functionName)
 	}
 
+	getVariableSpy(variableName) {
+		return this.variableSpies.get(variableName)
+	}
+
 	getCodeToEvalToSpyOnFunctions() {
-		//parameters are string names of functions
 		var returnString = ''
 		this.functionSpies.forEach(functionToSpyOn => {
 			returnString += functionToSpyOn.getFunctionName() + '=' + this.runtimeSpyName + '.getFunctionSpy(\'' +
@@ -74,11 +77,24 @@ class RuntimeSpy {
 		return returnString
 	}
 
+	getCodeToEvalToSpyOnVariables() {
+		var returnString = ''
+		var upperThis = this
+		this.variableSpies.forEach(VariableToSpyOn => {
+			if (upperThis.startFunctionCallParamNames.indexOf(VariableToSpyOn.getVariableName()) == -1)
+				returnString += this.runtimeSpyName + '.getVariableSpy(\'' +
+					VariableToSpyOn.getVariableName() + '\').setVariable(' +
+					VariableToSpyOn.getVariableName() + ')\n'
+		})
+		return returnString
+	}
+
 	getHarness() {
 		var harnessText = ''
 		harnessText += this.getDataRepositoryText()
 		harnessText += this.getFunctionMocksText()
 		harnessText += this.getVariableMocksText()
+		harnessText += this.getStartFunctionCallString()
 		return harnessText
 	}
 
