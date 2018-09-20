@@ -69,7 +69,7 @@ mocha.describe('Spies and Mocks', function () {
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-        console.log(mySpy.getHarness())
+       // console.log(mySpy.getHarness())
         expect(eval(mySpy.getHarness())).equals(36)
     })
 })
