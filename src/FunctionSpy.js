@@ -2,9 +2,10 @@ var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode())
     var VariableLiteral = require('./VariableLiteral')
 class FunctionSpy {
-    constructor(functionName) {
+    constructor(functionName, runtimeSpyName) {
         this.functionName = functionName
         this.trafficData = { input: [], output: [] }
+        this.runtimeSpyName = runtimeSpyName
     }
 
     getFunctionName() {
@@ -21,6 +22,21 @@ class FunctionSpy {
         }
     }
 
+    getCodeForSpy() {
+        var returnCode = 'var ' + this.functionName + '__Original = ' + this.functionName + '\n'
+        returnCode += this.functionName + ' = function(){\n' +
+            'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
+           '\''+ this.functionName +'\',arguments,null,' + this.functionName + '__Original)\n' +
+            '}\n'
+        return returnCode
+    }
+    reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
+        this.trafficData.input.push(Array.from(callArguments))
+        var returnValue = originalSpiedFunction.apply(null,Array.from(callArguments))
+        this.trafficData.output.push(returnValue)
+        return returnValue
+    }
+
     getDataRepositoryText() {
         return VariableLiteral.getVariableLiteral(this.trafficData).getLiteral()
     }
@@ -34,4 +50,4 @@ class FunctionSpy {
 
 }
 if (isNode())
-module.exports = FunctionSpy
+    module.exports = FunctionSpy

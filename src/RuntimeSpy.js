@@ -48,8 +48,9 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpies() {
+		var upperThis = this
 		Array.from(arguments).forEach(functionToSpyOn => {
-			this.functionSpies.set(functionToSpyOn, new FunctionSpy(functionToSpyOn))
+			this.functionSpies.set(functionToSpyOn, new FunctionSpy(functionToSpyOn,upperThis.runtimeSpyName))
 		})
 		return this
 	}
@@ -72,11 +73,13 @@ class RuntimeSpy {
 	getCodeToEvalToSpyOnFunctions() {
 		var returnString = ''
 		this.functionSpies.forEach(functionToSpyOn => {
-			returnString += functionToSpyOn.getFunctionName() + '=' + this.runtimeSpyName + '.getFunctionSpy(\'' +
-				functionToSpyOn.getFunctionName() + '\').getSpyFunction(this, ' +
-				functionToSpyOn.getFunctionName() + ')\n'
+			returnString += functionToSpyOn.getCodeForSpy() + '\n'
 		})
 		return returnString
+	}
+
+	reportSpiedFunctionCallAndGetResult(spiedFunctionName,callArguments,spyFunctionContextGetLiteral,originalSpiedFunction) {
+		return this.getFunctionSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
 	}
 
 	getCodeToEvalToSpyOnVariables() {
