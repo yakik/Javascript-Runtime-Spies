@@ -3,7 +3,7 @@ class VariableLiteral {
 
 	constructor(variable, ancestors, propertyName, path) {
 		this.variable = variable
-		
+
 
 		this.setPropertyName(propertyName)
 		this.setPath(path)
@@ -19,9 +19,9 @@ class VariableLiteral {
 		else
 			this.path = path
 		if (this.propertyName != '')
-			this.path += '[\''+this.propertyName+'\']'
+			this.path += '[\'' + this.propertyName + '\']'
 	}
-	
+
 	setPropertyName(propertyName) {
 		this.propertyName = ''
 		if (propertyName != undefined)
@@ -36,13 +36,13 @@ class VariableLiteral {
 		this.ancestors.set(this.variable, this.path)
 	}
 
-	static getVariableLiteral(variable, ancestors, propertyName,path) {
+	static getVariableLiteral(variable, ancestors, propertyName, path) {
 		var newCodeDefinition
 		if (variable === null) {
 			newCodeDefinition = new NullVariable(variable, ancestors, propertyName, path)
 		}
 		else {
-			
+
 			if (Array.isArray(variable))
 				newCodeDefinition = new ArrayVariable(variable, ancestors, propertyName, path)
 			else {
@@ -72,7 +72,15 @@ class VariableLiteral {
 		return literal += this.getValueLiteral()
 	}
 
-	
+	getLiteralAndCyclicDefinition(variableName) {
+		var definition = 'var ' + variableName + ' = ' + this.getLiteral()+'\n'
+		this.getCircularDefinitions().forEach(circularDefinition => {
+			definition += circularDefinition.getCircularDefinition(variableName) + '\n'
+		})
+		return definition
+	}
+
+
 
 	getValueLiteral() { }
 
@@ -108,7 +116,7 @@ class PrimitiveVariable extends VariableLiteral {
 	}
 }
 
-class CollectionVariable extends VariableLiteral{
+class CollectionVariable extends VariableLiteral {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 		this.addChildren()
@@ -116,22 +124,22 @@ class CollectionVariable extends VariableLiteral{
 
 	getCircularDefinitions() {
 		var circularDefinitions = []
-	
+
 		this.children.forEach((child) => {
 			circularDefinitions = circularDefinitions.
 				concat(child.getCircularDefinitions())
 		})
-		return circularDefinitions	
+		return circularDefinitions
 	}
 
 	getFunctionsDefinitions() {
 		var functionDefinitions = []
-	
+
 		this.children.forEach((child) => {
 			functionDefinitions = functionDefinitions.
 				concat(child.getFunctionsDefinitions())
 		})
-		return functionDefinitions	
+		return functionDefinitions
 	}
 }
 
@@ -158,7 +166,7 @@ class ArrayVariable extends CollectionVariable {
 	addChildren() {
 		this.children = []
 		var upperThis = this
-		this.variable.forEach((item,index) => {
+		this.variable.forEach((item, index) => {
 			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
 					push(VariableLiteral.getVariableLiteral(
@@ -167,19 +175,19 @@ class ArrayVariable extends CollectionVariable {
 			else {
 				upperThis.children.
 					push(VariableLiteral.getCircularVariable(
-						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']',upperThis.ancestors.get(item)))
+						item, upperThis.ancestors, undefined, upperThis.path + '[' + index + ']', upperThis.ancestors.get(item)))
 			}
 		})
 	}
 
-	
 
-	
+
+
 }
 
 
 class ObjectVariable extends CollectionVariable {
-	
+
 	addChildren() {
 		this.children = []
 		var upperThis = this
@@ -187,12 +195,12 @@ class ObjectVariable extends CollectionVariable {
 		Object.values(this.variable).forEach((item, index) => {
 			if (!upperThis.ancestors.has(item)) {
 				upperThis.children.
-					push(VariableLiteral.getVariableLiteral(item, upperThis.ancestors, objectProperties[index],upperThis.path))
+					push(VariableLiteral.getVariableLiteral(item, upperThis.ancestors, objectProperties[index], upperThis.path))
 			}
 			else {
 				upperThis.children.
 					push(VariableLiteral.getCircularVariable(
-						item, upperThis.ancestors, objectProperties[index],this.path,upperThis.ancestors.get(item)))
+						item, upperThis.ancestors, objectProperties[index], this.path, upperThis.ancestors.get(item)))
 			}
 		})
 	}
@@ -215,16 +223,16 @@ class ObjectVariable extends CollectionVariable {
 			}
 
 
-	/*	this.children.forEach((child, index) => {
-			if (index > 0)
-				literal += ','
-			literal += child.getLiteral()*/
+			/*	this.children.forEach((child, index) => {
+					if (index > 0)
+						literal += ','
+					literal += child.getLiteral()*/
 		})
 		literal += '}'
 		return literal
 	}
 
-	
+
 
 }
 
@@ -291,5 +299,5 @@ class CircularVariable extends VariableLiteral {
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 if (isNode())
-module.exports = VariableLiteral
+	module.exports = VariableLiteral
 

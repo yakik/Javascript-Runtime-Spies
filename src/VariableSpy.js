@@ -7,22 +7,11 @@ class VariableSpy {
         this.trafficData = { input: [], output: [] }
         if (variable != undefined)
             this.variable = variable
-      /*  else
-            this.variable = eval(this.variableName)*/
     }
 
 
     getMockText() {
-        var returnString = 'var ' + this.variableName + ' = ' +
-            VariableLiteral.getVariableLiteral(this.variable).getLiteral() + '\n'
-
-        VariableLiteral.getVariableLiteral(this.variable).getCircularDefinitions().forEach(definition => {
-            returnString += definition.getCircularDefinition(this.variableName) + '\n'
-
-        })
-
-        return returnString
-
+        return VariableLiteral.getVariableLiteral(this.variable).getLiteralAndCyclicDefinition(this.variableName)
 
     }
 
@@ -37,4 +26,4 @@ class VariableSpy {
 
 }
 if (isNode())
-module.exports = VariableSpy
+    module.exports = VariableSpy
