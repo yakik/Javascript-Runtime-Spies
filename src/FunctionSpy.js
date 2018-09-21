@@ -6,12 +6,18 @@ class FunctionSpy {
         this.functionName = functionName
         this.trafficData = { input: [], output: [] }
         this.runtimeSpyName = runtimeSpyName
+        this.functionCallIndex = 0;
     }
 
     getFunctionName() {
         return this.functionName
     }
-
+    
+    getCallIndex()
+    {
+        return this.functionCallIndex
+    }
+    
     getSpyFunction(originalContext, originalFunction) {
         var runtimeSpyThis = this
         return function () {
@@ -26,7 +32,10 @@ class FunctionSpy {
         var returnCode = 'var ' + this.functionName + '__Original = ' + this.functionName + '\n'
         returnCode += this.functionName + ' = function(){\n' +
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
-           '\''+ this.functionName +'\',arguments,null,' + this.functionName + '__Original)\n' +
+            '\'' + this.functionName + '\',arguments,' +
+            'function (variable, variableName) {' +
+            ' return VariableLiteral.getVariableLiteral(variable).getLiteralAndCyclicDefinition(variableName)},' +
+             this.functionName + '__Original) \n' +
             '}\n'
         return returnCode
     }
@@ -34,7 +43,9 @@ class FunctionSpy {
         this.trafficData.input.push(Array.from(callArguments))
         var returnValue = originalSpiedFunction.apply(null,Array.from(callArguments))
         this.trafficData.output.push(returnValue)
-        return returnValue
+        var toReturn = { returnValue: returnValue, callTag: this.functionCallIndex }
+        this.functionCallIndex++
+        return toReturn
     }
 
     getDataRepositoryText() {
@@ -51,3 +62,5 @@ class FunctionSpy {
 }
 if (isNode())
     module.exports = FunctionSpy
+
+

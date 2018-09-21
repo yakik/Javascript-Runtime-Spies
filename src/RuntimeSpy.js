@@ -2,6 +2,7 @@ var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
 	var FunctionSpy = require('./FunctionSpy')
 	var VariableSpy = require('./VariableSpy')
+	var VariableLiteral = require('../src/VariableLiteral')
 }
 const mockRepositoryDataName = 'mockRepositoryData'
 class RuntimeSpy {
@@ -33,7 +34,9 @@ class RuntimeSpy {
 				thisParamName = paramNames[index]
 
 			upperThis.startFunctionCallParamNames.push(thisParamName)
-			upperThis.variableSpies.set(thisParamName, new VariableSpy(thisParamName, value))
+			upperThis.variableSpies.set(thisParamName, new VariableSpy(thisParamName, '', this.runtimeSpyName))
+			upperThis.variableSpies.get(thisParamName).setNewVariableLiteral('Initial',
+			VariableLiteral.getVariableLiteral(paramValues[index]).getLiteralAndCyclicDefinition(thisParamName))
 		})
 	}
 
@@ -50,14 +53,14 @@ class RuntimeSpy {
 	addFunctionSpies() {
 		var upperThis = this
 		Array.from(arguments).forEach(functionToSpyOn => {
-			this.functionSpies.set(functionToSpyOn, new FunctionSpy(functionToSpyOn,upperThis.runtimeSpyName))
+			this.functionSpies.set(functionToSpyOn, new FunctionSpy(functionToSpyOn, upperThis.runtimeSpyName))
 		})
 		return this
 	}
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.variableSpies.set(variableToSpyOn, new VariableSpy(variableToSpyOn))
+			this.variableSpies.set(variableToSpyOn, new VariableSpy(variableToSpyOn,variableToSpyOn,this.runtimeSpyName))
 		})
 		return this
 	}
@@ -78,18 +81,43 @@ class RuntimeSpy {
 		return returnString
 	}
 
-	reportSpiedFunctionCallAndGetResult(spiedFunctionName,callArguments,spyFunctionContextGetLiteral,originalSpiedFunction) {
-		return this.getFunctionSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
+	trackSpiedVariableChanges(callTag,spyFunctionContextGetLiteral) {
+		this.variableSpies.forEach(variableSpy => {
+			variableSpy.trackValueChanges(callTag,spyFunctionContextGetLiteral)
+		})
 	}
+
+
+	reportSpiedFunctionCallAndGetResult(spiedFunctionName, callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
+		var answer = this.getFunctionSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
+		this.trackSpiedVariableChanges( answer.callTag,spyFunctionContextGetLiteral)
+		return answer.returnValue
+	}
+
+	getSpiedFunctionCallIndex(spiedFunctionName) {
+		return this.functionSpies.get(spiedFunctionName).getCallIndex()
+	}
+
+	trackSpiedVariablesValues(tag,spyFunctionContextGetLiteral) {
+		var myTag = ''
+		if (tag != 'Initial')
+			//tag == function name
+			myTag = tag + '@' + this.getSpiedFunctionCallIndex(tag)
+		else
+			myTag = tag
+		this.variableSpies.forEach(variableSpy => {
+			variableSpy.trackValueChanges(myTag,spyFunctionContextGetLiteral)
+		})
+			
+	}
+
+
 
 	getCodeToEvalToSpyOnVariables() {
 		var returnString = ''
 		var upperThis = this
-		this.variableSpies.forEach(VariableToSpyOn => {
-			if (upperThis.startFunctionCallParamNames.indexOf(VariableToSpyOn.getVariableName()) == -1)
-				returnString += this.runtimeSpyName + '.getVariableSpy(\'' +
-					VariableToSpyOn.getVariableName() + '\').setVariable(' +
-					VariableToSpyOn.getVariableName() + ')\n'
+		this.variableSpies.forEach(variableToSpyOn => {
+			returnString += variableToSpyOn.getCodeToInitializeVariable()
 		})
 		return returnString
 	}
@@ -109,6 +137,7 @@ class RuntimeSpy {
 			repositoryText += mockRepositoryDataName + '[\'' + functionSpyName + '\']' +
 				' = ' + functionSpy.getDataRepositoryText() + '\n'
 		})
+	
 		return repositoryText
 	}
 
@@ -117,14 +146,16 @@ class RuntimeSpy {
 		this.functionSpies.forEach((functionSpy) => {
 			mocksText += functionSpy.getMockText() + '\n'
 		})
+	
 		return mocksText
 	}
 
 	getVariableMocksText() {
 		var mocksText = ''
 		this.variableSpies.forEach((variableSpy) => {
-			mocksText += variableSpy.getMockText() + '\n'
+			mocksText += variableSpy.getLiteral('Initial') + '\n'
 		})
+	//	console.log(mocksText)
 		return mocksText
 
 	}
@@ -132,4 +163,4 @@ class RuntimeSpy {
 
 }
 if (isNode())
-module.exports = RuntimeSpy
+	module.exports = RuntimeSpy

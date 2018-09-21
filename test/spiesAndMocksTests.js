@@ -1,5 +1,6 @@
 var RuntimeSpy = require('../src/RuntimeSpy')
 var SmartMock = require('../src/SmartMock')
+var VariableLiteral = require('../src/VariableLiteral')
 var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
@@ -15,22 +16,28 @@ mocha.describe('Spies and Mocks', function () {
         var mySpy = new RuntimeSpy('mySpy')
         var testFunction = function () {
             mySpy.setStartFunctionCall(arguments, 'testFunction')
+          //  console.log(mySpy.getCodeToEvalToSpyOnVariables())
+            eval(mySpy.getCodeToEvalToSpyOnVariables())
             return a[0] + b.q
         }
         testFunction(a, b, 2)
+      // console.log(mySpy.getHarness())
         expect(eval(mySpy.getHarness())).equals(2)
     })
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var mySpy = new RuntimeSpy('mySpy')
+        var harness = ''
         var testFunction = function (A, B, C) {
+            var mySpy = new RuntimeSpy('mySpy')
             mySpy.setStartFunctionCall(arguments, 'testFunction', 'A,B ,C')
+            eval(mySpy.getCodeToEvalToSpyOnVariables())
+            harness = mySpy.getHarness()
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        expect(eval(mySpy.getHarness())).equals(2)
+        expect(eval(harness)).equals(2)
     })
 
 
@@ -48,16 +55,17 @@ mocha.describe('Spies and Mocks', function () {
         var b = { 1: 1, 2: globalVar2 }
         globalVar2['3']=b
 
-        var mySpy = new RuntimeSpy('mySpy')
+var harness = ''        
 
         var testFunction = function (A) {
             
-            
+            var mySpy = new RuntimeSpy('mySpy')
             mySpy.setStartFunctionCall(arguments, 'testFunction')
             eval(mySpy.addVariableSpies('globalVar','globalVar2').getCodeToEvalToSpyOnVariables())
             eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
             helper1(21)
             var result = helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1']
+            harness = mySpy.getHarness()
             return result
         }
 
@@ -70,6 +78,6 @@ mocha.describe('Spies and Mocks', function () {
         helper2 = function (x) { return 2 }
         globalVar = 8
        // console.log(mySpy.getHarness())
-        expect(eval(mySpy.getHarness())).equals(36)
+        expect(eval(harness)).equals(36)
     })
 })

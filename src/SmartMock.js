@@ -25,7 +25,10 @@ class SmartMock {
         }
     }
 
+   
+
     assertInput(callArguments, callIndex) {
+       // console.log(VariableLiteral.getVariableLiteral(Array.from(callArguments)).getLiteral())
         expect(VariableLiteral.getVariableLiteral(this.mockDataSource.input[callIndex]).getLiteral()).
             equals(VariableLiteral.getVariableLiteral(Array.from(callArguments)).getLiteral())
     }
