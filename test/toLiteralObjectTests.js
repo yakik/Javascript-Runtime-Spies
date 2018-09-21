@@ -62,6 +62,23 @@ mocha.describe('IdentifyParameters Object Tests', function () {
 
   })
 
+  mocha.it('test map', function () {
+
+    var a = new Map()
+    a.set(1, { 1: 1, 2: 2, 3: 3 })
+    a.set('asaf','koren')
+    a.set(20, 'yakiKoren')
+    var b = { 1: a, 2: 3 }
+    a.set(4,b)
+   
+    var myDefinition = VariableLiteral.getVariableLiteral(b).getLiteralAndCyclicDefinition('newMap')
+
+    expect(myDefinition).equals('var newMap = {1:new Map([[1,{1:1,2:2,3:3}],[\'asaf\',\'koren\'],[20,\'yakiKoren\']]),2:3};' +
+      'newMap[\'1\'].get(4)=newMap')
+    //the second line is wrong but for now it will do
+    
+  })
+
 })
 
 

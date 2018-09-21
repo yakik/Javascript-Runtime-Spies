@@ -11,19 +11,12 @@ class VariableSpy {
         this.variableNameForValue = variableNameForValue
     }
 
-    getCodeToInitializeVariable() {
-        var returnString = ''
-            returnString += this.runtimeSpyName + '.trackSpiedVariablesValues(' +
-            '\'Initial\',function (variableNameForValue,variableName) {' +
-            ' return VariableLiteral.getVariableLiteral(eval(variableNameForValue)).getLiteralAndCyclicDefinition(variableName)}' +
-       ' )\n'
-        return returnString
-    }
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
-        if (this.variableNameForValue=='') return
+        if (this.variableNameForValue == '') return
+        
         if (this.variableValueLiterals.size > 0) {
-            var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1]
+            var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
             if (currentValue != spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName))
                 this.setNewVariableLiteral(callTag, spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName))
         }
@@ -33,9 +26,15 @@ class VariableSpy {
             
     }
 
+    getMockText() {
+        var mockText = this.getLiteral(this.variableName + '_DB') + '\n'
+        mockText +=  this.variableValueLiterals.get('Initial') + '\n'
+        return mockText
+    }
 
-    getLiteral(tag) {
-        return this.variableValueLiterals.get(tag)
+    getLiteral(name) {
+        var returnText = VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(name)
+         return returnText 
     }
 
     getVariableName() {

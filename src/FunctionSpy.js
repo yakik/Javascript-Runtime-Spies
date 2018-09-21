@@ -34,7 +34,7 @@ class FunctionSpy {
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
             '\'' + this.functionName + '\',arguments,' +
             'function (variable, variableName) {' +
-            ' return VariableLiteral.getVariableLiteral(variable).getLiteralAndCyclicDefinition(variableName)},' +
+            ' return VariableLiteral.getVariableLiteral(eval(variable)).getLiteralAndCyclicDefinition(variableName)},' +
              this.functionName + '__Original) \n' +
             '}\n'
         return returnCode
@@ -43,7 +43,7 @@ class FunctionSpy {
         this.trafficData.input.push(Array.from(callArguments))
         var returnValue = originalSpiedFunction.apply(null,Array.from(callArguments))
         this.trafficData.output.push(returnValue)
-        var toReturn = { returnValue: returnValue, callTag: this.functionCallIndex }
+        var toReturn = { returnValue: returnValue, callTag: this.functionName+'_'+this.functionCallIndex }
         this.functionCallIndex++
         return toReturn
     }

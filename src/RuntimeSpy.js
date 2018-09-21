@@ -90,7 +90,7 @@ class RuntimeSpy {
 
 	reportSpiedFunctionCallAndGetResult(spiedFunctionName, callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
 		var answer = this.getFunctionSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
-		this.trackSpiedVariableChanges( answer.callTag,spyFunctionContextGetLiteral)
+		this.trackSpiedVariableChanges(answer.callTag, spyFunctionContextGetLiteral)
 		return answer.returnValue
 	}
 
@@ -115,11 +115,12 @@ class RuntimeSpy {
 
 	getCodeToEvalToSpyOnVariables() {
 		var returnString = ''
-		var upperThis = this
-		this.variableSpies.forEach(variableToSpyOn => {
-			returnString += variableToSpyOn.getCodeToInitializeVariable()
-		})
-		return returnString
+            returnString += this.runtimeSpyName + '.trackSpiedVariablesValues(' +
+            '\'Initial\',function (variableNameForValue,variableName) {' +
+            ' return VariableLiteral.getVariableLiteral(eval(variableNameForValue)).getLiteralAndCyclicDefinition(variableName)}' +
+       ' )\n'
+        return returnString
+
 	}
 
 	getHarness() {
@@ -153,9 +154,8 @@ class RuntimeSpy {
 	getVariableMocksText() {
 		var mocksText = ''
 		this.variableSpies.forEach((variableSpy) => {
-			mocksText += variableSpy.getLiteral('Initial') + '\n'
+			mocksText += variableSpy.getMockText() + '\n'
 		})
-	//	console.log(mocksText)
 		return mocksText
 
 	}

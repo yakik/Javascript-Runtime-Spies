@@ -42,17 +42,22 @@ class VariableLiteral {
 			newCodeDefinition = new NullVariable(variable, ancestors, propertyName, path)
 		}
 		else {
-
-			if (Array.isArray(variable))
-				newCodeDefinition = new ArrayVariable(variable, ancestors, propertyName, path)
+			if (variable instanceof Map) {
+				newCodeDefinition = new MapVariable(variable, ancestors, propertyName, path)
+			}
 			else {
-				if (typeof variable == 'object')
-					newCodeDefinition = new ObjectVariable(variable, ancestors, propertyName, path)
+
+				if (Array.isArray(variable))
+					newCodeDefinition = new ArrayVariable(variable, ancestors, propertyName, path)
 				else {
-					if (typeof variable == 'function')
-						newCodeDefinition = new FunctionVariable(variable, ancestors, propertyName, path)
-					else
-						newCodeDefinition = new PrimitiveVariable(variable, ancestors, propertyName, path)
+					if (typeof variable == 'object')
+						newCodeDefinition = new ObjectVariable(variable, ancestors, propertyName, path)
+					else {
+						if (typeof variable == 'function')
+							newCodeDefinition = new FunctionVariable(variable, ancestors, propertyName, path)
+						else
+							newCodeDefinition = new PrimitiveVariable(variable, ancestors, propertyName, path)
+					}
 				}
 			}
 		}
@@ -73,9 +78,9 @@ class VariableLiteral {
 	}
 
 	getLiteralAndCyclicDefinition(variableName) {
-		var definition = 'var ' + variableName + ' = ' + this.getLiteral()+'\n'
+		var definition = 'var ' + variableName + ' = ' + this.getLiteral() 
 		this.getCircularDefinitions().forEach(circularDefinition => {
-			definition += circularDefinition.getCircularDefinition(variableName) + '\n'
+			definition += ';'+circularDefinition.getCircularDefinition(variableName) 
 		})
 		return definition
 	}
@@ -142,6 +147,45 @@ class CollectionVariable extends VariableLiteral {
 		return functionDefinitions
 	}
 }
+
+class MapVariable  extends CollectionVariable {
+	constructor(variable, ancestors, propertyName, path) {
+		super(variable, ancestors, propertyName, path)
+		this.addChildren()
+	}
+
+	getValueLiteral() {
+		var literal = 'new Map(['
+		this.children.forEach((child, index) => {
+			var childLiteral = child.getLiteral()
+			if (childLiteral != '') {
+				if (index > 0)
+					literal += ','
+				literal += childLiteral
+			}
+		})
+		literal += '])'
+		return literal
+	}
+
+	addChildren() {
+		this.children = []
+		var upperThis = this
+		this.variable.forEach((value,key) => {
+			if (!upperThis.ancestors.has(value)) {
+				upperThis.children.
+					push(VariableLiteral.getVariableLiteral(
+						[key,value], upperThis.ancestors, undefined, upperThis.path + '.get(' + key + ')'))
+			}
+			else {
+				upperThis.children.
+					push(VariableLiteral.getCircularVariable(
+						[key,value], upperThis.ancestors, undefined, upperThis.path + '.get(' + key + ')', upperThis.ancestors.get(value)))
+			}
+		})
+	}
+}
+
 
 class ArrayVariable extends CollectionVariable {
 	constructor(variable, ancestors, propertyName, path) {

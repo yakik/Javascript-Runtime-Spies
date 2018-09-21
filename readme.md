@@ -61,6 +61,9 @@ Good luck :-)
 
 Contact me for any querie or comment: yaki.koren@gmail.com
 
+### known issues
+cyclic definitions in Maps are not supported
+in case a variable is a class, the program will not identify it. You will need to adapt the harness.
 
 
 
