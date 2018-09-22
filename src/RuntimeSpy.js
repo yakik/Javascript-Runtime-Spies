@@ -1,7 +1,8 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
 	var FunctionSpy = require('./FunctionSpy')
-	var VariableSpy = require('./VariableSpy')
+	var FunctionArgumentSpy = require('./FunctionArgumentSpy')
+	var GlobalVariableSpy = require('./GlobalVariableSpy')
 	var VariableLiteral = require('../src/VariableLiteral')
 }
 const mockRepositoryDataName = 'mockRepositoryData'
@@ -34,7 +35,7 @@ class RuntimeSpy {
 				thisParamName = paramNames[index]
 
 			upperThis.startFunctionCallParamNames.push(thisParamName)
-			upperThis.variableSpies.set(thisParamName, new VariableSpy(thisParamName, '', this.runtimeSpyName))
+			upperThis.variableSpies.set(thisParamName, new FunctionArgumentSpy(thisParamName, '', this.runtimeSpyName))
 			upperThis.variableSpies.get(thisParamName).setNewVariableLiteral('Initial',
 			VariableLiteral.getVariableLiteral(paramValues[index]).getLiteralAndCyclicDefinition(thisParamName))
 		})
@@ -60,7 +61,7 @@ class RuntimeSpy {
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.variableSpies.set(variableToSpyOn, new VariableSpy(variableToSpyOn,variableToSpyOn,this.runtimeSpyName))
+			this.variableSpies.set(variableToSpyOn, new GlobalVariableSpy(variableToSpyOn,variableToSpyOn,this.runtimeSpyName))
 		})
 		return this
 	}

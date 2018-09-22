@@ -1,11 +1,12 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode())
     var VariableLiteral = require('./VariableLiteral')
-class VariableSpy {
+   
+
+class GlobalVariableSpy {
     constructor(variableName, variableNameForValue,runtimeSpyName) {
         //methodParameterIndex is undefined if this is not a parameter for the intial call
         this.variableName = variableName
-        this.trafficData = { input: [], output: [] }
         this.variableValueLiterals = new Map()
         this.runtimeSpyName = runtimeSpyName
         this.variableNameForValue = variableNameForValue
@@ -49,4 +50,4 @@ class VariableSpy {
 
 }
 if (isNode())
-    module.exports = VariableSpy
+    module.exports = GlobalVariableSpy
