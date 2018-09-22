@@ -4,21 +4,20 @@ if (isNode()) {
 }
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
-	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments,startFunctionCallParamNames,startFunction) {
+	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments,startFunction) {
 		this.harnessName = harnessName
 		this.globalVariablesSpies = globalVariablesSpies
 		this.functionSpies = functionSpies
 		this.initialFunctionName = initialFunctionName
 		this.startFunctionArguments = startFunctionArguments
-		this.startFunctionCallParamNames = startFunctionCallParamNames
 		this.startFunction = startFunction
 	}
 
 	getStartFunctionCallString() {
 		var theString = this.startFunction + '('
-		this.startFunctionCallParamNames.forEach((param, index) => {
+		this.startFunctionArguments.forEach((param, index) => {
 			if (index > 0) theString += ', '
-			theString += param
+			theString += param.getVariableName()
 		})
 		theString += ')\n'
 		return theString

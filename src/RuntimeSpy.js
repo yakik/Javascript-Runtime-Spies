@@ -20,7 +20,7 @@ class RuntimeSpy {
 	}
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.functionSpies,this.initialFunctionName,this.startFunctionArguments,this.startFunctionCallParamNames,this.startFunction)
+		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.functionSpies,this.initialFunctionName,this.startFunctionArguments,this.startFunction)
 		return harnessFactory.getHarnessCode()
 	}
 
