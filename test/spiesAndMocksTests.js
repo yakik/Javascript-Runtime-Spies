@@ -1,3 +1,4 @@
+var Harness = require('../src/Harness')
 var RuntimeSpy = require('../src/RuntimeSpy')
 var SmartMock = require('../src/SmartMock')
 var VariableLiteral = require('../src/VariableLiteral')

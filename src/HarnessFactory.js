@@ -24,7 +24,7 @@ class HarnessFactory {
 	}
 
 	getHarnessCode() {
-		var harnessText = ''
+		var harnessText = 'var myHarness = new Harness('+this.harnessName+')\n'
 		harnessText += this.getDataRepositoryText()
 		harnessText += this.getFunctionMocksText()
 		harnessText += this.getVariableMocksText()
