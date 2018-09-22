@@ -10,7 +10,9 @@ class GlobalVariableMock {
         this.dataMap = dataMap
     }
 
-
+    getDefinitionByTag(tag) {
+        return this.dataMap.get(tag)
+    }
 }
 if (isNode())
     module.exports = GlobalVariableMock

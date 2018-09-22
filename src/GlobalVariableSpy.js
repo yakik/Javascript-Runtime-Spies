@@ -28,7 +28,7 @@ class GlobalVariableSpy {
 
     getMockText() {
         var mockText =  VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(this.variableName + '_DB') + '\n'
-        mockText +=  this.variableValueLiterals.get('Initial') + '\n'
+      //  mockText +=  this.variableValueLiterals.get('Initial') + '\n'
         return mockText
     }
 

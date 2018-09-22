@@ -64,14 +64,17 @@ class HarnessFactory {
 		var mocksText = ''
 		this.globalVariablesSpies.forEach((variableSpy) => {
 			mocksText += variableSpy.getMockText() + '\n'
-			mocksText += this.harnessName + '.addGlobalVAriableMock(' +
+			mocksText += this.harnessName + '.addGlobalVariableMock(' +
 				'\''+variableSpy.getVariableName() + '\',' +
 				variableSpy.getVariableName() + '_DB)\n'
 
 		})
+		mocksText += this.harnessName + '.updateVariablesByTag(\'Initial\',' +
+		'function(codeToEval){eval(codeToEval)})\n'
 		return mocksText
-
 	}
+
+	
 }
 
 if (isNode())

@@ -9,8 +9,16 @@ class Harness {
     }
     
     addGlobalVariableMock(variableName, dataMap) {
-        this.globalVariablesMocks.set(variableName,new GlobalVariableMock(variableName,dataMap))
+        this.globalVariablesMocks.set(variableName,new GlobalVariableMock(variableName,this.harnessName,dataMap))
     }
+
+    updateVariablesByTag(tag, evalCodeFunction) {
+        this.globalVariablesMocks.forEach(variable =>{
+            var definition = variable.getDefinitionByTag(tag)
+            if (definition != undefined)
+                evalCodeFunction(definition)
+        })
+	}
 }
 
 if (isNode())
