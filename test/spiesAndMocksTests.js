@@ -22,7 +22,6 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-       // console.log(mySpy.getHarness())
         expect(eval(harness)).equals(2)
     })
 
@@ -42,7 +41,6 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-       // console.log(harness)
         expect(eval(harness)).equals(2)
     })
 
@@ -81,17 +79,13 @@ var harness = ''
 
         expect(testFunction(5)).equals(41)
 
-        /*change original functions, we don't need them anymore for our test*/
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-        console.log(harness)
+      //  console.log(harness)
         
         expect(eval(harness)).equals(39)
     })
-
-   
-
 })
 
 

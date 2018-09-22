@@ -4,8 +4,9 @@ if (isNode()) {
 	var FunctionArgumentSpy = require('./FunctionArgumentSpy')
 	var GlobalVariableSpy = require('./GlobalVariableSpy')
 	var VariableLiteral = require('../src/VariableLiteral')
+	var HarnessFactory = require('../src/HarnessFactory')
 }
-const mockRepositoryDataName = 'mockRepositoryData'
+
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
@@ -16,6 +17,11 @@ class RuntimeSpy {
 		this.startFunctionArguments = []
 		this.startFunction = ''
 
+	}
+
+	getHarness() {
+		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.functionSpies,this.initialFunctionName,this.startFunctionArguments,this.startFunctionCallParamNames,this.startFunction)
+		return harnessFactory.getHarnessCode()
 	}
 
 	getTrafficData() {
@@ -40,16 +46,6 @@ class RuntimeSpy {
 				this.runtimeSpyName))
 			upperThis.startFunctionCallParamNames.push(thisParamName)
 		})
-	}
-
-	getStartFunctionCallString() {
-		var theString = this.startFunction + '('
-		this.startFunctionCallParamNames.forEach((param, index) => {
-			if (index > 0) theString += ', '
-			theString += param
-		})
-		theString += ')\n'
-		return theString
 	}
 
 	addFunctionSpies() {
@@ -125,52 +121,7 @@ class RuntimeSpy {
 
 	}
 
-	getHarness() {
-		var harnessText = ''
-		harnessText += this.getDataRepositoryText()
-		harnessText += this.getFunctionMocksText()
-		harnessText += this.getVariableMocksText()
-		harnessText += this.getStartFunctionArgumentsText()
-		harnessText += this.getStartFunctionCallString()
-		return harnessText
-	}
-
-	getDataRepositoryText() {
-		var repositoryText = 'var ' + mockRepositoryDataName + ' = {}\n'
-		this.functionSpies.forEach((functionSpy, functionSpyName) => {
-			repositoryText += mockRepositoryDataName + '[\'' + functionSpyName + '\']' +
-				' = ' + functionSpy.getDataRepositoryText() + '\n'
-		})
 	
-		return repositoryText
-	}
-
-	getFunctionMocksText() {
-		var mocksText = ''
-		this.functionSpies.forEach((functionSpy) => {
-			mocksText += functionSpy.getMockText() + '\n'
-		})
-	
-		return mocksText
-	}
-
-	getStartFunctionArgumentsText() {
-		var mocksText = ''
-		this.startFunctionArguments.forEach((variableSpy) => {
-			mocksText += variableSpy.getMockText() + '\n'
-		})
-		return mocksText
-	}
-
-	getVariableMocksText() {
-		var mocksText = ''
-		this.globalVariableSpies.forEach((variableSpy) => {
-			mocksText += variableSpy.getMockText() + '\n'
-		})
-		return mocksText
-
-	}
-
 
 }
 if (isNode())
