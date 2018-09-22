@@ -1,6 +1,6 @@
 var Harness = require('../src/Harness')
 var RuntimeSpy = require('../src/RuntimeSpy')
-var SmartMock = require('../src/SmartMock')
+var SmartMock = require('../src/FunctionMock')
 var VariableLiteral = require('../src/VariableLiteral')
 var mocha = require('mocha')
 var chai = require('chai')
@@ -84,10 +84,12 @@ var harness = ''
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-        //console.log(harness)
+     //   console.log(harness)
         
-        expect(eval(harness)).equals(39)
+        expect(eval(harness)).equals(41)
     })
+
+  
 })
 
 

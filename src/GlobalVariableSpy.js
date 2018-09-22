@@ -13,8 +13,8 @@ class GlobalVariableSpy {
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
         var newValue = spyFunctionContextGetLiteral(this.variableName, this.variableName)
-        newValue = newValue.replace(/\'/g,'\\\'')
-
+        newValue = newValue.replace(/\'/g, '\\\'')
+        
         if (this.variableValueLiterals.size > 0) {
             var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
             if (currentValue != spyFunctionContextGetLiteral(this.variableName, this.variableName))
@@ -28,7 +28,7 @@ class GlobalVariableSpy {
 
     getMockText() {
         var mockText =  VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(this.variableName + '_DB') + '\n'
-      //  mockText +=  this.variableValueLiterals.get('Initial') + '\n'
+        mockText +=  'var ' + this.variableName + '\n'
         return mockText
     }
 

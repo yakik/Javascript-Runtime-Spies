@@ -3,26 +3,28 @@ var chai = require('chai')
 var expect = chai.expect
 var VariableLiteral = require('./VariableLiteral')
 
-class SmartMock {
-    constructor(functionName, mockDataSource) {
+class FunctionMock {
+    constructor(functionName, harnessName, mockDataSource) {
+       this.harnessName = harnessName
         this.functionName = functionName
         this.mockDataSource = mockDataSource
         this.callIndex = 0
     }
 
     static getSmartMock(functionName, mockDataSource) {
-        var mock = new SmartMock(functionName, mockDataSource)
+        var mock = new FunctionMock(functionName, mockDataSource)
         return mock
     }
 
-    getSmartMockFunction() {
-        var upperThis = this
-        return function () {
-            upperThis.assertInput(arguments, upperThis.callIndex)
-            var output = upperThis.getOutput(upperThis.callIndex)
-            upperThis.callIndex++
-            return output
-        }
+    callFunction(callArguments) {
+        var output = {}
+            this.assertInput(callArguments, this.callIndex)
+        output.output = this.getOutput(this.callIndex)
+        output.tag = this.functionName+'_'+this.callIndex
+        
+        this.callIndex++
+            
+        return output
     }
 
    
@@ -40,4 +42,4 @@ class SmartMock {
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 if (isNode())
-module.exports = SmartMock
+module.exports = FunctionMock

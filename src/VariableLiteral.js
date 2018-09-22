@@ -78,7 +78,7 @@ class VariableLiteral {
 	}
 
 	getLiteralAndCyclicDefinition(variableName) {
-		var definition = 'var ' + variableName + ' = ' + this.getLiteral() 
+		var definition = variableName + ' = ' + this.getLiteral() 
 		this.getCircularDefinitions().forEach(circularDefinition => {
 			definition += ';'+circularDefinition.getCircularDefinition(variableName) 
 		})

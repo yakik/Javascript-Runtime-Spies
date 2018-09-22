@@ -73,7 +73,7 @@ mocha.describe('IdentifyParameters Object Tests', function () {
    
     var myDefinition = VariableLiteral.getVariableLiteral(b).getLiteralAndCyclicDefinition('newMap')
 
-    expect(myDefinition).equals('var newMap = {1:new Map([[1,{1:1,2:2,3:3}],[\'asaf\',\'koren\'],[20,\'yakiKoren\']]),2:3};' +
+    expect(myDefinition).equals('newMap = {1:new Map([[1,{1:1,2:2,3:3}],[\'asaf\',\'koren\'],[20,\'yakiKoren\']]),2:3};' +
       'newMap[\'1\'].get(4)=newMap')
     //the second line is wrong but for now it will do
     

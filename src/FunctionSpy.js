@@ -52,13 +52,6 @@ class FunctionSpy {
         return VariableLiteral.getVariableLiteral(this.trafficData).getLiteral()
     }
 
-    getMockText() {
-        return this.functionName + '= SmartMock.getSmartMock(\'' + this.functionName +
-            '\',mockRepositoryData[\'' + this.functionName + '\']).getSmartMockFunction()\n'
-
-    }
-
-
 }
 if (isNode())
     module.exports = FunctionSpy
