@@ -26,9 +26,9 @@ mocha.describe('Spies and Mocks', function () {
         expect(eval(harness)).equals(2)
     })
 
-  
 
-  
+
+
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
         var a = [1, 2, 3]
@@ -42,16 +42,16 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        
+
         expect(eval(harness)).equals(2)
     })
 
-   
+
 
     mocha.it('Mocks', function () {
-        
+
         var helper1 = function (x) {
-            
+
             globalVar = 2 * x
             return 2 * x
         }
@@ -59,39 +59,37 @@ mocha.describe('Spies and Mocks', function () {
         var globalVar = 5
         var globalVar2 = { 1: 6, 2: 2 }
         var b = { 1: 1, 2: globalVar2 }
-        globalVar2['3']=b
+        globalVar2['3'] = b
 
-var harness = ''        
+        var harness = ''
 
         var testFunction = function (A) {
-            
+
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setStartFunctionCall(arguments, 'testFunction')
             eval(mySpy.addVariableSpies('globalVar', 'globalVar2').getCodeToEvalToSpyOnVariables())
-            var functiontext = mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions()
-            eval(functiontext)
+            eval(mySpy.addFunctionSpies('helper1', 'helper2').getCodeToEvalToSpyOnFunctions())
 
             helper1(21)
             var result = helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1']
-            mySpy.addFinalResult(41)
+            mySpy.addFinalResult(result)
             harness = mySpy.getHarness()
-          
+
             return result
         }
 
-       
+
 
         expect(testFunction(5)).equals(41)
 
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-      //  console.log(harness)
         eval(harness)
-       // expect(eval(harness)).equals(41)
+        // expect(eval(harness)).equals(41)
     })
 
-  
+
 })
 
 
