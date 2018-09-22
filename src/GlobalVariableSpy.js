@@ -5,7 +5,6 @@ if (isNode())
 
 class GlobalVariableSpy {
     constructor(variableName,runtimeSpyName) {
-        //methodParameterIndex is undefined if this is not a parameter for the intial call
         this.variableName = variableName
         this.variableValueLiterals = new Map()
         this.runtimeSpyName = runtimeSpyName
@@ -22,20 +21,15 @@ class GlobalVariableSpy {
                 this.setNewVariableLiteral(callTag, newValue)
         }
         else {
-            this.setNewVariableLiteral(callTag, )
+            this.setNewVariableLiteral(callTag,newValue )
         }
             
     }
 
     getMockText() {
-        var mockText = this.getLiteral(this.variableName + '_DB') + '\n'
+        var mockText =  VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(this.variableName + '_DB') + '\n'
         mockText +=  this.variableValueLiterals.get('Initial') + '\n'
         return mockText
-    }
-
-    getLiteral(name) {
-        var returnText = VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(name)
-         return returnText 
     }
 
     getVariableName() {

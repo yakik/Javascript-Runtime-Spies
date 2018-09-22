@@ -42,7 +42,7 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        console.log(harness)
+       // console.log(harness)
         expect(eval(harness)).equals(2)
     })
 
@@ -85,7 +85,7 @@ var harness = ''
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-       // console.log(harness)
+        console.log(harness)
         
         expect(eval(harness)).equals(39)
     })
@@ -93,4 +93,6 @@ var harness = ''
    
 
 })
+
+
 

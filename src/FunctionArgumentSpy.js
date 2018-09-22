@@ -16,11 +16,6 @@ if (isNode())
             return this.variableValue
         }
     
-        getLiteral(name) {
-            var returnText = VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(name)
-             return returnText 
-        }
-    
         getVariableName() {
             return this.variableName
         }
