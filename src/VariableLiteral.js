@@ -223,10 +223,6 @@ class ArrayVariable extends CollectionVariable {
 			}
 		})
 	}
-
-
-
-
 }
 
 

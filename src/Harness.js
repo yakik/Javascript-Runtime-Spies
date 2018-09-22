@@ -1,12 +1,16 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
-	//var RuntimeSpy = require('./RunTimeSpy')
+	var GlobalVariableMock = require('./GlobalVariableMock')
 }
 class Harness {
     constructor(harnessName){
-		this.harnessName = harnessName
-	}
-
+        this.harnessName = harnessName
+        this.globalVariablesMocks = new Map()
+    }
+    
+    addGlobalVariableMock(variableName, dataMap) {
+        this.globalVariablesMocks.set(variableName,new GlobalVariableMock(variableName,dataMap))
+    }
 }
 
 if (isNode())

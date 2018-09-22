@@ -24,7 +24,7 @@ class HarnessFactory {
 	}
 
 	getHarnessCode() {
-		var harnessText = 'var myHarness = new Harness('+this.harnessName+')\n'
+		var harnessText = 'var myHarness = new Harness(\''+this.harnessName+'\')\n'
 		harnessText += this.getDataRepositoryText()
 		harnessText += this.getFunctionMocksText()
 		harnessText += this.getVariableMocksText()
@@ -64,6 +64,10 @@ class HarnessFactory {
 		var mocksText = ''
 		this.globalVariablesSpies.forEach((variableSpy) => {
 			mocksText += variableSpy.getMockText() + '\n'
+			mocksText += this.harnessName + '.addGlobalVAriableMock(' +
+				'\''+variableSpy.getVariableName() + '\',' +
+				variableSpy.getVariableName() + '_DB)\n'
+
 		})
 		return mocksText
 

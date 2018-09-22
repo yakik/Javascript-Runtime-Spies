@@ -42,6 +42,7 @@ mocha.describe('Spies and Mocks', function () {
             return a[0] + b.q
         }
         testFunction(a, b, 2)
+        
         expect(eval(harness)).equals(2)
     })
 
