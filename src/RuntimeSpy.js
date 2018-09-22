@@ -11,8 +11,9 @@ class RuntimeSpy {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
 		this.functionSpies = new Map()
-		this.variableSpies = new Map()
+		this.globalVariableSpies = new Map()
 		this.startFunctionCallParamNames = []
+		this.startFunctionArguments = []
 		this.startFunction = ''
 
 	}
@@ -34,10 +35,10 @@ class RuntimeSpy {
 			else
 				thisParamName = paramNames[index]
 
+			upperThis.startFunctionArguments.push(new FunctionArgumentSpy(thisParamName,
+				VariableLiteral.getVariableLiteral(paramValues[index]).getLiteralAndCyclicDefinition(thisParamName),
+				this.runtimeSpyName))
 			upperThis.startFunctionCallParamNames.push(thisParamName)
-			upperThis.variableSpies.set(thisParamName, new FunctionArgumentSpy(thisParamName, '', this.runtimeSpyName))
-			upperThis.variableSpies.get(thisParamName).setNewVariableLiteral('Initial',
-			VariableLiteral.getVariableLiteral(paramValues[index]).getLiteralAndCyclicDefinition(thisParamName))
 		})
 	}
 
@@ -61,7 +62,7 @@ class RuntimeSpy {
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.variableSpies.set(variableToSpyOn, new GlobalVariableSpy(variableToSpyOn,variableToSpyOn,this.runtimeSpyName))
+			this.globalVariableSpies.set(variableToSpyOn, new GlobalVariableSpy(variableToSpyOn,this.runtimeSpyName))
 		})
 		return this
 	}
@@ -71,7 +72,7 @@ class RuntimeSpy {
 	}
 
 	getVariableSpy(variableName) {
-		return this.variableSpies.get(variableName)
+		return this.globalVariableSpies.get(variableName)
 	}
 
 	getCodeToEvalToSpyOnFunctions() {
@@ -83,7 +84,7 @@ class RuntimeSpy {
 	}
 
 	trackSpiedVariableChanges(callTag,spyFunctionContextGetLiteral) {
-		this.variableSpies.forEach(variableSpy => {
+		this.globalVariableSpies.forEach(variableSpy => {
 			variableSpy.trackValueChanges(callTag,spyFunctionContextGetLiteral)
 		})
 	}
@@ -106,7 +107,7 @@ class RuntimeSpy {
 			myTag = tag + '@' + this.getSpiedFunctionCallIndex(tag)
 		else
 			myTag = tag
-		this.variableSpies.forEach(variableSpy => {
+		this.globalVariableSpies.forEach(variableSpy => {
 			variableSpy.trackValueChanges(myTag,spyFunctionContextGetLiteral)
 		})
 			
@@ -129,6 +130,7 @@ class RuntimeSpy {
 		harnessText += this.getDataRepositoryText()
 		harnessText += this.getFunctionMocksText()
 		harnessText += this.getVariableMocksText()
+		harnessText += this.getStartFunctionArgumentsText()
 		harnessText += this.getStartFunctionCallString()
 		return harnessText
 	}
@@ -152,9 +154,17 @@ class RuntimeSpy {
 		return mocksText
 	}
 
+	getStartFunctionArgumentsText() {
+		var mocksText = ''
+		this.startFunctionArguments.forEach((variableSpy) => {
+			mocksText += variableSpy.getMockText() + '\n'
+		})
+		return mocksText
+	}
+
 	getVariableMocksText() {
 		var mocksText = ''
-		this.variableSpies.forEach((variableSpy) => {
+		this.globalVariableSpies.forEach((variableSpy) => {
 			mocksText += variableSpy.getMockText() + '\n'
 		})
 		return mocksText

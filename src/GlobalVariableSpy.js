@@ -4,23 +4,21 @@ if (isNode())
    
 
 class GlobalVariableSpy {
-    constructor(variableName, variableNameForValue,runtimeSpyName) {
+    constructor(variableName,runtimeSpyName) {
         //methodParameterIndex is undefined if this is not a parameter for the intial call
         this.variableName = variableName
         this.variableValueLiterals = new Map()
         this.runtimeSpyName = runtimeSpyName
-        this.variableNameForValue = variableNameForValue
     }
 
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
-        if (this.variableNameForValue == '') return
-        var newValue = spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName)
+        var newValue = spyFunctionContextGetLiteral(this.variableName, this.variableName)
         newValue = newValue.replace(/\'/g,'\\\'')
 
         if (this.variableValueLiterals.size > 0) {
             var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
-            if (currentValue != spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName))
+            if (currentValue != spyFunctionContextGetLiteral(this.variableName, this.variableName))
                 this.setNewVariableLiteral(callTag, newValue)
         }
         else {
