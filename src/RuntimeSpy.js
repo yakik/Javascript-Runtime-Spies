@@ -19,8 +19,13 @@ class RuntimeSpy {
 
 	}
 
+	addFinalResult(result) {
+		this.resultLiteral = VariableLiteral.getVariableLiteral(result).getLiteralAndCyclicDefinition('result')
+	}
+
+
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.functionSpies,this.initialFunctionName,this.startFunctionArguments,this.startFunction)
+		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.functionSpies,this.initialFunctionName,this.startFunctionArguments,this.startFunction,this.resultLiteral)
 		return harnessFactory.getHarnessCode()
 	}
 

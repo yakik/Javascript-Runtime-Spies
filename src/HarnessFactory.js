@@ -4,13 +4,14 @@ if (isNode()) {
 }
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
-	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments,startFunction) {
+	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments,startFunction,resultLiteral) {
 		this.harnessName = harnessName
 		this.globalVariablesSpies = globalVariablesSpies
 		this.functionSpies = functionSpies
 		this.initialFunctionName = initialFunctionName
 		this.startFunctionArguments = startFunctionArguments
 		this.startFunction = startFunction
+		this.resultLiteral = resultLiteral
 	}
 
 	getStartFunctionCallString() {
@@ -30,7 +31,12 @@ class HarnessFactory {
 		harnessText += this.getFunctionMocksText()
 		harnessText += this.getVariableMocksText()
 		harnessText += this.getStartFunctionArgumentsText()
-		harnessText += this.getStartFunctionCallString()
+		if (this.resultLiteral == undefined)
+			harnessText += this.getStartFunctionCallString()
+		else {
+			harnessText += 'expect(VariableLiteral.getVariableLiteral('+this.getStartFunctionCallString()+').getLiteralAndCyclicDefinition(\'result\')' +
+				').equals(\'' + this.resultLiteral + '\')\n'
+		}
 		return harnessText
 	}
 
