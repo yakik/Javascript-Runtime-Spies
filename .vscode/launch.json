@@ -14,13 +14,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Mocha Current File",
-            "program": "${workspaceFolder}/javascript/node_modules/mocha/bin/_mocha",
+            "name": "mocks test",
+            "program": "${workspaceFolder}\\node_modules\\mocha\\bin\\_mocha",
             "args": [
                 "--timeout",
                 "999999",
                 "--colors",
-                "${file}"
+            //    "${file}"
+                "${workspaceFolder}\\test\\spiesAndMocksTests.js"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
