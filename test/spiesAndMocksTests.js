@@ -13,16 +13,22 @@ mocha.describe('Spies and Mocks', function () {
     mocha.it('should return definitions/calling statements (no param names)', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var mySpy = new RuntimeSpy('mySpy')
+        var harness = ''
         var testFunction = function () {
+            var mySpy = new RuntimeSpy('mySpy')
             mySpy.setStartFunctionCall(arguments, 'testFunction')
             eval(mySpy.getCodeToEvalToSpyOnVariables())
+            harness = mySpy.getHarness()
             return a[0] + b.q
         }
         testFunction(a, b, 2)
        // console.log(mySpy.getHarness())
-        expect(eval(mySpy.getHarness())).equals(2)
+        expect(eval(harness)).equals(2)
     })
+
+  
+
+  
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
         var a = [1, 2, 3]
@@ -30,7 +36,7 @@ mocha.describe('Spies and Mocks', function () {
         var harness = ''
         var testFunction = function (A, B, C) {
             var mySpy = new RuntimeSpy('mySpy')
-            mySpy.setStartFunctionCall(arguments, 'testFunction', 'A,B ,C')
+            mySpy.setStartFunctionCall(arguments, 'testFunction', 'A,B,C')
             eval(mySpy.getCodeToEvalToSpyOnVariables())
             harness = mySpy.getHarness()
             return a[0] + b.q
@@ -40,7 +46,7 @@ mocha.describe('Spies and Mocks', function () {
         expect(eval(harness)).equals(2)
     })
 
-
+   
 
     mocha.it('Mocks', function () {
         
@@ -80,39 +86,11 @@ var harness = ''
         helper2 = function (x) { return 2 }
         globalVar = 8
         
-      //  console.log(harness)
-        //expect(eval(harness)).equals(36)
+       // console.log(harness)
+        expect(eval(harness)).equals(39)
     })
 
-    mocha.it('Mocks -> test output of Mocks', function () {
-        
-       
-        var testFunction = function (A) {
-            
-           
-            helper1(21)
-            var result = helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1']
-            return result
-        }
-        var mockRepositoryData = {}
-        mockRepositoryData['helper1'] = {input:[[21],[5]],output:[42,10]}
-        mockRepositoryData['helper2'] = {input:[[5]],output:[15]}
-        helper1= SmartMock.getSmartMock('helper1',mockRepositoryData['helper1']).getSmartMockFunction()
-        
-        helper2= SmartMock.getSmartMock('helper2',mockRepositoryData['helper2']).getSmartMockFunction()
-        
-        var testFunctionParam0_DB = new Map([['Initial','var testFunctionParam0 = 5']])
-        var testFunctionParam0 = 5
-        
-        var globalVar_DB = new Map([['Initial','var globalVar = 5'],['helper1_0','var globalVar = 42'],['helper1_1','var globalVar = 10']])
-        var globalVar = 5
-        
-        var globalVar2_DB = new Map([['Initial','var globalVar2 = {1:6,2:2,3:{1:1}};globalVar2[\'3\'][\'2\']=globalVar2']])
-        var globalVar2 = {1:6,2:2,3:{1:1}};globalVar2['3']['2']=globalVar2
-        
-        testFunction(testFunctionParam0)
-
-    })
+   
 
 })
 

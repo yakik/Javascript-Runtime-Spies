@@ -14,14 +14,16 @@ class VariableSpy {
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
         if (this.variableNameForValue == '') return
-        
+        var newValue = spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName)
+        newValue = newValue.replace(/\'/g,'\\\'')
+
         if (this.variableValueLiterals.size > 0) {
             var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
             if (currentValue != spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName))
-                this.setNewVariableLiteral(callTag, spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName))
+                this.setNewVariableLiteral(callTag, newValue)
         }
         else {
-            this.setNewVariableLiteral(callTag, spyFunctionContextGetLiteral(this.variableNameForValue, this.variableName))
+            this.setNewVariableLiteral(callTag, )
         }
             
     }
