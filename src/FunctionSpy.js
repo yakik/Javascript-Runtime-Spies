@@ -29,7 +29,7 @@ class FunctionSpy {
     }
 
     getCodeForSpy() {
-        var returnCode = 'var ' + this.functionName + '__Original = ' + this.functionName + '\n'
+        var returnCode =  this.functionName + '__Original = ' + this.functionName + '\n'
         returnCode += this.functionName + ' = function(){\n' +
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
             '\'' + this.functionName + '\',arguments,' +

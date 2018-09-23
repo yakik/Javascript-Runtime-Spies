@@ -11,6 +11,23 @@ var expect = chai.expect
 
 mocha.describe('Spies and Mocks', function () {
 
+    mocha.it('long Function name', function () {
+        var b = { q: 1, w: {a:1,b:function(){return 3}} }
+        var harness = ''
+        var testFunction = function () {
+            var mySpy = new RuntimeSpy('mySpy')
+            mySpy.setStartFunctionCall(arguments, 'testFunction')
+            var text = mySpy.addFunctionSpies('b.w.b').getCodeToEvalToSpyOnFunctions()
+            
+            eval(text)
+            var a = b.w.b()
+            harness = mySpy.getHarness()
+            return a
+        }
+        testFunction()
+        expect(eval(harness)).equals(3)
+    })
+
     mocha.it('should return definitions/calling statements (no param names)', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }

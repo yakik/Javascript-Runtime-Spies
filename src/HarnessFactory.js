@@ -35,7 +35,7 @@ class HarnessFactory {
 			harnessText += this.getStartFunctionCallString()
 		else {
 			harnessText += 'expect(VariableLiteral.getVariableLiteral('+this.getStartFunctionCallString()+').getLiteralAndCyclicDefinition(\'result\')' +
-				').equals(\'' + this.resultLiteral + '\')\n'
+				').equals(\'' + this.resultLiteral.replace(/\'/g, '\\\'').replace(/\n/g,'\\n')  + '\')\n'
 		}
 		return harnessText
 	}

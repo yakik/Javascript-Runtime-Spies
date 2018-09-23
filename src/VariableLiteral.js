@@ -110,7 +110,7 @@ class PrimitiveVariable extends VariableLiteral {
 			case 'number':
 				return this.variable.toString()
 			case 'string':
-				return '\'' + this.variable + '\''
+				return '\'' + this.variable.replace(/\'/g, '\\\'').replace(/\n/g,'\\n') + '\''
 			case 'undefined':
 				return 'undefined'
 			case 'boolean':

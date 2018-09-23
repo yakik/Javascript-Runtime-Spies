@@ -34,6 +34,13 @@ mocha.describe('IdentifyParameters Primitive Tests', function () {
     expect((VariableLiteral.getVariableLiteral(undefinedVariable)).getLiteral()).equals('undefined')
   })
 
+  mocha.it('special characters', function () {
+   var a,b
+    var myString = '  a = \' aaa \' \n b = \' fff \''
+    eval(VariableLiteral.getVariableLiteral(myString).getLiteralAndCyclicDefinition('myVar'))
+    //test passes if there's no Syntax Error
+  })
+
 
 
 

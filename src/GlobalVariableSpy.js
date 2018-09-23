@@ -13,7 +13,7 @@ class GlobalVariableSpy {
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
         var newValue = spyFunctionContextGetLiteral(this.variableName, this.variableName)
-        newValue = newValue.replace(/\'/g, '\\\'')
+        
         
         if (this.variableValueLiterals.size > 0) {
             var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
