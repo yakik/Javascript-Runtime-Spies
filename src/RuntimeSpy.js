@@ -56,11 +56,17 @@ class RuntimeSpy {
 	addFunctionSpies() {
 		var upperThis = this
 		Array.from(arguments).forEach(functionToSpyOn => {
-			this.functionSpies.set(functionToSpyOn, new FunctionSpy(functionToSpyOn, upperThis.runtimeSpyName))
+			this.addFunctionSpy(functionToSpyOn)
 		})
 		return this
 	}
-	
+
+	addFunctionSpy(functionSpy) {
+			this.functionSpies.set(functionSpy, new FunctionSpy(functionSpy, this.runtimeSpyName))
+		return this
+	}
+
+
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
