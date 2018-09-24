@@ -60,6 +60,7 @@ class RuntimeSpy {
 		})
 		return this
 	}
+	
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
