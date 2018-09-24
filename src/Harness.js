@@ -1,6 +1,6 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
-    var GlobalVariableMock = require('./GlobalVariableMock')
+    var GlobalVariableMock = require('./NonFunctionMock')
     var FunctionMock = require('./FunctionMock')
 }
 const mockRepositoryDataName = 'mockRepositoryData'

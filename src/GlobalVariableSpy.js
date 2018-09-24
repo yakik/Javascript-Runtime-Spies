@@ -4,43 +4,12 @@ if (isNode())
    
 
 class GlobalVariableSpy {
-    constructor(variableName,runtimeSpyName,runtimeSpy) {
-        this.variableName = variableName
-        this.variableValueLiterals = new Map()
+    constructor(name, runtimeSpyName, runtimeSpy) {
+        this.name = name
         this.runtimeSpyName = runtimeSpyName
         this.runtimeSpy = runtimeSpy
     }
-
-
-    trackValueChanges(callTag, spyFunctionContextGetLiteral) {
-        var newValue = spyFunctionContextGetLiteral(this.variableName, this.variableName)
-        
-        
-        if (this.variableValueLiterals.size > 0) {
-            var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
-            if (currentValue != spyFunctionContextGetLiteral(this.variableName, this.variableName))
-                this.setNewVariableLiteral(callTag, newValue)
-        }
-        else {
-            this.setNewVariableLiteral(callTag,newValue )
-        }
-            
-    }
-
-    getMockText() {
-        var mockText =  VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(this.variableName + '_DB') + '\n'
-        mockText +=  'var ' + this.variableName + '\n'
-        return mockText
-    }
-
-    getVariableName() {
-        return this.variableName
-    }
-
-    setNewVariableLiteral(tag, literal) {
-        this.variableValueLiterals.set(tag, literal)
-    }
-
 }
+
 if (isNode())
     module.exports = GlobalVariableSpy

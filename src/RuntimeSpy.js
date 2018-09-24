@@ -2,7 +2,7 @@ var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
 	var FunctionSpy = require('./FunctionSpy')
 	var FunctionArgumentSpy = require('./FunctionArgumentSpy')
-	var GlobalVariableSpy = require('./GlobalVariableSpy')
+	var NonFunctionSpy = require('./NonFunctionSpy')
 	var VariableLiteral = require('../src/VariableLiteral')
 	var HarnessFactory = require('../src/HarnessFactory')
 }
@@ -62,7 +62,7 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpy(functionSpy) {
-			this.functionSpies.set(functionSpy, new FunctionSpy(functionSpy, this.runtimeSpyName))
+			this.functionSpies.set(functionSpy, new FunctionSpy(functionSpy, this.runtimeSpyName,this))
 		return this
 	}
 
@@ -70,7 +70,7 @@ class RuntimeSpy {
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.globalVariableSpies.set(variableToSpyOn, new GlobalVariableSpy(variableToSpyOn,this.runtimeSpyName,this))
+			this.globalVariableSpies.set(variableToSpyOn, new NonFunctionSpy(variableToSpyOn,this.runtimeSpyName,this))
 		})
 		return this
 	}

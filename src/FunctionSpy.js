@@ -1,16 +1,17 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
-if (isNode())
+if (isNode()) {
     var VariableLiteral = require('./VariableLiteral')
-class FunctionSpy {
-    constructor(functionName, runtimeSpyName) {
-        this.functionName = functionName
+    var GlobalVariableSpy = require('./GlobalVariableSpy')
+}
+class FunctionSpy extends GlobalVariableSpy{
+    constructor(name, runtimeSpyName, runtimeSpy) {
+        super(name, runtimeSpyName, runtimeSpy)
         this.trafficData = { input: [], output: [] }
-        this.runtimeSpyName = runtimeSpyName
         this.functionCallIndex = 0;
     }
 
     getFunctionName() {
-        return this.functionName
+        return this.name
     }
     
     getCallIndex()
@@ -29,13 +30,13 @@ class FunctionSpy {
     }
 
     getCodeForSpy() {
-        var returnCode =  this.functionName + '__Original = ' + this.functionName + '\n'
-        returnCode += this.functionName + ' = function(){\n' +
+        var returnCode =  this.name + '__Original = ' + this.name + '\n'
+        returnCode += this.name + ' = function(){\n' +
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
-            '\'' + this.functionName + '\',arguments,' +
+            '\'' + this.name + '\',arguments,' +
             'function (variable, variableName) {' +
             ' return VariableLiteral.getVariableLiteral(eval(variable)).getLiteralAndCyclicDefinition(variableName)},' +
-             this.functionName + '__Original) \n' +
+             this.name + '__Original) \n' +
             '}\n'
         return returnCode
     }
@@ -43,7 +44,7 @@ class FunctionSpy {
         this.trafficData.input.push(Array.from(callArguments))
         var returnValue = originalSpiedFunction.apply(null,Array.from(callArguments))
         this.trafficData.output.push(returnValue)
-        var toReturn = { returnValue: returnValue, callTag: this.functionName+'_'+this.functionCallIndex }
+        var toReturn = { returnValue: returnValue, callTag: this.name+'_'+this.functionCallIndex }
         this.functionCallIndex++
         return toReturn
     }
