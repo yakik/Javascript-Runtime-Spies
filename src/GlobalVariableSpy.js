@@ -4,10 +4,11 @@ if (isNode())
    
 
 class GlobalVariableSpy {
-    constructor(variableName,runtimeSpyName) {
+    constructor(variableName,runtimeSpyName,runtimeSpy) {
         this.variableName = variableName
         this.variableValueLiterals = new Map()
         this.runtimeSpyName = runtimeSpyName
+        this.runtimeSpy = runtimeSpy
     }
 
 

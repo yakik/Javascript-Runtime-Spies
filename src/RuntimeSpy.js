@@ -70,7 +70,7 @@ class RuntimeSpy {
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.globalVariableSpies.set(variableToSpyOn, new GlobalVariableSpy(variableToSpyOn,this.runtimeSpyName))
+			this.globalVariableSpies.set(variableToSpyOn, new GlobalVariableSpy(variableToSpyOn,this.runtimeSpyName,this))
 		})
 		return this
 	}
