@@ -231,16 +231,17 @@ class ObjectVariable extends CollectionVariable {
 	addChildren() {
 		this.children = []
 		var upperThis = this
+		//getOwnandPrototypeEnumerablesAndNonenumerables
 		var objectProperties = Object.getOwnPropertyNames(this.variable)
-		Object.values(this.variable).forEach((item, index) => {
-			if (!upperThis.ancestors.has(item)) {
+		objectProperties.forEach((property, index) => {
+			if (!upperThis.ancestors.has(this.variable[property])) {
 				upperThis.children.
-					push(VariableLiteral.getVariableLiteral(item, upperThis.ancestors, objectProperties[index], upperThis.path))
+					push(VariableLiteral.getVariableLiteral(this.variable[property], upperThis.ancestors, property, upperThis.path))
 			}
 			else {
 				upperThis.children.
 					push(VariableLiteral.getCircularVariable(
-						item, upperThis.ancestors, objectProperties[index], this.path, upperThis.ancestors.get(item)))
+						this.variable[property], upperThis.ancestors, property, this.path, upperThis.ancestors.get(this.variable[property])))
 			}
 		})
 	}
@@ -282,8 +283,8 @@ class FunctionVariable extends VariableLiteral {
 	}
 
 
-	getLiteral() {
-		return ''
+	getValueLiteral() {
+		return 'function(){}'
 	}
 
 	getFunctionsDefinitions() {

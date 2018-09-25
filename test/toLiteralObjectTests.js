@@ -20,7 +20,7 @@ mocha.describe('IdentifyParameters Object Tests', function () {
   mocha.it('Object with function', function () {
     var a = { Mom: 1, myFunc: function (x) { return x + 2 }, Pop: '2', 4: 3, 5: 'red', 6: function (x) { return 2 * x } }
     expect(VariableLiteral.getVariableLiteral(a).getLiteral())
-      .equals('{4:3,5:\'red\',Mom:1,Pop:\'2\'}')
+      .equals('{4:3,5:\'red\',6:function(){},Mom:1,myFunc:function(){},Pop:\'2\'}')
     var newMyFunc = VariableLiteral.getVariableLiteral(a).getFunctionsDefinitions()[0].getFunctionDefinition()
     expect(newMyFunc(3))
       .equals(6)
