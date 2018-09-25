@@ -11,7 +11,7 @@ class RuntimeSpy {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
 		this.functionSpies = []
-		this.globalVariableSpies = new Map()
+		this.globalVariableSpies = []
 		this.startFunctionCallParamNames = []
 		this.startFunctionArguments = []
 		this.startFunction = ''
@@ -24,7 +24,7 @@ class RuntimeSpy {
 
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.getAllFunctionSpies(),this.initialFunctionName,this.startFunctionArguments,this.startFunction,this.resultLiteral)
+		var harnessFactory = new HarnessFactory('myHarness',this.getAllNonFunctionSpies(),this.getAllFunctionSpies(),this.initialFunctionName,this.startFunctionArguments,this.startFunction,this.resultLiteral)
 		return harnessFactory.getHarnessCode()
 	}
 
@@ -69,7 +69,7 @@ class RuntimeSpy {
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.globalVariableSpies.set(variableToSpyOn, GlobalVariableSpy.getSpy(variableToSpyOn,this.runtimeSpyName,this,'nonFunction'))
+			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(variableToSpyOn,this.runtimeSpyName,this,'nonFunction'))
 		})
 		return this
 	}
@@ -79,11 +79,15 @@ class RuntimeSpy {
 	}
 
 	getVariableSpy(variableName) {
-		return this.globalVariableSpies.get(variableName)
+		return this.globalVariableSpies.filter(spy=>spy.getName()==functionName)[0]
 	}
 
 	getAllFunctionSpies() {
 		return this.functionSpies.filter(spy=> spy.getSpyType() == 'function')
+	}
+
+	getAllNonFunctionSpies() {
+		return this.globalVariableSpies.filter(spy=> spy.getSpyType() == 'nonFunction')
 	}
 
 	getCodeToEvalToSpyOnFunctions() {
