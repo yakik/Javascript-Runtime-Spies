@@ -52,20 +52,10 @@ class RuntimeSpy {
 		})
 	}
 
-	/*addFunctionSpies() {
-		var upperThis = this
-		Array.from(arguments).forEach(functionToSpyOn => {
-			this.addFunctionSpy(functionToSpyOn)
-		})
-		return this
-	}*/
-
 	addFunctionSpy(functionSpy) {
 			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
 		return this
 	}
-
-
 
 	addGlobalVariablesSpies(variablesTospy) {
 		var variableValues = Object.values(variablesTospy)
@@ -81,12 +71,8 @@ class RuntimeSpy {
 		return this
 	}
 
-	getFunctionSpy(functionName) {
-		return this.globalVariableSpies.filter(spy=>spy.getName()==functionName)[0]
-	}
-
 	getVariableSpy(variableName) {
-		return this.globalVariableSpies.filter(spy=>spy.getName()==functionName)[0]
+		return this.globalVariableSpies.filter(spy=>spy.getName()==variableName)[0]
 	}
 
 	getAllFunctionSpies() {
@@ -123,13 +109,13 @@ class RuntimeSpy {
 
 
 	reportSpiedFunctionCallAndGetResult(spiedFunctionName, callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
-		var answer = this.getFunctionSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
+		var answer = this.getVariableSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
 		this.trackSpiedVariableChanges(answer.callTag, spyFunctionContextGetLiteral)
 		return answer.returnValue
 	}
 
 	getSpiedFunctionCallIndex(spiedFunctionName) {
-		return this.getFunctionSpy(spiedFunctionName).getCallIndex()
+		return this.getVariableSpy(spiedFunctionName).getCallIndex()
 	}
 
 	trackSpiedVariablesValues(tag,spyFunctionContextGetLiteral) {
