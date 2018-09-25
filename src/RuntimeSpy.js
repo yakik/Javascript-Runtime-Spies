@@ -30,6 +30,7 @@ class RuntimeSpy {
 	getTrafficData() {
 		return this.trafficData
 	}
+
 	setStartFunctionCall(callingFunctionArguments, functionName, paramString) {
 		this.startFunction = functionName
 		var upperThis = this
@@ -51,13 +52,13 @@ class RuntimeSpy {
 		})
 	}
 
-	addFunctionSpies() {
+	/*addFunctionSpies() {
 		var upperThis = this
 		Array.from(arguments).forEach(functionToSpyOn => {
 			this.addFunctionSpy(functionToSpyOn)
 		})
 		return this
-	}
+	}*/
 
 	addFunctionSpy(functionSpy) {
 			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
@@ -66,9 +67,16 @@ class RuntimeSpy {
 
 
 
-	addVariableSpies() {
-		Array.from(arguments).forEach(variableToSpyOn => {
-			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(variableToSpyOn,this.runtimeSpyName,this,'nonFunction'))
+	addGlobalVariablesSpies(variablesTospy) {
+		var variableValues = Object.values(variablesTospy)
+		Object.getOwnPropertyNames(variablesTospy).forEach((variableToSpyOn, index) => {
+			let variableType = ''
+			if (typeof variableValues[index] == "function")
+				variableType = "function"
+			else
+				variableType = "nonFunction"
+			
+			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(variableToSpyOn,this.runtimeSpyName,this,variableType))
 		})
 		return this
 	}
@@ -95,6 +103,16 @@ class RuntimeSpy {
 			returnString += functionToSpyOn.getCodeForSpy() + '\n'
 		})
 		return returnString
+	}
+
+	getCodeToEvalToSpyOnVariables() {
+		var returnString = ''
+            returnString += this.runtimeSpyName + '.trackSpiedVariablesValues(' +
+            '\'Initial\',function (variableNameForValue,variableName) {' +
+            ' return VariableLiteral.getVariableLiteral(eval(variableNameForValue)).getLiteralAndCyclicDefinition(variableName)}' +
+       ' )\n'
+        return returnString + this.getCodeToEvalToSpyOnFunctions()
+
 	}
 
 	trackSpiedVariableChanges(callTag,spyFunctionContextGetLiteral) {
@@ -126,20 +144,6 @@ class RuntimeSpy {
 		})
 			
 	}
-
-
-
-	getCodeToEvalToSpyOnVariables() {
-		var returnString = ''
-            returnString += this.runtimeSpyName + '.trackSpiedVariablesValues(' +
-            '\'Initial\',function (variableNameForValue,variableName) {' +
-            ' return VariableLiteral.getVariableLiteral(eval(variableNameForValue)).getLiteralAndCyclicDefinition(variableName)}' +
-       ' )\n'
-        return returnString
-
-	}
-
-	
 
 }
 if (isNode())
