@@ -18,7 +18,7 @@ class HarnessFactory {
 		var theString = this.startFunction + '('
 		this.startFunctionArguments.forEach((param, index) => {
 			if (index > 0) theString += ', '
-			theString += param.getVariableName()
+			theString += param
 		})
 		theString += ')\n'
 		return theString
@@ -30,7 +30,6 @@ class HarnessFactory {
 		harnessText += 'myHarness.setMockRepositoryData('+mockRepositoryDataName+')\n'
 		harnessText += this.getVariableMocksText()
 		harnessText += this.getFunctionMocksText()
-		harnessText += this.getStartFunctionArgumentsText()
 		if (this.resultLiteral == undefined)
 			harnessText += this.getStartFunctionCallString()
 		else {
@@ -64,13 +63,6 @@ class HarnessFactory {
 		return mocksText
 	}
 
-	getStartFunctionArgumentsText() {
-		var mocksText = ''
-		this.startFunctionArguments.forEach((variableSpy) => {
-			mocksText += variableSpy.getMockText(this.harnessName) + '\n'
-		})
-		return mocksText
-	}
 
 	getVariableMocksText() {
 		var mocksText = ''

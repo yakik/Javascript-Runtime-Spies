@@ -1,7 +1,6 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
 	var GlobalVariableSpy = require('./GlobalVariableSpy')
-	var FunctionArgumentSpy = require('./FunctionArgumentSpy')
 	var VariableLiteral = require('../src/VariableLiteral')
 	var HarnessFactory = require('../src/HarnessFactory')
 }
@@ -12,7 +11,6 @@ class RuntimeSpy {
 		this.runtimeSpyName = runtimeSpyName
 		this.globalVariableSpies = []
 		this.startFunctionCallParamNames = []
-		this.startFunctionArguments = []
 		this.startFunction = ''
 
 	}
@@ -23,7 +21,7 @@ class RuntimeSpy {
 
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness',this.getAllNonFunctionSpies(),this.getAllFunctionSpies(),this.initialFunctionName,this.startFunctionArguments,this.startFunction,this.resultLiteral)
+		var harnessFactory = new HarnessFactory('myHarness',this.getAllNonFunctionSpies(),this.getAllFunctionSpies(),this.initialFunctionName,this.startFunctionCallParamNames,this.startFunction,this.resultLiteral)
 		return harnessFactory.getHarnessCode()
 	}
 
@@ -45,9 +43,7 @@ class RuntimeSpy {
 			else
 				thisParamName = paramNames[index]
 
-			upperThis.startFunctionArguments.push(new FunctionArgumentSpy(thisParamName,
-				VariableLiteral.getVariableLiteral(paramValues[index]).getLiteralAndCyclicDefinition(thisParamName),
-				this.runtimeSpyName))
+			upperThis.addGlobalVariableSpy(thisParamName,paramValues[index])
 			upperThis.startFunctionCallParamNames.push(thisParamName)
 		})
 	}

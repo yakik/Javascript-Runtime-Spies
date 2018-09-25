@@ -39,7 +39,7 @@ mocha.describe('Spies and Mocks', function () {
             harness = mySpy.getHarness()
             return a[0] + b.q
         }
-        testFunction(a, b, 2)
+        testFunction()
         expect(eval(harness)).equals(2)
     })
 
@@ -84,9 +84,8 @@ mocha.describe('Spies and Mocks', function () {
         var testFunction = function (A) {
 
             var mySpy = new RuntimeSpy('mySpy')
-            mySpy.setStartFunctionCall(arguments, 'testFunction')
+            mySpy.setStartFunctionCall(arguments, 'testFunction','A')
             var myText = mySpy.addGlobalVariablesSpies({ globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 }).getCodeToEvalToSpyOnVariables()
-          
             eval(myText)
             helper1(21)
             var a = globalVar2['4']['12'](3)
@@ -104,7 +103,7 @@ mocha.describe('Spies and Mocks', function () {
         helper1 = function (x) { return 2 }
         helper2 = function (x) { return 2 }
         globalVar = 8
-        console.log(harness)
+       
         eval(harness)
     })
 
@@ -114,4 +113,3 @@ mocha.describe('Spies and Mocks', function () {
     })
 
 })
-
