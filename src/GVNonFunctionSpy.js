@@ -11,10 +11,8 @@ class GVNonFunctionSpy extends GlobalVariableSpy{
         this.variableValueLiterals = new Map()
     }
 
-
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
         var newValue = spyFunctionContextGetLiteral(this.name, this.name)
-        
         
         if (this.variableValueLiterals.size > 0) {
             var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
@@ -24,7 +22,6 @@ class GVNonFunctionSpy extends GlobalVariableSpy{
         else {
             this.setNewVariableLiteral(callTag,newValue )
         }
-            
     }
 
     getMockText() {
@@ -32,8 +29,6 @@ class GVNonFunctionSpy extends GlobalVariableSpy{
         mockText +=  'var ' + this.name + '\n'
         return mockText
     }
-
-   
 
     setNewVariableLiteral(tag, literal) {
         this.variableValueLiterals.set(tag, literal)
