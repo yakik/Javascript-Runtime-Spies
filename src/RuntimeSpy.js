@@ -1,8 +1,7 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
-	var FunctionSpy = require('./GVFunctionSpy')
+	var GlobalVariableSpy = require('./GlobalVariableSpy')
 	var FunctionArgumentSpy = require('./FunctionArgumentSpy')
-	var NonFunctionSpy = require('./GVNonFunctionSpy')
 	var VariableLiteral = require('../src/VariableLiteral')
 	var HarnessFactory = require('../src/HarnessFactory')
 }
@@ -62,7 +61,7 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpy(functionSpy) {
-			this.functionSpies.set(functionSpy, new FunctionSpy(functionSpy, this.runtimeSpyName,this))
+			this.functionSpies.set(functionSpy, GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
 		return this
 	}
 
@@ -70,7 +69,7 @@ class RuntimeSpy {
 
 	addVariableSpies() {
 		Array.from(arguments).forEach(variableToSpyOn => {
-			this.globalVariableSpies.set(variableToSpyOn, new NonFunctionSpy(variableToSpyOn,this.runtimeSpyName,this))
+			this.globalVariableSpies.set(variableToSpyOn, GlobalVariableSpy.getSpy(variableToSpyOn,this.runtimeSpyName,this,'nonFunction'))
 		})
 		return this
 	}
