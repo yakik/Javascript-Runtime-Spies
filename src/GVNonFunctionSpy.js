@@ -1,11 +1,11 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
     var VariableLiteral = require('./VariableLiteral')
-    var GlobalVariableSpy = require('./GlobalVariableSpy')
+    var GlobalVariableSpy = require('./GVGlobalVariableSpy')
 }
    
 
-class NonFunctionSpy extends GlobalVariableSpy{
+class GVNonFunctionSpy extends GlobalVariableSpy{
     constructor(name,runtimeSpyName,runtimeSpy) {
         super(name,runtimeSpyName,runtimeSpy)
         this.variableValueLiterals = new Map()
@@ -33,7 +33,7 @@ class NonFunctionSpy extends GlobalVariableSpy{
         return mockText
     }
 
-    getVariableName() {
+    getName() {
         return this.name
     }
 
@@ -43,4 +43,4 @@ class NonFunctionSpy extends GlobalVariableSpy{
 
 }
 if (isNode())
-    module.exports = NonFunctionSpy
+    module.exports = GVNonFunctionSpy

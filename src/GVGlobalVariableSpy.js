@@ -3,7 +3,7 @@ if (isNode())
     var VariableLiteral = require('./VariableLiteral')
    
 
-class GlobalVariableSpy {
+class GVGlobalVariableSpy {
     constructor(name, runtimeSpyName, runtimeSpy) {
         this.name = name
         this.runtimeSpyName = runtimeSpyName
@@ -12,4 +12,4 @@ class GlobalVariableSpy {
 }
 
 if (isNode())
-    module.exports = GlobalVariableSpy
+    module.exports = GVGlobalVariableSpy

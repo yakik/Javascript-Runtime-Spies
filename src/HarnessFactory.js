@@ -53,9 +53,9 @@ class HarnessFactory {
 	getFunctionMocksText() {
 		var mocksText = ''
 		this.functionSpies.forEach((functionSpy) => {
-			mocksText += this.harnessName + '.addFunctionMock(\'' + functionSpy.getFunctionName() + '\')\n'
-			mocksText += functionSpy.getFunctionName() + '= function(){\n' +
-				'return ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getFunctionName() + '\',' +
+			mocksText += this.harnessName + '.addFunctionMock(\'' + functionSpy.getName() + '\')\n'
+			mocksText += functionSpy.getName() + '= function(){\n' +
+				'return ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getName() + '\',' +
 				'arguments,'+
 				'function(codeToEval){eval(codeToEval)})\n' +
 				'}\n'
@@ -77,8 +77,8 @@ class HarnessFactory {
 		this.globalVariablesSpies.forEach((variableSpy) => {
 			mocksText += variableSpy.getMockText() + '\n'
 			mocksText += this.harnessName + '.addGlobalVariableMock(' +
-				'\''+variableSpy.getVariableName() + '\',' +
-				variableSpy.getVariableName() + '_DB)\n'
+				'\''+variableSpy.getName() + '\',' +
+				variableSpy.getName() + '_DB)\n'
 
 		})
 		mocksText += this.harnessName + '.updateVariablesByTag(\'Initial\',' +

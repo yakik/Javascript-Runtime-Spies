@@ -1,8 +1,8 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
-	var FunctionSpy = require('./FunctionSpy')
+	var FunctionSpy = require('./GVFunctionSpy')
 	var FunctionArgumentSpy = require('./FunctionArgumentSpy')
-	var NonFunctionSpy = require('./NonFunctionSpy')
+	var NonFunctionSpy = require('./GVNonFunctionSpy')
 	var VariableLiteral = require('../src/VariableLiteral')
 	var HarnessFactory = require('../src/HarnessFactory')
 }

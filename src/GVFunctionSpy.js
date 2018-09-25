@@ -1,16 +1,16 @@
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 if (isNode()) {
     var VariableLiteral = require('./VariableLiteral')
-    var GlobalVariableSpy = require('./GlobalVariableSpy')
+    var GlobalVariableSpy = require('./GVGlobalVariableSpy')
 }
-class FunctionSpy extends GlobalVariableSpy{
+class GVFunctionSpy extends GlobalVariableSpy{
     constructor(name, runtimeSpyName, runtimeSpy) {
         super(name, runtimeSpyName, runtimeSpy)
         this.trafficData = { input: [], output: [] }
         this.functionCallIndex = 0;
     }
 
-    getFunctionName() {
+    getName() {
         return this.name
     }
     
@@ -55,6 +55,6 @@ class FunctionSpy extends GlobalVariableSpy{
 
 }
 if (isNode())
-    module.exports = FunctionSpy
+    module.exports = GVFunctionSpy
 
 
