@@ -10,7 +10,6 @@ class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
-		this.functionSpies = []
 		this.globalVariableSpies = []
 		this.startFunctionCallParamNames = []
 		this.startFunctionArguments = []
@@ -61,7 +60,7 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpy(functionSpy) {
-			this.functionSpies.push(GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
+			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
 		return this
 	}
 
@@ -75,7 +74,7 @@ class RuntimeSpy {
 	}
 
 	getFunctionSpy(functionName) {
-		return this.functionSpies.filter(spy=>spy.getName()==functionName)[0]
+		return this.globalVariableSpies.filter(spy=>spy.getName()==functionName)[0]
 	}
 
 	getVariableSpy(variableName) {
@@ -83,7 +82,7 @@ class RuntimeSpy {
 	}
 
 	getAllFunctionSpies() {
-		return this.functionSpies.filter(spy=> spy.getSpyType() == 'function')
+		return this.globalVariableSpies.filter(spy=> spy.getSpyType() == 'function')
 	}
 
 	getAllNonFunctionSpies() {
@@ -99,7 +98,7 @@ class RuntimeSpy {
 	}
 
 	trackSpiedVariableChanges(callTag,spyFunctionContextGetLiteral) {
-		this.globalVariableSpies.forEach(variableSpy => {
+		this.getAllNonFunctionSpies().forEach(variableSpy => {
 			variableSpy.trackValueChanges(callTag,spyFunctionContextGetLiteral)
 		})
 	}
@@ -122,7 +121,7 @@ class RuntimeSpy {
 			myTag = tag + '@' + this.getSpiedFunctionCallIndex(tag)
 		else
 			myTag = tag
-		this.globalVariableSpies.forEach(variableSpy => {
+		this.getAllNonFunctionSpies().forEach(variableSpy => {
 			variableSpy.trackValueChanges(myTag,spyFunctionContextGetLiteral)
 		})
 			
