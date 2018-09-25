@@ -16,16 +16,6 @@ class GVFunctionSpy extends GlobalVariableSpy{
         return this.functionCallIndex
     }
     
-    getSpyFunction(originalContext, originalFunction) {
-        var runtimeSpyThis = this
-        return function () {
-            runtimeSpyThis.trafficData.input.push(Array.from(arguments))
-            var returnValue = originalFunction.apply(originalContext, arguments)
-            runtimeSpyThis.trafficData.output.push(returnValue)
-            return returnValue
-        }
-    }
-
     getCodeForSpy() {
         var returnCode =  this.name + '__Original = ' + this.name + '\n'
         returnCode += this.name + ' = function(){\n' +
