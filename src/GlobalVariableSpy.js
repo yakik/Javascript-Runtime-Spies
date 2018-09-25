@@ -14,6 +14,10 @@ class GlobalVariableSpy {
         return this.name
     }
 
+    getSpyType() {
+        return this.spyType
+    }
+
     static getSpy(name, runtimeSpyName, runtimeSpy, type) {
         if (type == 'function')
             return new FunctionSpy(name, runtimeSpyName, runtimeSpy)
@@ -26,6 +30,7 @@ class NonFunctionSpy extends GlobalVariableSpy{
     constructor(name,runtimeSpyName,runtimeSpy) {
         super(name,runtimeSpyName,runtimeSpy)
         this.variableValueLiterals = new Map()
+        this.spyType = 'nonFunction'
     }
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
@@ -58,6 +63,7 @@ class FunctionSpy extends GlobalVariableSpy{
         super(name, runtimeSpyName, runtimeSpy)
         this.trafficData = { input: [], output: [] }
         this.functionCallIndex = 0;
+        this.spyType = 'function'
     }
 
     

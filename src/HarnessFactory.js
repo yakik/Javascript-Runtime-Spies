@@ -42,8 +42,8 @@ class HarnessFactory {
 
 	getDataRepositoryText() {
 		var repositoryText = 'var ' + mockRepositoryDataName + ' = {}\n'
-		this.functionSpies.forEach((functionSpy, functionSpyName) => {
-			repositoryText += mockRepositoryDataName + '[\'' + functionSpyName + '\']' +
+		this.functionSpies.forEach(functionSpy => {
+			repositoryText += mockRepositoryDataName + '[\'' + functionSpy.getName() + '\']' +
 				' = ' + functionSpy.getDataRepositoryText() + '\n'
 		})
 

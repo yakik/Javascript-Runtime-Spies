@@ -10,7 +10,7 @@ class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
-		this.functionSpies = new Map()
+		this.functionSpies = []
 		this.globalVariableSpies = new Map()
 		this.startFunctionCallParamNames = []
 		this.startFunctionArguments = []
@@ -24,7 +24,7 @@ class RuntimeSpy {
 
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.functionSpies,this.initialFunctionName,this.startFunctionArguments,this.startFunction,this.resultLiteral)
+		var harnessFactory = new HarnessFactory('myHarness',this.globalVariableSpies,this.getAllFunctionSpies(),this.initialFunctionName,this.startFunctionArguments,this.startFunction,this.resultLiteral)
 		return harnessFactory.getHarnessCode()
 	}
 
@@ -61,7 +61,7 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpy(functionSpy) {
-			this.functionSpies.set(functionSpy, GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
+			this.functionSpies.push(GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
 		return this
 	}
 
@@ -75,16 +75,20 @@ class RuntimeSpy {
 	}
 
 	getFunctionSpy(functionName) {
-		return this.functionSpies.get(functionName)
+		return this.functionSpies.filter(spy=>spy.getName()==functionName)[0]
 	}
 
 	getVariableSpy(variableName) {
 		return this.globalVariableSpies.get(variableName)
 	}
 
+	getAllFunctionSpies() {
+		return this.functionSpies.filter(spy=> spy.getSpyType() == 'function')
+	}
+
 	getCodeToEvalToSpyOnFunctions() {
 		var returnString = ''
-		this.functionSpies.forEach(functionToSpyOn => {
+		this.getAllFunctionSpies().forEach(functionToSpyOn => {
 			returnString += functionToSpyOn.getCodeForSpy() + '\n'
 		})
 		return returnString
@@ -104,7 +108,7 @@ class RuntimeSpy {
 	}
 
 	getSpiedFunctionCallIndex(spiedFunctionName) {
-		return this.functionSpies.get(spiedFunctionName).getCallIndex()
+		return this.getFunctionSpy(spiedFunctionName).getCallIndex()
 	}
 
 	trackSpiedVariablesValues(tag,spyFunctionContextGetLiteral) {
