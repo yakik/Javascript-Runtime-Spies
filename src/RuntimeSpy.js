@@ -52,18 +52,17 @@ class RuntimeSpy {
 		})
 	}
 
-	addFunctionSpy(functionSpy) {
-			this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(functionSpy, this.runtimeSpyName,this,'function'))
-		return this
-	}
-
 	addGlobalVariablesSpies(variablesTospy) {
 		var variableValues = Object.values(variablesTospy)
 		Object.getOwnPropertyNames(variablesTospy).forEach((variableNameToSpyOn, index) => {
-			
-			this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(variableNameToSpyOn,this.runtimeSpyName,this,variableValues[index]))
-		})
+			this.addGlobalVariableSpy(variableNameToSpyOn,variableValues[index])
+				})
 		return this
+	}
+
+	addGlobalVariableSpy(variableName, theVariable) {
+		this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(variableName,this.runtimeSpyName,this,theVariable))
+	
 	}
 
 	getVariableSpy(variableName) {

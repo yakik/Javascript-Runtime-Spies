@@ -21,8 +21,15 @@ class GlobalVariableSpy {
     static getNewSpy(name, runtimeSpyName, runtimeSpy, theVariable) {
         if (typeof theVariable == 'function')
             return new FunctionSpy(name, runtimeSpyName, runtimeSpy)
-        else
+        else {
+            var functionDefinitions = VariableLiteral.getVariableLiteral(theVariable).getFunctionsDefinitions()
+            functionDefinitions.forEach(functionDefinition => {
+                runtimeSpy.addGlobalVariableSpy((name + functionDefinition.path) ,
+                functionDefinition.variable)
+            })
             return new NonFunctionSpy(name, runtimeSpyName, runtimeSpy)
+        }
+            
     }
 }
 
@@ -73,14 +80,14 @@ class FunctionSpy extends GlobalVariableSpy{
     }
     
     getCodeForSpy() {
-        var returnCode =  this.name + '__Original = ' + this.name + '\n'
+        var returnCode =  '{let __tempFunction = ' + this.name + '\n'
         returnCode += this.name + ' = function(){\n' +
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
-            '\'' + this.name + '\',arguments,' +
+            '\'' + this.name.replace(/\'/g, '\\\'') + '\',arguments,' +
             'function (variable, variableName) {' +
             ' return VariableLiteral.getVariableLiteral(eval(variable)).getLiteralAndCyclicDefinition(variableName)},' +
-             this.name + '__Original) \n' +
-            '}\n'
+              '__tempFunction) \n' +
+            '}}\n'
         return returnCode
     }
     reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
@@ -100,3 +107,4 @@ class FunctionSpy extends GlobalVariableSpy{
 
 if (isNode())
     module.exports = GlobalVariableSpy
+   

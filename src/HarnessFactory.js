@@ -28,8 +28,8 @@ class HarnessFactory {
 		var harnessText = 'var myHarness = new Harness(\''+this.harnessName+'\')\n'
 		harnessText += this.getDataRepositoryText()
 		harnessText += 'myHarness.setMockRepositoryData('+mockRepositoryDataName+')\n'
-		harnessText += this.getFunctionMocksText()
 		harnessText += this.getVariableMocksText()
+		harnessText += this.getFunctionMocksText()
 		harnessText += this.getStartFunctionArgumentsText()
 		if (this.resultLiteral == undefined)
 			harnessText += this.getStartFunctionCallString()
@@ -43,7 +43,7 @@ class HarnessFactory {
 	getDataRepositoryText() {
 		var repositoryText = 'var ' + mockRepositoryDataName + ' = {}\n'
 		this.functionSpies.forEach(functionSpy => {
-			repositoryText += mockRepositoryDataName + '[\'' + functionSpy.getName() + '\']' +
+			repositoryText += mockRepositoryDataName + '[\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\']' +
 				' = ' + functionSpy.getDataRepositoryText() + '\n'
 		})
 
@@ -53,9 +53,9 @@ class HarnessFactory {
 	getFunctionMocksText() {
 		var mocksText = ''
 		this.functionSpies.forEach((functionSpy) => {
-			mocksText += this.harnessName + '.addFunctionMock(\'' + functionSpy.getName() + '\')\n'
+			mocksText += this.harnessName + '.addFunctionMock(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\')\n'
 			mocksText += functionSpy.getName() + '= function(){\n' +
-				'return ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getName() + '\',' +
+				'return ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\',' +
 				'arguments,'+
 				'function(codeToEval){eval(codeToEval)})\n' +
 				'}\n'
