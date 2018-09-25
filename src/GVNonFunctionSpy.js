@@ -33,9 +33,7 @@ class GVNonFunctionSpy extends GlobalVariableSpy{
         return mockText
     }
 
-    getName() {
-        return this.name
-    }
+   
 
     setNewVariableLiteral(tag, literal) {
         this.variableValueLiterals.set(tag, literal)

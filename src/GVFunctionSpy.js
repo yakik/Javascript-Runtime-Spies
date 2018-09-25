@@ -10,9 +10,6 @@ class GVFunctionSpy extends GlobalVariableSpy{
         this.functionCallIndex = 0;
     }
 
-    getName() {
-        return this.name
-    }
     
     getCallIndex()
     {

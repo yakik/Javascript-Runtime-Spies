@@ -9,6 +9,10 @@ class GVGlobalVariableSpy {
         this.runtimeSpyName = runtimeSpyName
         this.runtimeSpy = runtimeSpy
     }
+
+    getName() {
+        return this.name
+    }
 }
 
 if (isNode())
