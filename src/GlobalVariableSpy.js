@@ -18,8 +18,8 @@ class GlobalVariableSpy {
         return this.spyType
     }
 
-    static getSpy(name, runtimeSpyName, runtimeSpy, type) {
-        if (type == 'function')
+    static getNewSpy(name, runtimeSpyName, runtimeSpy, theVariable) {
+        if (typeof theVariable == 'function')
             return new FunctionSpy(name, runtimeSpyName, runtimeSpy)
         else
             return new NonFunctionSpy(name, runtimeSpyName, runtimeSpy)

@@ -53,20 +53,15 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpy(functionSpy) {
-			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(functionSpy, this.runtimeSpyName,this,'function'))
+			this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(functionSpy, this.runtimeSpyName,this,'function'))
 		return this
 	}
 
 	addGlobalVariablesSpies(variablesTospy) {
 		var variableValues = Object.values(variablesTospy)
-		Object.getOwnPropertyNames(variablesTospy).forEach((variableToSpyOn, index) => {
-			let variableType = ''
-			if (typeof variableValues[index] == "function")
-				variableType = "function"
-			else
-				variableType = "nonFunction"
+		Object.getOwnPropertyNames(variablesTospy).forEach((variableNameToSpyOn, index) => {
 			
-			this.globalVariableSpies.push(GlobalVariableSpy.getSpy(variableToSpyOn,this.runtimeSpyName,this,variableType))
+			this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(variableNameToSpyOn,this.runtimeSpyName,this,variableValues[index]))
 		})
 		return this
 	}
