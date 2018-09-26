@@ -54,10 +54,12 @@ class HarnessFactory {
 		this.functionSpies.forEach((functionSpy) => {
 			mocksText += this.harnessName + '.addFunctionMock(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\')\n'
 			mocksText += functionSpy.getName() + '= function(){\n' +
-				'return ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\',' +
+				'var returnValue =  ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\',' +
 				'arguments,'+
 				'function(codeToEval){eval(codeToEval)})\n' +
-				'}\n'
+				'if (returnValue!=\'NOVALUERETURNED\')' +
+				'return eval(returnValue)\n' +
+			'}\n'
 		})
 
 		return mocksText
