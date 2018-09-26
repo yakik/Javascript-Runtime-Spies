@@ -27,7 +27,9 @@ class GlobalVariableSpy {
                 runtimeSpy.addGlobalVariableSpy((name + functionDefinition.path) ,
                 functionDefinition.variable)
             })
-            return new NonFunctionSpy(name, runtimeSpyName, runtimeSpy)
+            var newNonFunctionVariable = new NonFunctionSpy(name, runtimeSpyName, runtimeSpy)
+            newNonFunctionVariable.setNewVariableLiteral('Initial',VariableLiteral.getVariableLiteral(theVariable).getLiteralAndCyclicDefinition(name))
+            return newNonFunctionVariable 
         }
             
     }

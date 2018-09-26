@@ -82,12 +82,8 @@ class RuntimeSpy {
 	}
 
 	getCodeToEvalToSpyOnVariables() {
-		var returnString = ''
-            returnString += this.runtimeSpyName + '.trackSpiedVariablesValues(' +
-            '\'Initial\',function (variableNameForValue,variableName) {' +
-            ' return VariableLiteral.getVariableLiteral(eval(variableNameForValue)).getLiteralAndCyclicDefinition(variableName)}' +
-       ' )\n'
-        return returnString + this.getCodeToEvalToSpyOnFunctions()
+	
+        return this.getCodeToEvalToSpyOnFunctions()
 
 	}
 
