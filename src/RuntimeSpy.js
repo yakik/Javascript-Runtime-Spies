@@ -4,7 +4,7 @@ if (isNode()) {
 	var VariableLiteral = require('../src/VariableLiteral')
 	var HarnessFactory = require('../src/HarnessFactory')
 }
-
+const globalReturnedPrefix = '__globalFunctionReturnVariable'
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
@@ -12,7 +12,12 @@ class RuntimeSpy {
 		this.globalVariableSpies = []
 		this.startFunctionCallParamNames = []
 		this.startFunction = ''
+		this.globalFunctionReturnedIndex = 0
 
+	}
+
+	getNextGlobalFunctionReturnName() {
+		return globalReturnedPrefix + this.globalFunctionReturnedIndex++
 	}
 
 	addFinalResult(result) {
@@ -88,7 +93,8 @@ class RuntimeSpy {
 	}
 
 	trackSpiedVariableChanges(callTag,spyFunctionContextGetLiteral) {
-		this.getAllNonFunctionSpies().forEach(variableSpy => {
+		this.getAllNonFunctionSpies().filter(variableSpy =>
+			variableSpy.getName().indexOf(globalReturnedPrefix) == -1).forEach(variableSpy => {
 			variableSpy.trackValueChanges(callTag,spyFunctionContextGetLiteral)
 		})
 	}

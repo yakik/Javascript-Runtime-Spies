@@ -93,9 +93,13 @@ class FunctionSpy extends GlobalVariableSpy{
         return returnCode
     }
     reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
-        var callTag = this.name+'_'+this.functionCallIndex
+        var callTag = this.name + '_' + this.functionCallIndex
         this.trafficData.input.push(Array.from(callArguments))
-        var returnValue = originalSpiedFunction.apply(null,Array.from(callArguments))
+        var returnValue = originalSpiedFunction.apply(null, Array.from(callArguments))
+        if (returnValue != undefined) {
+            let returnedValueName = this.runtimeSpy.getNextGlobalFunctionReturnName()
+            this.runtimeSpy.addGlobalVariableSpy(returnedValueName,returnValue)
+        }
         this.trafficData.output.push(returnValue)
         var toReturn = { returnValue: returnValue, callTag: callTag }
         this.functionCallIndex++
