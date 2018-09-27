@@ -106,6 +106,14 @@ helper2= function(){
 
 expect(VariableLiteral.getVariableLiteral(testFunction(A)).getLiteralAndCyclicDefinition('result')).equals('result = 76') //here the program is called and the result is asserted
 ```
+### Known Limitations
+When we set out to do this we thought the process would be completely automated: add one line of code, get a harness.
+Unfortunately it doesn't work like this.
+As we plowed our way through javascript we found more and more cases we should handle.
+For instance there is the not-so-complicated case where a global function returns a function. it sounded reasonable we should spy on that function and we nearly made it but it got complicated and even more complicated so we said no.
+And there other probably more cases we didn't think about.
+So, the point is you will get a harness, once you decide where is your starting point and where is the end point. The nice thing is that you get code. Once you have the code, the harness, you can start tweaking it! This tool will give you a good starting point and you can take it from there.
+
 
 Contact me for any querie or comment: yaki.koren@gmail.com OR yaki@agilesparks.com
 
