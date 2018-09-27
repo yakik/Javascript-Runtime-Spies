@@ -1,6 +1,5 @@
-var isNode = new Function("try {return this===global;}catch(e){return false;}");
-if (isNode())
-    var VariableLiteral = require('./VariableLiteral')
+if (typeof window === 'undefined')
+    eval('var VariableLiteral = require(\'./VariableLiteral\')')
 
 
 class GlobalVariableSpy {
@@ -113,6 +112,6 @@ class FunctionSpy extends GlobalVariableSpy {
 
 }
 
-if (isNode())
+if (typeof window === 'undefined')
     module.exports = GlobalVariableSpy
 

@@ -1,8 +1,7 @@
-var isNode = new Function("try {return this===global;}catch(e){return false;}");
-if (isNode()) {
-	var GlobalVariableSpy = require('./GlobalVariableSpy')
-	var VariableLiteral = require('../src/VariableLiteral')
-	var HarnessFactory = require('../src/HarnessFactory')
+if (typeof window === 'undefined') {
+		eval('var GlobalVariableSpy = require(\'./GlobalVariableSpy\')')
+		eval('var VariableLiteral = require(\'./VariableLiteral\')')
+		eval('var HarnessFactory = require(\'./HarnessFactory\')')
 }
 const globalReturnedPrefix = '__globalFunctionReturnVariable'
 class RuntimeSpy {
@@ -124,5 +123,5 @@ class RuntimeSpy {
 	}
 
 }
-if (isNode())
+if (typeof window === 'undefined')
 	module.exports = RuntimeSpy

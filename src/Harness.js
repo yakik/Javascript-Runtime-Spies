@@ -1,5 +1,4 @@
-var isNode = new Function("try {return this===global;}catch(e){return false;}");
-if (isNode()) {
+if (module != undefined) {
     var GlobalVariableMock = require('./NonFunctionMock')
     var FunctionMock = require('./FunctionMock')
 }
@@ -40,5 +39,5 @@ class Harness {
     }
 }
 
-if (isNode())
+if (module != undefined)
 	module.exports = Harness

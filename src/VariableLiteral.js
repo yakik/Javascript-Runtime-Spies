@@ -1,3 +1,4 @@
+
 class VariableLiteral {
 
 
@@ -337,7 +338,7 @@ class CircularVariable extends VariableLiteral {
 	}
 
 }
-var isNode = new Function("try {return this===global;}catch(e){return false;}");
+if (typeof window === 'undefined')
 
 	module.exports = VariableLiteral
 

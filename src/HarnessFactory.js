@@ -1,6 +1,5 @@
-var isNode = new Function("try {return this===global;}catch(e){return false;}");
-if (isNode()) {
-	var RuntimeSpy = require('./RunTimeSpy')
+if (typeof window === 'undefined') {
+	eval('var RuntimeSpy = require(\'./RuntimeSpy\')')
 }
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
@@ -83,5 +82,5 @@ class HarnessFactory {
 	
 }
 
-if (isNode())
+if (typeof window === 'undefined')
 	module.exports = HarnessFactory

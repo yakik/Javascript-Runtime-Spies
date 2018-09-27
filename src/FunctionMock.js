@@ -1,6 +1,7 @@
 
 var chai = require('chai')
 var expect = chai.expect
+if (module != undefined)
 var VariableLiteral = require('./VariableLiteral')
 
 class FunctionMock {
@@ -41,5 +42,5 @@ class FunctionMock {
 }
 var isNode = new Function("try {return this===global;}catch(e){return false;}");
 
-if (isNode())
+if (module != undefined)
 module.exports = FunctionMock
