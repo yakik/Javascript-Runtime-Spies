@@ -14,6 +14,7 @@ Then you should start refactoring.
 - Capture the arguments sent into a function and producing code that will call your functioin with the same arguments
 - Capture data going into and out of global functions and producing code for the harness that will imitate these functions
 - Capture global variables data (also if they change due to global variables) and produce harness code to simulate them
+- When capturing global variables / arguments (same) the tool knows to handle cyclic reference and when it stumbles upon member functions is tracks them
 
 ### example (see explanation below)
 This is taken from one unit test from the project. You need to require RuntimeSpy.js for it to work.
