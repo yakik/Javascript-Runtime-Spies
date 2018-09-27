@@ -19,108 +19,92 @@ Then you should start refactoring.
 This is taken from one unit test from the project. You need to require RuntimeSpy.js for it to work.
 GLobal variables:
 ```js
-        var helper1 = function (x) {
+var helper1 = function (x) {
 
-            globalVar = 2 * x
-            return 2 * x
-        }
-        var helper2 = function (x) { return 3 * x }
-        var globalVar = 5
-        var globalVar2 = { 1: 6, 2: 2 }
-        var b = { 1: 1, 2: globalVar2 }
-        globalVar2['3'] = b
-        globalVar2['4'] = { 1: 4, 12: function (x) { return 5 * x } }
+    globalVar = 2 * x
+    return 2 * x
+}
+var helper2 = function (x) { return 3 * x }
+var globalVar = 5
+var globalVar2 = { 1: 6, 2: 2 }
+var b = { 1: 1, 2: globalVar2 }
+globalVar2['3'] = b
+globalVar2['4'] = { 1: 4, 12: function (x) { return 5 * x } }
 ```
 The function we want to harness:
 ```js
 var testFunction = function (A) {
-            helper1(21)
-            var a = globalVar2['4']['12'](3)
-            var result = a+helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
-            
-            return result
-        }
+    helper1(21)
+    var a = globalVar2['4']['12'](3)
+    var result = a+helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
+    
+    return result
+}   
 ```
 We add our code to the function
 ```js
  
-             var testFunction = function (A) {
+var testFunction = function (A) {
             
-            // We've added the following lines to generate the harness
-            var mySpy = new RuntimeSpy('mySpy') //the main spy object
-            mySpy.setStartFunctionCall(arguments, 'testFunction','A') //capturing the function's arguments (2nd paramtere is the function's name, third is the list of parameters
-            eval(mySpy.addGlobalVariablesSpies({ globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 }).getCodeToEvalToSpyOnVariables()) //spying on global variables
-            //end of setup
-           
-            helper1(21)
-            var a = globalVar2['4']['12'](3)
-            var result = a+helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
+    // We've added the following lines to generate the harness
+    var mySpy = new RuntimeSpy('mySpy') //the main spy object
+    mySpy.setStartFunctionCall(arguments, 'testFunction','A') //capturing the function's arguments (2nd paramtere is the function's name, third is the list of parameters
+    eval(mySpy.addGlobalVariablesSpies({ globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 }).getCodeToEvalToSpyOnVariables()) //spying on global variables
+    //end of setup
+    
+    helper1(21)
+    var a = globalVar2['4']['12'](3)
+    var result = a+helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
 
-            mySpy.addFinalResult(result) //here we tell the spy what is the end result so it can later assert on it
-            harness = mySpy.getHarness() //generating the harness
+    mySpy.addFinalResult(result) //here we tell the spy what is the end result so it can later assert on it
+    harness = mySpy.getHarness() //generating the harness
 
-            return result
-        }
+    return result
+}
 
 ```
 Now we run the function with our code in it. And this is the harness the RuntimeSpy generates:
 ```js
-       var myHarness = new Harness('myHarness')
-var mockRepositoryData = {}
-mockRepositoryData['globalVar2[\'4\'][\'12\']'] = {input:[[3],[4]],output:['__globalFunctionReturnVariable1','__globalFunctionReturnVariable4']}
-mockRepositoryData['helper1'] = {input:[[21],[5]],output:['__globalFunctionReturnVariable0','__globalFunctionReturnVariable2']}
-mockRepositoryData['helper2'] = {input:[[5]],output:['__globalFunctionReturnVariable3']}
-myHarness.setMockRepositoryData(mockRepositoryData)
-A_DB = new Map([['Initial','A = 5']])
-var A
+var myHarness = new Harness('myHarness') //the main object managing the operation
+var mockRepositoryData = {} //This is the "database" of the mock functions
+mockRepositoryData['globalVar2[\'4\'][\'12\']'] = {input:[[3],[4]],output:[15,20]}
+mockRepositoryData['helper1'] = {input:[[21],[5]],output:[42,10]} //helper1 was called twice. At the first time there was one input, 21, and the output was 42. At the second time it was 5 and 10.
+mockRepositoryData['helper2'] = {input:[[5]],output:[15]}
+myHarness.setMockRepositoryData(mockRepositoryData) //load the harness object with this information
 
-myHarness.addGlobalVariableMock('A',A_DB)
+A_DB = new Map([['Initial','A = 5']]) //"database" for global variable A. It had one value throughout the program's run: 5
+var A
+myHarness.addGlobalVariableMock('A',A_DB) //load A to the harness object
+
 globalVar_DB = new Map([['Initial','globalVar = 5'],['helper1_0','globalVar = 42'],['helper1_1','globalVar = 10']])
 var globalVar
-
 myHarness.addGlobalVariableMock('globalVar',globalVar_DB)
+
 globalVar2_DB = new Map([['Initial','globalVar2 = {1:6,2:2,3:{1:1},4:{1:4,12:function(){}}};globalVar2[\'3\'][\'2\']=globalVar2']])
 var globalVar2
-
 myHarness.addGlobalVariableMock('globalVar2',globalVar2_DB)
-__globalFunctionReturnVariable0_DB = new Map([['Initial','__globalFunctionReturnVariable0 = 42']])
-var __globalFunctionReturnVariable0
 
-myHarness.addGlobalVariableMock('__globalFunctionReturnVariable0',__globalFunctionReturnVariable0_DB)
-__globalFunctionReturnVariable1_DB = new Map([['Initial','__globalFunctionReturnVariable1 = 15']])
-var __globalFunctionReturnVariable1
+myHarness.updateVariablesByTag('Initial',function(codeToEval){eval(codeToEval)}) //Here, the global variables (A, globalVar and globalVar2 are updated to to have the first value (tag == "Initial"))
 
-myHarness.addGlobalVariableMock('__globalFunctionReturnVariable1',__globalFunctionReturnVariable1_DB)
-__globalFunctionReturnVariable2_DB = new Map([['Initial','__globalFunctionReturnVariable2 = 10']])
-var __globalFunctionReturnVariable2
-
-myHarness.addGlobalVariableMock('__globalFunctionReturnVariable2',__globalFunctionReturnVariable2_DB)
-__globalFunctionReturnVariable3_DB = new Map([['Initial','__globalFunctionReturnVariable3 = 15']])
-var __globalFunctionReturnVariable3
-
-myHarness.addGlobalVariableMock('__globalFunctionReturnVariable3',__globalFunctionReturnVariable3_DB)
-__globalFunctionReturnVariable4_DB = new Map([['Initial','__globalFunctionReturnVariable4 = 20']])
-var __globalFunctionReturnVariable4
-
-myHarness.addGlobalVariableMock('__globalFunctionReturnVariable4',__globalFunctionReturnVariable4_DB)
-myHarness.updateVariablesByTag('Initial',function(codeToEval){eval(codeToEval)})
-myHarness.addFunctionMock('globalVar2[\'4\'][\'12\']')
+myHarness.addFunctionMock('globalVar2[\'4\'][\'12\']') //loading the global function, globalVar2['4']['12'] to the harness object. The below is the definition of the function
 globalVar2['4']['12']= function(){
-var returnValue =  myHarness.callFunctionSpy('globalVar2[\'4\'][\'12\']',arguments,function(codeToEval){eval(codeToEval)})
-if (returnValue!='NOVALUERETURNED')return eval(returnValue)
+    var returnValue =  myHarness.callFunctionSpy('globalVar2[\'4\'][\'12\']',arguments,function(codeToEval){eval(codeToEval)})
+    if (returnValue!='NOVALUERETURNED')return eval(returnValue)
 }
+
 myHarness.addFunctionMock('helper1')
 helper1= function(){
-var returnValue =  myHarness.callFunctionSpy('helper1',arguments,function(codeToEval){eval(codeToEval)})
-if (returnValue!='NOVALUERETURNED')return eval(returnValue)
+    var returnValue =  myHarness.callFunctionSpy('helper1',arguments,function(codeToEval){eval(codeToEval)})
+    if (returnValue!='NOVALUERETURNED')return eval(returnValue)
 }
+
 myHarness.addFunctionMock('helper2')
 helper2= function(){
-var returnValue =  myHarness.callFunctionSpy('helper2',arguments,function(codeToEval){eval(codeToEval)})
-if (returnValue!='NOVALUERETURNED')return eval(returnValue)
+    var returnValue =  myHarness.callFunctionSpy('helper2',arguments,function(codeToEval){eval(codeToEval)})
+    if (returnValue!='NOVALUERETURNED')return eval(returnValue)
 }
-expect(VariableLiteral.getVariableLiteral(testFunction(A)
-).getLiteralAndCyclicDefinition('result')).equals('result = 76')
+
+expect(VariableLiteral.getVariableLiteral(testFunction(A)).getLiteralAndCyclicDefinition('result')).equals('result = 76') //here the program is called and the result is asserted
 ```
 
 Contact me for any querie or comment: yaki.koren@gmail.com OR yaki@agilesparks.com

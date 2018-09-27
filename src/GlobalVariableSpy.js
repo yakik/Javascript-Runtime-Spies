@@ -95,9 +95,7 @@ class FunctionSpy extends GlobalVariableSpy {
         this.trafficData.input.push(Array.from(callArguments))
         var returnValue = originalSpiedFunction.apply(null, Array.from(callArguments))
         if (returnValue != undefined) {
-            let returnedValueName = this.runtimeSpy.getNextGlobalFunctionReturnName()
-            this.runtimeSpy.addGlobalVariableSpy(returnedValueName, returnValue)
-            this.trafficData.output.push(returnedValueName)
+            this.trafficData.output.push(returnValue)
         }
         else
             this.trafficData.output.push('NOVALUERETURNED')
