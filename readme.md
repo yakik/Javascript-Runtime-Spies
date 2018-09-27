@@ -120,7 +120,7 @@ Contact me for any querie or comment: yaki.koren@gmail.com OR yaki@agilesparks.c
 
 #### copyright notice
 
-Copyright (C) 2018 
+Copyright (C) 2018 Yaki Koren
  
 Redistribution, modification and use of this source code is allowed. You do need to mention the copyright.
 This software is intended to be used in a test environment only.
