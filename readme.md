@@ -1,8 +1,14 @@
-### Runtime Spies - Javascript
-A set of tools to harness javascript legacy code into a unit test.
-The main idea is to run the system in an integrative environment after adding some code. The added code captures the data going to the unit and out of it and generates code that will harness the unit in a unit test environment.
+### The Problem We're trying to solve
+When working with Legacy code one of the main problems is we do not have tests. To start refactoring code we better have tests to let us do it with calm.
+Whilte integration tests are good, unit tests are much better. Integration tests take a long time and a complicated environment (if that's not the case for you - use the integration tests). Unit tests are fast and do not need any special environment. When we code we run our unit tests every 2-3 minutes if not more, and it takes them under a second to complete.
+Writing unit tests for legcy code isn't easy. One of the problems is that the code is usually entangled in many other pieces of code, which makes harnessing it inot a unit tests very difficult.
+The problem we're trying to solve here is to help harnessing legacy code into a unit test.
 
-The purpose of this is to provide straight forward unit test to allow us to do refactoring.
+### Runtime Spies - Javascript
+The Runtime Spies are pieces of code you add to your code (on a side branch - this doesn't go into production) which capture traffic going into and out of the code you want to test (is it one function? A set of function? That's for you to decide).
+After adding the code you run scenarios in the integration environenment. The Runtime spies capture the traffic and produce a harness for the unit test.
+
+Then you should start refactoring.
 
 ### example (see explanation below)
 This is one unit test from the project. You need to require RuntimeSpy.js for it to work.
