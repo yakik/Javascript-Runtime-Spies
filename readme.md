@@ -69,9 +69,11 @@ Now we run the function with our code in it. And this is the harness the Runtime
 var myHarness = new Harness('myHarness') //the main object managing the operation
 var mockRepositoryData = {} //This is the "database" of the mock functions
 mockRepositoryData['globalVar2[\'4\'][\'12\']'] = {input:[[3],[4]],output:[15,20]}
-mockRepositoryData['helper1'] = {input:[[21],[5]],output:[42,10]} //helper1 was called twice. At the first time there was one input, 21, and the output was 42. At the second time it was 5 and 10.
+mockRepositoryData['helper1'] = {input:[[21],[5]],output:[42,10]}
+//helper1 was called twice. At the first time there was one input, 21, and the output was 42. At the second time it was 5 and 10.
 mockRepositoryData['helper2'] = {input:[[5]],output:[15]}
-myHarness.setMockRepositoryData(mockRepositoryData) //load the harness object with this information
+myHarness.setMockRepositoryData(mockRepositoryData)
+//load the harness object with this information
 
 A_DB = new Map([['Initial','A = 5']]) //"database" for global variable A. It had one value throughout the program's run: 5
 var A
@@ -85,9 +87,11 @@ globalVar2_DB = new Map([['Initial','globalVar2 = {1:6,2:2,3:{1:1},4:{1:4,12:fun
 var globalVar2
 myHarness.addGlobalVariableMock('globalVar2',globalVar2_DB)
 
-myHarness.updateVariablesByTag('Initial',function(codeToEval){eval(codeToEval)}) //Here, the global variables (A, globalVar and globalVar2 are updated to to have the first value (tag == "Initial"))
+myHarness.updateVariablesByTag('Initial',function(codeToEval){eval(codeToEval)})
+//Here, the global variables (A, globalVar and globalVar2 are updated to to have the first value (tag == "Initial"))
 
-myHarness.addFunctionMock('globalVar2[\'4\'][\'12\']') //loading the global function, globalVar2['4']['12'] to the harness object. The below is the definition of the function
+myHarness.addFunctionMock('globalVar2[\'4\'][\'12\']')
+//loading the global function, globalVar2['4']['12'] to the harness object. The below is the definition of the function
 globalVar2['4']['12']= function(){
     var returnValue =  myHarness.callFunctionSpy('globalVar2[\'4\'][\'12\']',arguments,function(codeToEval){eval(codeToEval)})
     if (returnValue!='NOVALUERETURNED')return eval(returnValue)
@@ -105,7 +109,8 @@ helper2= function(){
     if (returnValue!='NOVALUERETURNED')return eval(returnValue)
 }
 
-expect(VariableLiteral.getVariableLiteral(testFunction(A)).getLiteralAndCyclicDefinition('result')).equals('result = 76') //here the program is called and the result is asserted
+expect(VariableLiteral.getVariableLiteral(testFunction(A)).getLiteralAndCyclicDefinition('result')).equals('result = 76')
+//here the program is called and the result is asserted
 ```
 ### Known Limitations
 When we set out to do this we thought the process would be completely automated: add one line of code, get a harness.
