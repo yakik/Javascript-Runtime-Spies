@@ -1,6 +1,6 @@
 ### The Problem We're trying to solve
 When working with Legacy code one of the main problems is we do not have tests. To start refactoring code we better have tests to let us do it with calm.
-Whilte integration tests are good, unit tests are much better. Integration tests take a long time and a complicated environment (if that's not the case for you - use the integration tests). Unit tests are fast and do not need any special environment. When we code we run our unit tests every 2-3 minutes if not more, and it takes them under a second to complete.
+While integration tests are good, unit tests are much better. Integration tests take a long time and a complicated environment (if that's not the case for you - use the integration tests). Unit tests are fast and do not need any special environment. When we code we run our unit tests every 2-3 minutes if not more, and it takes them under a second to complete.
 Writing unit tests for legcy code isn't easy. One of the problems is that the code is usually entangled in many other pieces of code, which makes harnessing it inot a unit tests very difficult.
 The problem we're trying to solve here is to help harnessing legacy code into a unit test.
 
