@@ -1,7 +1,7 @@
 {
-  "name": "harness",
+  "name": "runtime-spies",
   "version": "1.0.0",
-  "description": "",
+  "description": "Creates unit test harnesses for legacy code",
   "main": "identifyParametersTest.js",
   "scripts": {
     "test": "mocha ./test/*Tests.js"
