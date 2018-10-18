@@ -85,8 +85,8 @@ mocha.describe('Spies and Mocks', function () {
 
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall("testFunction(A)")
-            var myText = mySpy.addVariablesSpies({ A:A,globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 }).getCodeToEvalToSpyOnVariables()
-            eval(myText)
+            eval(mySpy.addVariablesSpies({ A: A, globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 })
+                .getCodeToEvalToSpyOnVariables())
             helper1(21)
             var a = globalVar2['4']['12'](3)
             var result = a + helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
