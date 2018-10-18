@@ -2,7 +2,7 @@ var RuntimeSpy = require('./RuntimeSpy')
 
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
-	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments,startFunction,resultLiteral) {
+	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments, startFunction, resultLiteral, testFunctionCall) {
 		this.harnessName = harnessName
 		this.globalVariablesSpies = globalVariablesSpies
 		this.functionSpies = functionSpies
@@ -10,6 +10,7 @@ class HarnessFactory {
 		this.startFunctionArguments = startFunctionArguments
 		this.startFunction = startFunction
 		this.resultLiteral = resultLiteral
+		this.testFunctionCall = testFunctionCall
 	}
 
 	getStartFunctionCallString() {
@@ -23,16 +24,21 @@ class HarnessFactory {
 	}
 
 	getHarnessCode() {
-		var harnessText = 'var myHarness = new Harness(\''+this.harnessName+'\')\n'
+		var harnessText = 'var myHarness = new Harness(\'' + this.harnessName + '\')\n'
 		harnessText += this.getDataRepositoryText()
-		harnessText += 'myHarness.setMockRepositoryData('+mockRepositoryDataName+')\n'
+		harnessText += 'myHarness.setMockRepositoryData(' + mockRepositoryDataName + ')\n'
 		harnessText += this.getVariableMocksText()
 		harnessText += this.getFunctionMocksText()
+		var functionCall = ""
+		if (this.testFunctionCall == "EMPTY")
+			functionCall = this.getStartFunctionCallString()
+		else
+			functionCall = this.testFunctionCall
 		if (this.resultLiteral == undefined)
-			harnessText += this.getStartFunctionCallString()
+			harnessText += functionCall
 		else {
-			harnessText += 'expect(VariableLiteral.getVariableLiteral('+this.getStartFunctionCallString()+').getLiteralAndCyclicDefinition(\'result\')' +
-				').equals(\'' + this.resultLiteral.replace(/\'/g, '\\\'').replace(/\n/g,'\\n')  + '\')\n'
+			harnessText += 'expect(VariableLiteral.getVariableLiteral(' + functionCall + ').getLiteralAndCyclicDefinition(\'result\')' +
+				').equals(\'' + this.resultLiteral.replace(/\'/g, '\\\'').replace(/\n/g, '\\n') + '\')\n'
 		}
 		return harnessText
 	}
@@ -53,11 +59,11 @@ class HarnessFactory {
 			mocksText += this.harnessName + '.addFunctionMock(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\')\n'
 			mocksText += functionSpy.getName() + '= function(){\n' +
 				'var returnValue =  ' + this.harnessName + '.callFunctionSpy(\'' + functionSpy.getName().replace(/\'/g, '\\\'') + '\',' +
-				'arguments,'+
+				'arguments,' +
 				'function(codeToEval){eval(codeToEval)})\n' +
 				'if (returnValue!=\'NOVALUERETURNED\')' +
 				'return eval(returnValue)\n' +
-			'}\n'
+				'}\n'
 		})
 
 		return mocksText
@@ -69,16 +75,16 @@ class HarnessFactory {
 		this.globalVariablesSpies.forEach((variableSpy) => {
 			mocksText += variableSpy.getMockText() + '\n'
 			mocksText += this.harnessName + '.addGlobalVariableMock(' +
-				'\''+variableSpy.getName() + '\',' +
+				'\'' + variableSpy.getName() + '\',' +
 				variableSpy.getName() + '_DB)\n'
 
 		})
 		mocksText += this.harnessName + '.updateVariablesByTag(\'Initial\',' +
-		'function(codeToEval){eval(codeToEval)})\n'
+			'function(codeToEval){eval(codeToEval)})\n'
 		return mocksText
 	}
 
-	
+
 }
 
-	module.exports = HarnessFactory
+module.exports = HarnessFactory

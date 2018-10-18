@@ -7,9 +7,10 @@ class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
-		this.globalVariableSpies = []
+		this.variableSpies = []
 		this.startFunctionCallParamNames = []
 		this.startFunction = ''
+		this.testFunctionCall = 'EMPTY'
 		this.globalFunctionReturnedIndex = 0
 
 	}
@@ -22,9 +23,12 @@ class RuntimeSpy {
 		this.resultLiteral = VariableLiteral.getVariableLiteral(result).getLiteralAndCyclicDefinition('result')
 	}
 
+	setTestFunctionCall(testFunctionCall) {
+		this.testFunctionCall = testFunctionCall
+	}
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(), this.initialFunctionName, this.startFunctionCallParamNames, this.startFunction, this.resultLiteral)
+		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(), this.initialFunctionName, this.startFunctionCallParamNames, this.startFunction, this.resultLiteral, this.testFunctionCall)
 		return harnessFactory.getHarnessCode()
 	}
 
@@ -51,7 +55,7 @@ class RuntimeSpy {
 		})
 	}
 
-	addGlobalVariablesSpies(variablesTospy) {
+	addVariablesSpies(variablesTospy) {
 		var variableValues = Object.values(variablesTospy)
 		Object.getOwnPropertyNames(variablesTospy).forEach((variableNameToSpyOn, index) => {
 			this.addGlobalVariableSpy(variableNameToSpyOn, variableValues[index])
@@ -60,20 +64,20 @@ class RuntimeSpy {
 	}
 
 	addGlobalVariableSpy(variableName, theVariable) {
-		this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(variableName, this.runtimeSpyName, this, theVariable))
+		this.variableSpies.push(GlobalVariableSpy.getNewSpy(variableName, this.runtimeSpyName, this, theVariable))
 
 	}
 
 	getVariableSpy(variableName) {
-		return this.globalVariableSpies.filter(spy => spy.getName() == variableName)[0]
+		return this.variableSpies.filter(spy => spy.getName() == variableName)[0]
 	}
 
 	getAllFunctionSpies() {
-		return this.globalVariableSpies.filter(spy => spy.getSpyType() == 'function')
+		return this.variableSpies.filter(spy => spy.getSpyType() == 'function')
 	}
 
 	getAllNonFunctionSpies() {
-		return this.globalVariableSpies.filter(spy => spy.getSpyType() == 'nonFunction')
+		return this.variableSpies.filter(spy => spy.getSpyType() == 'nonFunction')
 	}
 
 	getCodeToEvalToSpyOnFunctions() {
