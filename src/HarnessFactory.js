@@ -2,25 +2,13 @@ var RuntimeSpy = require('./RuntimeSpy')
 
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
-	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments, startFunction, resultLiteral, testFunctionCall) {
+	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, resultLiteral, testFunctionCall) {
 		this.harnessName = harnessName
 		this.globalVariablesSpies = globalVariablesSpies
 		this.functionSpies = functionSpies
 		this.initialFunctionName = initialFunctionName
-		this.startFunctionArguments = startFunctionArguments
-		this.startFunction = startFunction
 		this.resultLiteral = resultLiteral
 		this.testFunctionCall = testFunctionCall
-	}
-
-	getStartFunctionCallString() {
-		var theString = this.startFunction + '('
-		this.startFunctionArguments.forEach((param, index) => {
-			if (index > 0) theString += ', '
-			theString += param
-		})
-		theString += ')\n'
-		return theString
 	}
 
 	getHarnessCode() {
@@ -29,16 +17,13 @@ class HarnessFactory {
 		harnessText += 'myHarness.setMockRepositoryData(' + mockRepositoryDataName + ')\n'
 		harnessText += this.getVariableMocksText()
 		harnessText += this.getFunctionMocksText()
-		var functionCall = ""
-		if (this.testFunctionCall == "EMPTY")
-			functionCall = this.getStartFunctionCallString()
-		else
-			functionCall = this.testFunctionCall
-		if (this.resultLiteral == undefined)
-			harnessText += functionCall
-		else {
-			harnessText += 'expect(VariableLiteral.getVariableLiteral(' + functionCall + ').getLiteralAndCyclicDefinition(\'result\')' +
-				').equals(\'' + this.resultLiteral.replace(/\'/g, '\\\'').replace(/\n/g, '\\n') + '\')\n'
+		if (this.testFunctionCall != "EMPTY") {
+			if (this.resultLiteral == undefined)
+				harnessText += this.testFunctionCall
+			else {
+				harnessText += 'expect(VariableLiteral.getVariableLiteral(' + this.testFunctionCall + ').getLiteralAndCyclicDefinition(\'result\')' +
+					').equals(\'' + this.resultLiteral.replace(/\'/g, '\\\'').replace(/\n/g, '\\n') + '\')\n'
+			}
 		}
 		return harnessText
 	}

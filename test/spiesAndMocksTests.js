@@ -96,8 +96,6 @@ mocha.describe('Spies and Mocks', function () {
             return result
         }
 
-
-
         expect(testFunction(5)).equals(76)
 
         helper1 = function (x) { return 2 }

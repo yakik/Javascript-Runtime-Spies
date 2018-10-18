@@ -8,8 +8,6 @@ class RuntimeSpy {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
 		this.variableSpies = []
-		this.startFunctionCallParamNames = []
-		this.startFunction = ''
 		this.testFunctionCall = 'EMPTY'
 		this.globalFunctionReturnedIndex = 0
 
@@ -28,7 +26,7 @@ class RuntimeSpy {
 	}
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(), this.initialFunctionName, this.startFunctionCallParamNames, this.startFunction, this.resultLiteral, this.testFunctionCall)
+		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(), this.initialFunctionName, this.resultLiteral, this.testFunctionCall)
 		return harnessFactory.getHarnessCode()
 	}
 
@@ -36,24 +34,6 @@ class RuntimeSpy {
 		return this.trafficData
 	}
 
-	setStartFunctionCall(callingFunctionArguments, functionName, paramString) {
-		this.startFunction = functionName
-		var upperThis = this
-		var paramValues = Array.from(callingFunctionArguments)
-		var paramNames = []
-		if (paramString != undefined)
-			paramNames = paramString.split(',')
-		paramValues.forEach((value, index) => {
-			var thisParamName = ''
-			if (paramNames[index] == undefined)
-				thisParamName = functionName + 'Param' + index
-			else
-				thisParamName = paramNames[index]
-
-			upperThis.addGlobalVariableSpy(thisParamName, paramValues[index])
-			upperThis.startFunctionCallParamNames.push(thisParamName)
-		})
-	}
 
 	addVariablesSpies(variablesTospy) {
 		var variableValues = Object.values(variablesTospy)
