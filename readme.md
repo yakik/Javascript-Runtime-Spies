@@ -49,8 +49,8 @@ var testFunction = function (A) {
             
     // We've added the following lines to generate the harness
     var mySpy = new RuntimeSpy('mySpy') //the main spy object
-    mySpy.setStartFunctionCall(arguments, 'testFunction','A') //capturing the function's arguments (2nd paramtere is the function's name, third is the list of parameters
-    eval(mySpy.addGlobalVariablesSpies({ globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 }).getCodeToEvalToSpyOnVariables()) //spying on global variables
+    mySpy.setTestFunctionCall("testFunction(A)") //setting how to call the test function
+    eval(mySpy.addGlobalVariablesSpies({ A: A, globalVar: globalVar, globalVar2: globalVar2, helper1: helper1, helper2: helper2 }).getCodeToEvalToSpyOnVariables()) //spying on variables
     //end of setup
     
     helper1(21)
