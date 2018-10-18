@@ -16,7 +16,7 @@ mocha.describe('Spies and Mocks', function () {
         var harness = ''
         var testFunction = function () {
             var mySpy = new RuntimeSpy('mySpy')
-            mySpy.setStartFunctionCall(arguments, 'testFunction')
+            mySpy.setTestFunctionCall("testFunction()")
             var text = mySpy.addVariablesSpies({ 'b.w.b': b.w.b }).getCodeToEvalToSpyOnVariables()
             
             eval(text)
@@ -34,7 +34,6 @@ mocha.describe('Spies and Mocks', function () {
         var harness = ''
         var testFunction = function () {
            var mySpy = new RuntimeSpy('mySpy')
-         //  mySpy.setStartFunctionCall(arguments, 'testFunction')
             mySpy.setTestFunctionCall("testFunction()")
             eval(mySpy.getCodeToEvalToSpyOnVariables())
             harness = mySpy.getHarness()
