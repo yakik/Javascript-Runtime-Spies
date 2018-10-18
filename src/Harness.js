@@ -1,10 +1,9 @@
-if (module != undefined) {
-    var GlobalVariableMock = require('./NonFunctionMock')
-    var FunctionMock = require('./FunctionMock')
-}
+var GlobalVariableMock = require('./NonFunctionMock')
+var FunctionMock = require('./FunctionMock')
+
 const mockRepositoryDataName = 'mockRepositoryData'
 class Harness {
-    constructor(harnessName){
+    constructor(harnessName) {
         this.harnessName = harnessName
         this.globalVariablesMocks = new Map()
         this.functionMocks = new Map()
@@ -13,13 +12,13 @@ class Harness {
     setMockRepositoryData(mockRepositoryData) {
         this.mockRepositoryData = mockRepositoryData
     }
-    
+
     addGlobalVariableMock(variableName, dataMap) {
-        this.globalVariablesMocks.set(variableName,new GlobalVariableMock(variableName,this.harnessName,dataMap))
+        this.globalVariablesMocks.set(variableName, new GlobalVariableMock(variableName, this.harnessName, dataMap))
     }
 
     updateVariablesByTag(tag, evalCodeFunction) {
-        this.globalVariablesMocks.forEach(variable =>{
+        this.globalVariablesMocks.forEach(variable => {
             var definition = variable.getDefinitionByTag(tag)
             if (definition != undefined)
                 evalCodeFunction(definition)
@@ -30,8 +29,8 @@ class Harness {
         this.functionMocks.set(functionName,
             new FunctionMock(functionName, this.harnessName, this.mockRepositoryData[functionName]))
     }
-    
-    callFunctionSpy(functionName, callArguments,evalCodeFunction) {
+
+    callFunctionSpy(functionName, callArguments, evalCodeFunction) {
         var functionMock = this.functionMocks.get(functionName)
         var output = functionMock.callFunction(callArguments)
         this.updateVariablesByTag(output.tag, evalCodeFunction)
@@ -39,5 +38,4 @@ class Harness {
     }
 }
 
-if (module != undefined)
-	module.exports = Harness
+module.exports = Harness

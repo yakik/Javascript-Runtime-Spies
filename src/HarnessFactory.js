@@ -1,6 +1,5 @@
-if (typeof window === 'undefined') {
-	eval('var RuntimeSpy = require(\'./RuntimeSpy\')')
-}
+var RuntimeSpy = require('./RuntimeSpy')
+
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
 	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, startFunctionArguments,startFunction,resultLiteral) {
@@ -82,5 +81,4 @@ class HarnessFactory {
 	
 }
 
-if (typeof window === 'undefined')
 	module.exports = HarnessFactory

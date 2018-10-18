@@ -40,7 +40,4 @@ class FunctionMock {
     }
 
 }
-var isNode = new Function("try {return this===global;}catch(e){return false;}");
-
-if (module != undefined)
 module.exports = FunctionMock

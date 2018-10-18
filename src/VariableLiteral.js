@@ -79,9 +79,9 @@ class VariableLiteral {
 	}
 
 	getLiteralAndCyclicDefinition(variableName) {
-		var definition = variableName + ' = ' + this.getLiteral() 
+		var definition = variableName + ' = ' + this.getLiteral()
 		this.getCircularDefinitions().forEach(circularDefinition => {
-			definition += ';'+circularDefinition.getCircularDefinition(variableName) 
+			definition += ';' + circularDefinition.getCircularDefinition(variableName)
 		})
 		return definition
 	}
@@ -111,7 +111,7 @@ class PrimitiveVariable extends VariableLiteral {
 			case 'number':
 				return this.variable.toString()
 			case 'string':
-				return '\'' + this.variable.replace(/\'/g, '\\\'').replace(/\n/g,'\\n') + '\''
+				return '\'' + this.variable.replace(/\'/g, '\\\'').replace(/\n/g, '\\n') + '\''
 			case 'undefined':
 				return 'undefined'
 			case 'boolean':
@@ -149,7 +149,7 @@ class CollectionVariable extends VariableLiteral {
 	}
 }
 
-class MapVariable  extends CollectionVariable {
+class MapVariable extends CollectionVariable {
 	constructor(variable, ancestors, propertyName, path) {
 		super(variable, ancestors, propertyName, path)
 		this.addChildren()
@@ -172,16 +172,16 @@ class MapVariable  extends CollectionVariable {
 	addChildren() {
 		this.children = []
 		var upperThis = this
-		this.variable.forEach((value,key) => {
+		this.variable.forEach((value, key) => {
 			if (!upperThis.ancestors.has(value)) {
 				upperThis.children.
 					push(VariableLiteral.getVariableLiteral(
-						[key,value], upperThis.ancestors, undefined, upperThis.path + '.get(' + key + ')'))
+						[key, value], upperThis.ancestors, undefined, upperThis.path + '.get(' + key + ')'))
 			}
 			else {
 				upperThis.children.
 					push(VariableLiteral.getCircularVariable(
-						[key,value], upperThis.ancestors, undefined, upperThis.path + '.get(' + key + ')', upperThis.ancestors.get(value)))
+						[key, value], upperThis.ancestors, undefined, upperThis.path + '.get(' + key + ')', upperThis.ancestors.get(value)))
 			}
 		})
 	}
@@ -338,7 +338,6 @@ class CircularVariable extends VariableLiteral {
 	}
 
 }
-if (typeof window === 'undefined')
 
-	module.exports = VariableLiteral
+module.exports = VariableLiteral
 

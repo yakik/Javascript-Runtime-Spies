@@ -1,5 +1,4 @@
-if (typeof window === 'undefined')
-    eval('var VariableLiteral = require(\'./VariableLiteral\')')
+var VariableLiteral = require('./VariableLiteral')
 
 
 class GlobalVariableSpy {
@@ -110,6 +109,5 @@ class FunctionSpy extends GlobalVariableSpy {
 
 }
 
-if (typeof window === 'undefined')
     module.exports = GlobalVariableSpy
 

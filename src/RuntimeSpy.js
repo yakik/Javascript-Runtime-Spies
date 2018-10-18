@@ -1,8 +1,7 @@
-if (typeof window === 'undefined') {
-		eval('var GlobalVariableSpy = require(\'./GlobalVariableSpy\')')
-		eval('var VariableLiteral = require(\'./VariableLiteral\')')
-		eval('var HarnessFactory = require(\'./HarnessFactory\')')
-}
+var GlobalVariableSpy = require('./GlobalVariableSpy')
+var VariableLiteral = require('./VariableLiteral')
+var HarnessFactory = require('./HarnessFactory')
+
 const globalReturnedPrefix = '__globalFunctionReturnVariable'
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
@@ -25,7 +24,7 @@ class RuntimeSpy {
 
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness',this.getAllNonFunctionSpies(),this.getAllFunctionSpies(),this.initialFunctionName,this.startFunctionCallParamNames,this.startFunction,this.resultLiteral)
+		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(), this.initialFunctionName, this.startFunctionCallParamNames, this.startFunction, this.resultLiteral)
 		return harnessFactory.getHarnessCode()
 	}
 
@@ -47,7 +46,7 @@ class RuntimeSpy {
 			else
 				thisParamName = paramNames[index]
 
-			upperThis.addGlobalVariableSpy(thisParamName,paramValues[index])
+			upperThis.addGlobalVariableSpy(thisParamName, paramValues[index])
 			upperThis.startFunctionCallParamNames.push(thisParamName)
 		})
 	}
@@ -55,26 +54,26 @@ class RuntimeSpy {
 	addGlobalVariablesSpies(variablesTospy) {
 		var variableValues = Object.values(variablesTospy)
 		Object.getOwnPropertyNames(variablesTospy).forEach((variableNameToSpyOn, index) => {
-			this.addGlobalVariableSpy(variableNameToSpyOn,variableValues[index])
-				})
+			this.addGlobalVariableSpy(variableNameToSpyOn, variableValues[index])
+		})
 		return this
 	}
 
 	addGlobalVariableSpy(variableName, theVariable) {
-		this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(variableName,this.runtimeSpyName,this,theVariable))
-	
+		this.globalVariableSpies.push(GlobalVariableSpy.getNewSpy(variableName, this.runtimeSpyName, this, theVariable))
+
 	}
 
 	getVariableSpy(variableName) {
-		return this.globalVariableSpies.filter(spy=>spy.getName()==variableName)[0]
+		return this.globalVariableSpies.filter(spy => spy.getName() == variableName)[0]
 	}
 
 	getAllFunctionSpies() {
-		return this.globalVariableSpies.filter(spy=> spy.getSpyType() == 'function')
+		return this.globalVariableSpies.filter(spy => spy.getSpyType() == 'function')
 	}
 
 	getAllNonFunctionSpies() {
-		return this.globalVariableSpies.filter(spy=> spy.getSpyType() == 'nonFunction')
+		return this.globalVariableSpies.filter(spy => spy.getSpyType() == 'nonFunction')
 	}
 
 	getCodeToEvalToSpyOnFunctions() {
@@ -86,16 +85,16 @@ class RuntimeSpy {
 	}
 
 	getCodeToEvalToSpyOnVariables() {
-	
-        return this.getCodeToEvalToSpyOnFunctions()
+
+		return this.getCodeToEvalToSpyOnFunctions()
 
 	}
 
-	trackSpiedVariableChanges(callTag,spyFunctionContextGetLiteral) {
+	trackSpiedVariableChanges(callTag, spyFunctionContextGetLiteral) {
 		this.getAllNonFunctionSpies().filter(variableSpy =>
 			variableSpy.getName().indexOf(globalReturnedPrefix) == -1).forEach(variableSpy => {
-			variableSpy.trackValueChanges(callTag,spyFunctionContextGetLiteral)
-		})
+				variableSpy.trackValueChanges(callTag, spyFunctionContextGetLiteral)
+			})
 	}
 
 
@@ -109,7 +108,7 @@ class RuntimeSpy {
 		return this.getVariableSpy(spiedFunctionName).getCallIndex()
 	}
 
-	trackSpiedVariablesValues(tag,spyFunctionContextGetLiteral) {
+	trackSpiedVariablesValues(tag, spyFunctionContextGetLiteral) {
 		var myTag = ''
 		if (tag != 'Initial')
 			//tag == function name
@@ -117,11 +116,10 @@ class RuntimeSpy {
 		else
 			myTag = tag
 		this.getAllNonFunctionSpies().forEach(variableSpy => {
-			variableSpy.trackValueChanges(myTag,spyFunctionContextGetLiteral)
+			variableSpy.trackValueChanges(myTag, spyFunctionContextGetLiteral)
 		})
-			
+
 	}
 
 }
-if (typeof window === 'undefined')
-	module.exports = RuntimeSpy
+module.exports = RuntimeSpy
