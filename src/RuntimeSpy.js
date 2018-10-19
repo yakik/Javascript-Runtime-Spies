@@ -1,6 +1,5 @@
 var GlobalVariableSpy = require('./GlobalVariableSpy')
-var VariableLiteral = require('./VariableLiteral')
-var HarnessFactory = require('./HarnessFactory')
+var VariableLiteral = require('variable-literal')
 
 const globalReturnedPrefix = '__globalFunctionReturnVariable'
 class RuntimeSpy {
@@ -25,11 +24,9 @@ class RuntimeSpy {
 		this.testedFunctionCall = testFunctionCall
 	}
 
-	getHarness() {
-
-		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(),this.resultLiteral, this.testedFunctionCall)
-		return harnessFactory.getHarnessCode()
-	}
+	getLiteralAndCyclic(variable, name) {
+		return VariableLiteral.getVariableLiteral(variable).getLiteralAndCyclicDefinition(name)
+}
 
 	getHarnessNew() {
 		var harnessJSON = {}

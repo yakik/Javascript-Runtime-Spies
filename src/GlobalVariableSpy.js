@@ -1,4 +1,4 @@
-var VariableLiteral = require('./VariableLiteral')
+var VariableLiteral = require('variable-literal')
 
 
 class GlobalVariableSpy {
@@ -53,12 +53,6 @@ class NonFunctionSpy extends GlobalVariableSpy {
         }
     }
 
-    getMockText() {
-        var mockText = VariableLiteral.getVariableLiteral(this.variableValueLiterals).getLiteralAndCyclicDefinition(this.name + '_DB') + '\n'
-        mockText += 'var ' + this.name + '\n'
-        return mockText
-    }
-
     setNewVariableLiteral(tag, literal) {
         this.variableValueLiterals.set(tag, literal)
     }
@@ -84,7 +78,7 @@ class FunctionSpy extends GlobalVariableSpy {
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
             '\'' + this.name.replace(/\'/g, '\\\'') + '\',arguments,' +
             'function (variable, variableName) {' +
-            ' return VariableLiteral.getVariableLiteral(eval(variable)).getLiteralAndCyclicDefinition(variableName)},' +
+            ' return ' +this.runtimeSpyName + '.getLiteralAndCyclic(eval(variable),variableName)},' +
             '__tempFunction) \n' +
             '}}\n'
         return returnCode

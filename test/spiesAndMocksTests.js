@@ -1,5 +1,4 @@
 var RuntimeSpy = require('../src/RuntimeSpy')
-var VariableLiteral = require('../src/VariableLiteral')
 var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
