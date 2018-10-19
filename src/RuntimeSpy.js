@@ -39,8 +39,9 @@ class RuntimeSpy {
 				values: VariableLiteral.getVariableLiteral(nonFunctionSpy.variableValueLiterals).getLiteral()
 			})
 		})
+		harnessJSON.functions = [];
 		this.getAllFunctionSpies().forEach(functionSpy => {
-			harnessJSON.variables.push({
+			harnessJSON.functions.push({
 				name: functionSpy.getName(),
 				values: functionSpy.getDataRepositoryText()
 			})

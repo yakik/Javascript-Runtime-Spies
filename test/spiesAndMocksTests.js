@@ -9,7 +9,8 @@ mocha.describe('Spies and Mocks', function () {
         var expectedJSON = {
             testedFuctionCall: 'testFunction()',
             resultLiteral: undefined,
-            variables: [{ name: 'b.w.b', values: '{input:[[]],output:[3]}' }]
+            variables: [],
+            functions:[{ name: 'b.w.b', values: '{input:[[]],output:[3]}' }]
         }
         var b = { q: 1, w: { a: 1, b: function () { return 3 } } }
         var testFunction = function () {
@@ -27,7 +28,8 @@ mocha.describe('Spies and Mocks', function () {
         var expectedJSON = {
             testedFuctionCall: 'testFunction()',
             resultLiteral: undefined,
-            variables: []
+            variables: [],
+            functions:[]
         }
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
@@ -53,7 +55,8 @@ mocha.describe('Spies and Mocks', function () {
                 {
                     name: 'b',
                     values: 'new Map([[\'Initial\',\'b = {q:1,w:[1,2,3]}\']])'
-                }]
+                    }],
+            functions:[]
         }
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
@@ -83,13 +86,14 @@ mocha.describe('Spies and Mocks', function () {
                 {
                     name: 'globalVar2',
                     values: 'new Map([[\'Initial\',\'globalVar2 = {1:6,2:2,3:{1:1},4:{1:4,12:function(){}}};globalVar2[\\\'3\\\'][\\\'2\\\']=globalVar2\']])'
-                },
-                {
-                    name: 'globalVar2[\'4\'][\'12\']',
-                    values: '{input:[[3],[4]],output:[15,20]}'
-                },
-                { name: 'helper1', values: '{input:[[21],[5]],output:[42,10]}' },
-                { name: 'helper2', values: '{input:[[5]],output:[15]}' }]
+                }],
+            functions:
+                [
+                    {
+                        name: 'globalVar2[\'4\'][\'12\']',
+                        values: '{input:[[3],[4]],output:[15,20]}'
+                    }, { name: 'helper1', values: '{input:[[21],[5]],output:[42,10]}' },
+                    { name: 'helper2', values: '{input:[[5]],output:[15]}' }]
         }
         var helper1 = function (x) {
 
@@ -113,7 +117,7 @@ mocha.describe('Spies and Mocks', function () {
             var a = globalVar2['4']['12'](3)
             var result = a + helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
             mySpy.addFinalResult(result)
-           
+
             expect(expectedJSON).to.deep.equal(mySpy.getHarnessNew())
         }
 
