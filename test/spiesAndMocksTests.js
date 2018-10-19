@@ -7,7 +7,7 @@ mocha.describe('Spies and Mocks', function () {
 
     mocha.it('long Function name', function () {
         var expectedJSON = {
-            testedFuctionCall: 'testFunction()',
+            testedFunctionCall: 'testFunction()',
             resultLiteral: undefined,
             variables: [],
             functions:[{ name: 'b.w.b', values: '{input:[[]],output:[3]}' }]
@@ -26,7 +26,7 @@ mocha.describe('Spies and Mocks', function () {
 
     mocha.it('should return definitions/calling statements (no param names)', function () {
         var expectedJSON = {
-            testedFuctionCall: 'testFunction()',
+            testedFunctionCall: 'testFunction()',
             resultLiteral: undefined,
             variables: [],
             functions:[]
@@ -45,7 +45,7 @@ mocha.describe('Spies and Mocks', function () {
 
     mocha.it('should return definitions/calling statements (with param names)', function () {
         var expectedJSON = {
-            testedFuctionCall: 'testFunction(a,b,2)',
+            testedFunctionCall: 'testFunction(a,b,2)',
             resultLiteral: undefined,
             variables:
                 [{
@@ -75,7 +75,7 @@ mocha.describe('Spies and Mocks', function () {
     mocha.it('Mocks', function () {
 
         var expectedJSON = {
-            testedFuctionCall: 'testFunction(A)',
+            testedFunctionCall: 'testFunction(A)',
             resultLiteral: 'result = 76',
             variables:
                 [{ name: 'A', values: 'new Map([[\'Initial\',\'A = 5\']])' },

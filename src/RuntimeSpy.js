@@ -30,7 +30,7 @@ class RuntimeSpy {
 
 	getHarnessNew() {
 		var harnessJSON = {}
-		harnessJSON.testedFuctionCall = this.testedFunctionCall
+		harnessJSON.testedFunctionCall = this.testedFunctionCall
 		harnessJSON.resultLiteral = this.resultLiteral
 		harnessJSON.variables = [];
 		this.getAllNonFunctionSpies().forEach(nonFunctionSpy => {
