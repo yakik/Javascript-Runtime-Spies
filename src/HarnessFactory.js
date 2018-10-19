@@ -2,11 +2,10 @@ var RuntimeSpy = require('./RuntimeSpy')
 
 const mockRepositoryDataName = 'mockRepositoryData'
 class HarnessFactory {
-	constructor(harnessName, globalVariablesSpies, functionSpies, initialFunctionName, resultLiteral, testFunctionCall) {
+	constructor(harnessName, globalVariablesSpies, functionSpies, resultLiteral, testFunctionCall) {
 		this.harnessName = harnessName
 		this.globalVariablesSpies = globalVariablesSpies
 		this.functionSpies = functionSpies
-		this.initialFunctionName = initialFunctionName
 		this.resultLiteral = resultLiteral
 		this.testFunctionCall = testFunctionCall
 	}

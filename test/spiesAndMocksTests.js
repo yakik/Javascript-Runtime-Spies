@@ -1,6 +1,4 @@
-var Harness = require('../src/Harness')
 var RuntimeSpy = require('../src/RuntimeSpy')
-var SmartMock = require('../src/FunctionMock')
 var VariableLiteral = require('../src/VariableLiteral')
 var mocha = require('mocha')
 var chai = require('chai')
@@ -13,34 +11,40 @@ mocha.describe('Spies and Mocks', function () {
 
     mocha.it('long Function name', function () {
         var b = { q: 1, w: { a: 1, b: function () { return 3 } } }
-        var harness = ''
         var testFunction = function () {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall("testFunction()")
-            var text = mySpy.addVariablesSpies({ 'b.w.b': b.w.b }).getCodeToEvalToSpyOnVariables()
-
-            eval(text)
+            eval(mySpy.addVariablesSpies({ 'b.w.b': b.w.b }).getCodeToEvalToSpyOnVariables())
             var a = b.w.b()
-            harness = mySpy.getHarness()
+            var expectedJSON = {
+                testedFuctionCall: 'testFunction()',
+                resultLiteral: undefined,
+                variables: [{ name: 'b.w.b', values: '{input:[[]],output:[3]}' }]
+            }
+            expect(expectedJSON).to.deep.equal(mySpy.getHarnessNew())
             return a
         }
         testFunction()
-        expect(eval(harness)).equals(3)
     })
 
     mocha.it('should return definitions/calling statements (no param names)', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var harness = ''
         var testFunction = function () {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall("testFunction()")
             eval(mySpy.getCodeToEvalToSpyOnVariables())
             harness = mySpy.getHarness()
+
+            var expectedJSON = {
+                testedFuctionCall: 'testFunction()',
+                resultLiteral: undefined,
+                variables: []
+            }
+            expect(expectedJSON).to.deep.equal(mySpy.getHarnessNew())
             return a[0] + b.q
         }
         testFunction()
-        expect(eval(harness)).equals(2)
     })
 
 
@@ -50,16 +54,28 @@ mocha.describe('Spies and Mocks', function () {
     mocha.it('should return definitions/calling statements (with param names)', function () {
         var a = [1, 2, 3]
         var b = { q: 1, w: a }
-        var harness = ''
         var testFunction = function (A, B, C) {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall("testFunction(a,b,2)")
             eval(mySpy.addVariablesSpies({ a: a, b: b }).getCodeToEvalToSpyOnVariables())
-            harness = mySpy.getHarness()
+
+            var expectedJSON = {
+                testedFuctionCall: 'testFunction(a,b,2)',
+                resultLiteral: undefined,
+                variables:
+                    [{
+                        name: 'a',
+                        values: 'new Map([[\'Initial\',\'a = [1,2,3]\']])'
+                    },
+                    {
+                        name: 'b',
+                        values: 'new Map([[\'Initial\',\'b = {q:1,w:[1,2,3]}\']])'
+                    }]
+            }
+            expect(expectedJSON).to.deep.equal(mySpy.getHarnessNew())
             return a[0] + b.q
         }
         testFunction(a, b, 2)
-        expect(eval(harness)).equals(2)
     })
 
 
@@ -78,8 +94,6 @@ mocha.describe('Spies and Mocks', function () {
         globalVar2['3'] = b
         globalVar2['4'] = { 1: 4, 12: function (x) { return 5 * x } }
 
-        var harness = ''
-
         var testFunction = function (A) {
 
             var mySpy = new RuntimeSpy('mySpy')
@@ -90,17 +104,31 @@ mocha.describe('Spies and Mocks', function () {
             var a = globalVar2['4']['12'](3)
             var result = a + helper1(A) + helper2(A) + globalVar + globalVar2['3']['2']['1'] + globalVar2['4']['12'](4)
             mySpy.addFinalResult(result)
-            harness = mySpy.getHarness()
-
+            var expectedJSON = {
+                testedFuctionCall: 'testFunction(A)',
+                resultLiteral: 'result = 76',
+                variables:
+                    [{ name: 'A', values: 'new Map([[\'Initial\',\'A = 5\']])' },
+                    {
+                        name: 'globalVar',
+                        values: 'new Map([[\'Initial\',\'globalVar = 5\'],[\'helper1_0\',\'globalVar = 42\'],[\'helper1_1\',\'globalVar = 10\']])'
+                    },
+                    {
+                        name: 'globalVar2',
+                        values: 'new Map([[\'Initial\',\'globalVar2 = {1:6,2:2,3:{1:1},4:{1:4,12:function(){}}};globalVar2[\\\'3\\\'][\\\'2\\\']=globalVar2\']])'
+                    },
+                    {
+                        name: 'globalVar2[\'4\'][\'12\']',
+                        values: '{input:[[3],[4]],output:[15,20]}'
+                    },
+                    { name: 'helper1', values: '{input:[[21],[5]],output:[42,10]}' },
+                    { name: 'helper2', values: '{input:[[5]],output:[15]}' }]
+            }
+            expect(expectedJSON).to.deep.equal(mySpy.getHarnessNew())
             return result
         }
 
         expect(testFunction(5)).equals(76)
-
-        helper1 = function (x) { return 2 }
-        helper2 = function (x) { return 2 }
-        globalVar = 8
-        eval(harness)
     })
 
     mocha.it('Mocks2', function () {

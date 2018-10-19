@@ -8,7 +8,7 @@ class RuntimeSpy {
 		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
 		this.variableSpies = []
-		this.testFunctionCall = 'EMPTY'
+		this.testedFunctionCall = 'EMPTY'
 		this.globalFunctionReturnedIndex = 0
 
 	}
@@ -22,12 +22,34 @@ class RuntimeSpy {
 	}
 
 	setTestFunctionCall(testFunctionCall) {
-		this.testFunctionCall = testFunctionCall
+		this.testedFunctionCall = testFunctionCall
 	}
 
 	getHarness() {
-		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(), this.initialFunctionName, this.resultLiteral, this.testFunctionCall)
+
+		var harnessFactory = new HarnessFactory('myHarness', this.getAllNonFunctionSpies(), this.getAllFunctionSpies(),this.resultLiteral, this.testedFunctionCall)
 		return harnessFactory.getHarnessCode()
+	}
+
+	getHarnessNew() {
+		var harnessJSON = {}
+		harnessJSON.testedFuctionCall = this.testedFunctionCall
+		harnessJSON.resultLiteral = this.resultLiteral
+		harnessJSON.variables = [];
+		this.getAllNonFunctionSpies().forEach(nonFunctionSpy => {
+			harnessJSON.variables.push({
+				name: nonFunctionSpy.getName(),
+				values: VariableLiteral.getVariableLiteral(nonFunctionSpy.variableValueLiterals).getLiteral()
+			})
+		})
+		this.getAllFunctionSpies().forEach(functionSpy => {
+			harnessJSON.variables.push({
+				name: functionSpy.getName(),
+				values: functionSpy.getDataRepositoryText()
+			})
+		})
+
+		return harnessJSON
 	}
 
 	getTrafficData() {
