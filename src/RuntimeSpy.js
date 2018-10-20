@@ -91,9 +91,8 @@ class RuntimeSpy {
 
 	addSpies(variablesTospy) {
 		if (variablesTospy.variables != undefined) {
-			var variableValues = Object.values(variablesTospy.variables)
-			Object.getOwnPropertyNames(variablesTospy.variables).forEach((variableNameToSpyOn, index) => {
-				this.addGlobalVariableSpy(variableNameToSpyOn, variableValues[index])
+			variablesTospy.variables.forEach((variable) => {
+				this.addGlobalVariableSpy(variable)
 			})
 		}
 		if (variablesTospy.functions != undefined) {
@@ -109,8 +108,8 @@ class RuntimeSpy {
 			this.runtimeSpyName, this))
 	}
 
-	addGlobalVariableSpy(variableName, theVariable) {
-		this.variableSpies.push(GlobalVariableSpy.getNewSpy(variableName, this.runtimeSpyName, this, theVariable))
+	addGlobalVariableSpy(variable) {
+		this.variableSpies.push(GlobalVariableSpy.getNewSpy(variable.name, this.runtimeSpyName, this, variable.value))
 
 	}
 
