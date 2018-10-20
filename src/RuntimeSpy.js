@@ -41,6 +41,10 @@ class RuntimeSpy {
 		var returnedArray = []
 		functions.forEach(functionSpied=> {
 			let functionJSON = { name: functionSpied.getName(), traffic: [] }
+			let trafficData = functionSpied.getTrafficData()
+			trafficData.input.forEach((input, index) => {
+				functionJSON.traffic.push({callNumber:index ,arguments:input.slice(), returnValue:trafficData.output[index]})
+			})
 			returnedArray.push(functionJSON)
 		})
 		return returnedArray;
@@ -102,7 +106,7 @@ class RuntimeSpy {
 
 	addFunctionSpy(functionSpy) {
 		this.variableSpies.push(GlobalVariableSpy.getNewFunctionSpy(functionSpy.name,
-			this.runtimeSpyName, this, functionSpy.parameters))
+			this.runtimeSpyName, this))
 	}
 
 	addGlobalVariableSpy(variableName, theVariable) {

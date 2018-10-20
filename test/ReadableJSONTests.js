@@ -90,9 +90,13 @@ mocha.describe('Readable JSON', function () {
             functions: [{
                 name: 'a',
                 traffic: [{
-                    callNumber: 1,
-                    arguments: { x: 2, y: 4 },
+                    callNumber: 0,
+                    arguments: [1,5],
                     returnValue: 6
+                },{
+                    callNumber: 1,
+                    arguments: [5,-3],
+                    returnValue: 2
                 }]
             }]
         }
@@ -100,7 +104,7 @@ mocha.describe('Readable JSON', function () {
         var testFunction = function (a) {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall('testFunction(a)')
-            eval(mySpy.addSpies({ functions: [ {name: 'a', parameters: ['x', 'y'] } ] }).getCodeToEvalToSpyOnVariables())
+            eval(mySpy.addSpies({ functions: [ {name: 'a'} ] }).getCodeToEvalToSpyOnVariables())
             a(1, 5)
             a(5,-3)
             expect(mySpy.getReadableHarness()).to.deep.equal(expectedJSON)
