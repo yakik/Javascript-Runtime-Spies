@@ -82,13 +82,13 @@ mocha.describe('Readable JSON', function () {
         testFunction(2,true,undefined,"string","string\nstring")
     })
 
- /*   mocha.it('one function', function () {
+    mocha.it('one function', function () {
         var expectedJSON = {
             testedFunctionCall: 'testFunction(a)',
             resultLiteral: 'NOTSET',
             variables:[],
             functions: [{
-                name: 'myFunction',
+                name: 'a',
                 traffic: [{
                     callNumber: 1,
                     arguments: { x: 2, y: 4 },
@@ -99,14 +99,14 @@ mocha.describe('Readable JSON', function () {
 
         var testFunction = function (a) {
             var mySpy = new RuntimeSpy('mySpy')
-            mySpy.setTestFunctionCall("testFunction(a)")
-            eval(mySpy.addVariablesSpies({ a: a }).getCodeToEvalToSpyOnVariables())
+            mySpy.setTestFunctionCall('testFunction(a)')
+            eval(mySpy.addSpies({ functions: [ {name: 'a', parameters: ['x', 'y'] } ] }).getCodeToEvalToSpyOnVariables())
             a(1, 5)
             a(5,-3)
             expect(mySpy.getReadableHarness()).to.deep.equal(expectedJSON)
         }
         var a = function(x,y){return x+y}
         testFunction(a)
-    })*/
+    })
 })
 

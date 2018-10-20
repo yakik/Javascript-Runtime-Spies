@@ -13,6 +13,10 @@ class GlobalVariableSpy {
         return this.spyType
     }
 
+    static getNewFunctionSpy(name,runtimeSpyName, runtimeSpy,parameters) {
+        var newFunctionSpy = new FunctionSpy(name,runtimeSpyName, runtimeSpy, parameters)
+        return newFunctionSpy
+    }
     static getNewSpy(name, runtimeSpyName, runtimeSpy, theVariable) {
         if (typeof theVariable == 'function')
             return new FunctionSpy(name, runtimeSpyName, runtimeSpy)
@@ -57,11 +61,12 @@ class NonFunctionSpy extends GlobalVariableSpy {
 }
 
 class FunctionSpy extends GlobalVariableSpy {
-    constructor(name, runtimeSpyName, runtimeSpy) {
+    constructor(name,runtimeSpyName, runtimeSpy, parameters) {
         super(name, runtimeSpyName, runtimeSpy)
         this.trafficData = { input: [], output: [] }
         this.functionCallIndex = 0;
         this.spyType = 'function'
+        this.parameters = parameters.slice()
     }
 
 

@@ -31,18 +31,27 @@ class RuntimeSpy {
 		var harnessJSON = {}
 		harnessJSON.testedFunctionCall = this.testedFunctionCall
 		harnessJSON.resultLiteral = this.resultLiteral
-		harnessJSON.variables = this.getReadableHarnessVariables(this.getAllNonFunctionSpies());
-		harnessJSON.functions = [];
+		harnessJSON.variables = this.getReadableHarnessVariables(this.getAllNonFunctionSpies())
+		harnessJSON.functions = this.getReadableHarnessFunctions(this.getAllFunctionSpies())
 
 		return harnessJSON
+	}
+
+	getReadableHarnessFunctions(functions) {
+		var returnedArray = []
+		functions.forEach(functionSpied=> {
+			let functionJSON = { name: functionSpied.getName(), traffic: [] }
+			returnedArray.push(functionJSON)
+		})
+		return returnedArray;
 	}
 
 	getReadableHarnessVariables(variables) {
 		var returnedArray = []
 		variables.forEach(variable => {
-			let variableJSON = {name:variable.getName(), values:[] }
+			let variableJSON = { name: variable.getName(), values: [] }
 			variable.variableValueLiterals.forEach((value, key) => {
-				variableJSON.values.push({timing:key, value:value})
+				variableJSON.values.push({ timing: key, value: value })
 			})
 			returnedArray.push(variableJSON)
 		})
@@ -77,11 +86,23 @@ class RuntimeSpy {
 
 
 	addSpies(variablesTospy) {
-		var variableValues = Object.values(variablesTospy.variables)
-		Object.getOwnPropertyNames(variablesTospy.variables).forEach((variableNameToSpyOn, index) => {
-			this.addGlobalVariableSpy(variableNameToSpyOn, variableValues[index])
-		})
+		if (variablesTospy.variables != undefined) {
+			var variableValues = Object.values(variablesTospy.variables)
+			Object.getOwnPropertyNames(variablesTospy.variables).forEach((variableNameToSpyOn, index) => {
+				this.addGlobalVariableSpy(variableNameToSpyOn, variableValues[index])
+			})
+		}
+		if (variablesTospy.functions != undefined) {
+			variablesTospy.functions.forEach(functionSpy => {
+				this.addFunctionSpy(functionSpy)
+			})
+		}
 		return this
+	}
+
+	addFunctionSpy(functionSpy) {
+		this.variableSpies.push(GlobalVariableSpy.getNewFunctionSpy(functionSpy.name,
+			this.runtimeSpyName, this, functionSpy.parameters))
 	}
 
 	addGlobalVariableSpy(variableName, theVariable) {
