@@ -8,7 +8,7 @@ mocha.describe('Readable JSON', function () {
     mocha.it('one variable, one value', function () {
         var expectedJSON = {
             testedFunctionCall: 'testFunction(a)',
-            resultLiteral: 'NOTSET',
+            result: 'NOTSET',
             variables:
                 [{
                     name: 'a',
@@ -34,7 +34,7 @@ mocha.describe('Readable JSON', function () {
     mocha.it('two variables, one value', function () {
         var expectedJSON = {
             testedFunctionCall: 'testFunction(a,b,c,d,e)',
-            resultLiteral: 'NOTSET',
+            result: 'NOTSET',
             variables:
                 [{
                     name: 'a',
@@ -85,7 +85,7 @@ mocha.describe('Readable JSON', function () {
     mocha.it('one function', function () {
         var expectedJSON = {
             testedFunctionCall: 'testFunction(a)',
-            resultLiteral: 'NOTSET',
+            result: 8,
             variables:[],
             functions: [{
                 name: 'a',
@@ -105,9 +105,12 @@ mocha.describe('Readable JSON', function () {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall('testFunction(a)')
             eval(mySpy.addSpies({ functions: [ {name: 'a'} ] }).getCodeToEvalToSpyOnVariables())
-            a(1, 5)
-            a(5,-3)
+            b = a(1, 5) + a(5, -3)
+            mySpy.addFinalResult(b)
+            spyJSON = mySpy.getReadableHarness()
+            
             expect(mySpy.getReadableHarness()).to.deep.equal(expectedJSON)
+            return b
         }
         var a = function(x,y){return x+y}
         testFunction(a)

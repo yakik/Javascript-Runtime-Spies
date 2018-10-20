@@ -7,6 +7,8 @@ var spyJSONToHarnessJSON = function(spyJSON) {
     spyJSON.functions.forEach(functionSpy => {
         harnessJSON.push(getFunctionHarness(functionSpy))
     });
+    if (spyJSON.result != 'NOTSET' && spyJSON.testedFunctionCall != 'EMPTY')
+        harnessJSON.push( { testFunctionAssertion: { result: spyJSON.result, testFunctionCall: spyJSON.testedFunctionCall } })
     return harnessJSON
 }
 
@@ -35,9 +37,9 @@ var getFunctionDefinition = function (functionSpyJSON) {
     var returnedJSON = {
             name: functionSpyJSON.name,
             content: [
-                { validateInputAndGetOutput: { function: functionSpyJSON.name, DB: functionSpyJSON.name + '_DB', counter: functionSpyJSON.name + '_counter', toVariable: 'output' } },
+                { validateInputAndGetOutput: { function: functionSpyJSON.name, DB: functionSpyJSON.name + '_DB', counter: functionSpyJSON.name + '_counter', returnVariable: 'output' } },
                 { increaseCounterByOne: { counter: functionSpyJSON.name + '_counter' } },
-                { returnOutput: { returnedVariable: 'output' } }]
+                { returnOutput: { returnVariable: 'output' } }]
         }
         return returnedJSON
 }

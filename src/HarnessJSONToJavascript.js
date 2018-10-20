@@ -28,6 +28,9 @@ var getHarnessCode = function (harnessJSON) {
             case 'returnOutput':
                 javascriptCode += getCodeForReturnOutput(harnessJSON[propertyName])
                 break
+            case 'testFunctionAssertion':
+            javascriptCode += getCodeFortestFunctionAssertion(harnessJSON[propertyName])
+            break
             default:
                 console.log('Something\'s wrong. switch didn\'t catch harnessJSON type '+propertyName)
         }
@@ -52,7 +55,7 @@ var getCodeForFunctionDefinition=function(harnessJSON) {
 
 var getCodeForValidateInputAndGetOutput=function(harnessJSON) {
     var javascriptCode = 'expect(Array.from(arguments)).deep.equal('+harnessJSON.DB+'['+harnessJSON.counter+'].arguments)\n'
-    javascriptCode+= 'var ' + harnessJSON.outputVariable + ' = ' +
+    javascriptCode+= 'var ' + harnessJSON.returnVariable + ' = ' +
         harnessJSON.DB+'['+harnessJSON.counter+'].returnValue\n'
     return javascriptCode
 }
@@ -63,8 +66,12 @@ var getCodeForIncreaseCounterByOne=function(harnessJSON) {
  }
 
 var getCodeForReturnOutput=function(harnessJSON) {
-    return 'return '+harnessJSON.returnedVariable
- }
+    return 'return '+harnessJSON.returnVariable
+}
+ 
+var getCodeFortestFunctionAssertion = function (harnessJSON){
+    return 'expect('+harnessJSON.testFunctionCall+').equals('+harnessJSON.result+')\n'
+}
 
 
 module.exports = HarnessJSONToJavascript

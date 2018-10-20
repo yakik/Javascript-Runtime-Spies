@@ -9,7 +9,7 @@ mocha.describe('Get Code JSON From Spy JSON', function () {
 
         var spyJSON = {
             testedFunctionCall: 'testFunction(a)',
-            resultLiteral: 'NOTSET',
+            result: 'NOTSET',
             variables:
                 [{
                     name: 'a',
@@ -30,7 +30,7 @@ mocha.describe('Get Code JSON From Spy JSON', function () {
 
         var spyJSON = {
             testedFunctionCall: 'testFunction(a)',
-            resultLiteral: 'NOTSET',
+            result: 8,
             variables: [],
             functions: [{
                 name: 'a',
@@ -64,13 +64,13 @@ mocha.describe('Get Code JSON From Spy JSON', function () {
                         functionDefinition: {
                             name: 'a',
                             content: [
-                                { validateInputAndGetOutput: { function: 'a', DB: 'a_DB', counter: 'a_counter', toVariable: 'output' } },
+                                { validateInputAndGetOutput: { function: 'a', DB: 'a_DB', counter: 'a_counter', returnVariable: 'output' } },
                                 { increaseCounterByOne: { counter: 'a_counter' } },
-                                { returnOutput: { returnedVariable: 'output' } }]
+                                { returnOutput: { returnVariable: 'output' } }]
                         }
                     }
                 ]
-            }
+            }, { testFunctionAssertion: { result: 8, testFunctionCall: 'testFunction(a)' } }
         ]
         expect(SpyJSONToHarnessJSON(spyJSON)).to.deep.equal(expectedJSON)
     })

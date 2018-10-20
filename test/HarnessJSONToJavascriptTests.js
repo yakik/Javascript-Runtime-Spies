@@ -26,11 +26,11 @@ mocha.describe('Get Javscript from harness(Code) JSON', function () {
                         functionDefinition: {
                             name: 'a',
                             content: [
-                                { validateInputAndGetOutput: { function: 'a', DB: 'a_DB', counter: 'a_counter', outputVariable: 'output' } },
+                                { validateInputAndGetOutput: { function: 'a', DB: 'a_DB', counter: 'a_counter', returnVariable: 'output' } },
                                 { increaseCounterByOne: { counter: 'a_counter' } },
-                                { returnOutput: { returnedVariable: 'output' } }]
+                                { returnOutput: { returnVariable: 'output' } }]
                         }
-                    }
+                    }, { testFunctionAssertion: { result: 8, testFunctionCall: 'testFunction(a)' } }
                 ]
             }
         ]
@@ -41,7 +41,8 @@ mocha.describe('Get Javscript from harness(Code) JSON', function () {
             'var output = a_DB[a_counter].returnValue\n' +
             'a_counter++\n' +
             'return output\n' +
-            '}\n'
+            '}\n' +
+            'expect(testFunction(a)).equals(8)\n'
         expect(HarnessJSONToJavascript(harnessJSON)).equals(expectedJavascript)
     })
 })

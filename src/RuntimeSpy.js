@@ -8,7 +8,7 @@ class RuntimeSpy {
 		this.variableSpies = []
 		this.testedFunctionCall = 'EMPTY'
 		this.globalFunctionReturnedIndex = 0
-		this.resultLiteral = 'NOTSET'
+		this.result = 'NOTSET'
 
 	}
 
@@ -17,7 +17,7 @@ class RuntimeSpy {
 	}
 
 	addFinalResult(result) {
-		this.resultLiteral = VariableLiteral.getVariableLiteral(result).getLiteralAndCyclicDefinition('result')
+		this.result = result
 	}
 
 	setTestFunctionCall(testFunctionCall) {
@@ -30,7 +30,7 @@ class RuntimeSpy {
 	getReadableHarness() {
 		var harnessJSON = {}
 		harnessJSON.testedFunctionCall = this.testedFunctionCall
-		harnessJSON.resultLiteral = this.resultLiteral
+		harnessJSON.result = this.result
 		harnessJSON.variables = this.getReadableHarnessVariables(this.getAllNonFunctionSpies())
 		harnessJSON.functions = this.getReadableHarnessFunctions(this.getAllFunctionSpies())
 
