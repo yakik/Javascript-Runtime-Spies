@@ -76,9 +76,9 @@ class RuntimeSpy {
 	}
 
 
-	addVariablesSpies(variablesTospy) {
-		var variableValues = Object.values(variablesTospy)
-		Object.getOwnPropertyNames(variablesTospy).forEach((variableNameToSpyOn, index) => {
+	addSpies(variablesTospy) {
+		var variableValues = Object.values(variablesTospy.variables)
+		Object.getOwnPropertyNames(variablesTospy.variables).forEach((variableNameToSpyOn, index) => {
 			this.addGlobalVariableSpy(variableNameToSpyOn, variableValues[index])
 		})
 		return this
