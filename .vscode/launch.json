@@ -14,33 +14,19 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "mocks test",
+            "name": "JSON test",
             "program": "${workspaceFolder}\\node_modules\\mocha\\bin\\_mocha",
             "args": [
                 "--timeout",
                 "999999",
                 "--colors",
             //    "${file}"
-                "${workspaceFolder}\\test\\spiesAndMocksTests.js"
+                "${workspaceFolder}\\test\\ReadableJSONTests.js"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "real test",
-            "program": "${workspaceFolder}\\node_modules\\mocha\\bin\\_mocha",
-            "args": [
-                "--timeout",
-                "999999",
-                "--colors",
-            //    "${file}"
-                "${workspaceFolder}\\test\\realTests.js"
-            ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
-        },
+        
 
     ]
 }

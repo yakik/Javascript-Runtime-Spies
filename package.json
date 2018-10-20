@@ -1,6 +1,6 @@
 {
   "name": "runtime-spies",
-  "version": "1.2.0",
+  "version": "1.0.1",
   "description": "Creates unit test harnesses for legacy code",
   "main": "./src/RuntimeSpy.js",
   "scripts": {
@@ -16,7 +16,5 @@
     "chai": "^4.1.2",
     "mocha": "^5.2.0"
   },
-  "dependencies": {
-    "variable-literal": "^1.0.1"
-  }
+  "dependencies": {}
 }

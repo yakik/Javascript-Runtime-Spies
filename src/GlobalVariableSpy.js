@@ -1,6 +1,3 @@
-var VariableLiteral = require('variable-literal')
-
-
 class GlobalVariableSpy {
     constructor(name, runtimeSpyName, runtimeSpy) {
         this.name = name
@@ -20,13 +17,13 @@ class GlobalVariableSpy {
         if (typeof theVariable == 'function')
             return new FunctionSpy(name, runtimeSpyName, runtimeSpy)
         else {
-            var functionDefinitions = VariableLiteral.getVariableLiteral(theVariable).getFunctionsDefinitions()
+           /* var functionDefinitions = theVariable //VariableLiteral.getVariableLiteral(theVariable).getFunctionsDefinitions()
             functionDefinitions.forEach(functionDefinition => {
                 runtimeSpy.addGlobalVariableSpy((name + functionDefinition.path),
                     functionDefinition.variable)
-            })
+            })*/
             var newNonFunctionVariable = new NonFunctionSpy(name, runtimeSpyName, runtimeSpy)
-            newNonFunctionVariable.setNewVariableLiteral('Initial', VariableLiteral.getVariableLiteral(theVariable).getLiteralAndCyclicDefinition(name))
+            newNonFunctionVariable.setNewVariableLiteral('Initial', theVariable/*VariableLiteral.getVariableLiteral(theVariable).getLiteral()*/)
             return newNonFunctionVariable
         }
 
@@ -41,7 +38,7 @@ class NonFunctionSpy extends GlobalVariableSpy {
     }
 
     trackValueChanges(callTag, spyFunctionContextGetLiteral) {
-        var newValue = spyFunctionContextGetLiteral(this.name, this.name)
+        var newValue = spyFunctionContextGetLiteral(this.name)
 
         if (this.variableValueLiterals.size > 0) {
             var currentValue = Array.from(this.variableValueLiterals)[this.variableValueLiterals.size - 1][1]
@@ -77,8 +74,8 @@ class FunctionSpy extends GlobalVariableSpy {
         returnCode += this.name + ' = function(){\n' +
             'return ' + this.runtimeSpyName + '.reportSpiedFunctionCallAndGetResult(' +
             '\'' + this.name.replace(/\'/g, '\\\'') + '\',arguments,' +
-            'function (variable, variableName) {' +
-            ' return ' +this.runtimeSpyName + '.getLiteralAndCyclic(eval(variable),variableName)},' +
+            'function (variable) {' +
+            ' return ' +this.runtimeSpyName + '.getLiteral(eval(variable))},' +
             '__tempFunction) \n' +
             '}}\n'
         return returnCode
