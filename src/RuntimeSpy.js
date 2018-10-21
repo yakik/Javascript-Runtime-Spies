@@ -1,19 +1,15 @@
 var GlobalVariableSpy = require('./GlobalVariableSpy')
+var spyToSpyJSON = require('./SpyToSpyJSON')
 
 const globalReturnedPrefix = '__globalFunctionReturnVariable'
 class RuntimeSpy {
 	constructor(runtimeSpyName) {
-		this.trafficData = {}
 		this.runtimeSpyName = runtimeSpyName
 		this.variableSpies = []
 		this.testedFunctionCall = 'EMPTY'
 		this.globalFunctionReturnedIndex = 0
 		this.result = 'NOTSET'
 
-	}
-
-	getNextGlobalFunctionReturnName() {
-		return globalReturnedPrefix + this.globalFunctionReturnedIndex++
 	}
 
 	addFinalResult(result) {
@@ -24,70 +20,16 @@ class RuntimeSpy {
 		this.testedFunctionCall = testFunctionCall
 	}
 
-	getLiteral(variable) {
-		return VariableLiteral.getVariableLiteral(variable).getLiteral()
-	}
 	getReadableHarness() {
-		var harnessJSON = {}
-		harnessJSON.testedFunctionCall = this.testedFunctionCall
-		harnessJSON.result = this.result
-		harnessJSON.variables = this.getReadableHarnessVariables(this.getAllNonFunctionSpies())
-		harnessJSON.functions = this.getReadableHarnessFunctions(this.getAllFunctionSpies())
-
-		return harnessJSON
-	}
-
-	getReadableHarnessFunctions(functions) {
-		var returnedArray = []
-		functions.forEach(functionSpied=> {
-			let functionJSON = { name: functionSpied.getName(), traffic: [] }
-			let trafficData = functionSpied.getTrafficData()
-			trafficData.input.forEach((input, index) => {
-				functionJSON.traffic.push({callNumber:index ,arguments:input.slice(), returnValue:trafficData.output[index]})
-			})
-			returnedArray.push(functionJSON)
+		return spyToSpyJSON({
+			testedFunctionCall: this.testedFunctionCall,
+			result: this.result,
+			variableSpies: this.getAllNonFunctionSpies(),
+			functionSpies: this.getAllFunctionSpies()
 		})
-		return returnedArray;
 	}
 
-	getReadableHarnessVariables(variables) {
-		var returnedArray = []
-		variables.forEach(variable => {
-			let variableJSON = { name: variable.getName(), values: [] }
-			variable.variableValueLiterals.forEach((value, key) => {
-				variableJSON.values.push({ timing: key, value: value })
-			})
-			returnedArray.push(variableJSON)
-		})
-		return returnedArray;
-	}
-
-	getHarnessNew() {
-		var harnessJSON = {}
-		harnessJSON.testedFunctionCall = this.testedFunctionCall
-		harnessJSON.resultLiteral = this.resultLiteral
-		harnessJSON.variables = [];
-		this.getAllNonFunctionSpies().forEach(nonFunctionSpy => {
-			harnessJSON.variables.push({
-				name: nonFunctionSpy.getName(),
-				values: VariableLiteral.getVariableLiteral(nonFunctionSpy.variableValueLiterals).getLiteral()
-			})
-		})
-		harnessJSON.functions = [];
-		this.getAllFunctionSpies().forEach(functionSpy => {
-			harnessJSON.functions.push({
-				name: functionSpy.getName(),
-				values: functionSpy.getDataRepositoryText()
-			})
-		})
-
-		return harnessJSON
-	}
-
-	getTrafficData() {
-		return this.trafficData
-	}
-
+	
 
 	addSpies(variablesTospy) {
 		if (variablesTospy.variables != undefined) {

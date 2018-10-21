@@ -18,19 +18,9 @@ class GlobalVariableSpy {
         return newFunctionSpy
     }
     static getNewSpy(name, runtimeSpyName, runtimeSpy, theVariable) {
-        if (typeof theVariable == 'function')
-            return new FunctionSpy(name, runtimeSpyName, runtimeSpy)
-        else {
-           /* var functionDefinitions = theVariable //VariableLiteral.getVariableLiteral(theVariable).getFunctionsDefinitions()
-            functionDefinitions.forEach(functionDefinition => {
-                runtimeSpy.addGlobalVariableSpy((name + functionDefinition.path),
-                    functionDefinition.variable)
-            })*/
             var newNonFunctionVariable = new NonFunctionSpy(name, runtimeSpyName, runtimeSpy)
-            newNonFunctionVariable.setNewVariableLiteral('Initial', theVariable/*VariableLiteral.getVariableLiteral(theVariable).getLiteral()*/)
+            newNonFunctionVariable.setNewVariableLiteral('Initial', theVariable)
             return newNonFunctionVariable
-        }
-
     }
 }
 
@@ -101,9 +91,6 @@ class FunctionSpy extends GlobalVariableSpy {
         return toReturn
     }
 
-    getDataRepositoryText() {
-        return VariableLiteral.getVariableLiteral(this.trafficData).getLiteral()
-    }
 
 }
 
