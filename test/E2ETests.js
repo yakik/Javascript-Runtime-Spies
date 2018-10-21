@@ -2,10 +2,10 @@ var RuntimeSpy = require('../src/RuntimeSpy')
 var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
-var HarnessJSONToJavascript = require('../src/HarnessJSONToJavascript')
+var JSONToJavascript = require('../src/JSONToJavascript')
 var SpyJSONToHarnessJSON = require('../src/SpyJSONToHarnessJSON')
 
-mocha.describe('E2E', function () {
+mocha.describe('E2E Tests', function () {
 
    
     mocha.it('one function', function () {
@@ -22,7 +22,7 @@ mocha.describe('E2E', function () {
         var a = function(x,y){return x+y}
         testFunction(a)
         {
-        eval(HarnessJSONToJavascript(SpyJSONToHarnessJSON(spyJSON)))
+        eval(JSONToJavascript(SpyJSONToHarnessJSON(spyJSON)))
         }
     })
 })

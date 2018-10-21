@@ -3,7 +3,7 @@ var chai = require('chai')
 var expect = chai.expect
 var SpyJSONToHarnessJSON = require('../src/SpyJSONToHarnessJSON')
 
-mocha.describe('Get Code JSON From Spy JSON', function () {
+mocha.describe('Spy JSON to Harness JSON', function () {
 
     mocha.it('One Variable', function () {
 

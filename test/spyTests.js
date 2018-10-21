@@ -5,7 +5,7 @@ var expect = chai.expect
 
 mocha.describe('Spy Tests', function () {
 
-    mocha.it('one function', function () {
+    mocha.it('function', function () {
 
        
     })

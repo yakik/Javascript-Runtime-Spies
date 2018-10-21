@@ -1,9 +1,9 @@
 var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
-var HarnessJSONToJavascript = require('../src/HarnessJSONToJavascript')
+var JSONToJavascript = require('../src/JSONToJavascript')
 
-mocha.describe('Get Javscript from harness(Code) JSON', function () {
+mocha.describe('Harness JSON to javascript Tests', function () {
 
     mocha.it('Variable and Function', function () {
 
@@ -43,6 +43,6 @@ mocha.describe('Get Javscript from harness(Code) JSON', function () {
             'return output\n' +
             '}\n' +
             'expect(testFunction(a)).equals(8)\n'
-        expect(HarnessJSONToJavascript(harnessJSON)).equals(expectedJavascript)
+        expect(JSONToJavascript(harnessJSON)).equals(expectedJavascript)
     })
 })

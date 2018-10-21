@@ -3,7 +3,7 @@ var mocha = require('mocha')
 var chai = require('chai')
 var expect = chai.expect
 
-mocha.describe('Readable JSON', function () {
+mocha.describe('Create Spy JSON Tests', function () {
 
     mocha.it('one variable, one value', function () {
         var expectedJSON = {

@@ -3,7 +3,7 @@ var chai = require('chai')
 var expect = chai.expect
 var SpyJSONToHarnessJSON = require('../src/SpyJSONToHarnessJSON')
 
-mocha.describe('test generated javascript code', function () {
+mocha.describe('Javascript harness tests', function () {
 
     mocha.it('test mock functions', function () {
         var testFunction = function (a) {
