@@ -12,6 +12,10 @@ class RuntimeSpy {
 
 	}
 
+	static getFunctionSpiesDBAfterThisCall(functionName, callArguments, returnValue, spyDB) {
+		
+	}
+
 	addFinalResult(result) {
 		this.result = result
 	}

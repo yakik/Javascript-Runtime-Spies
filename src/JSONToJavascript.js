@@ -53,7 +53,7 @@ var getHarnessCode = function (harnessJSON) {
 
 var reportSpiedFunctionCallingArgumentsAndResult= function (harnessJSON) {
     return 'functionSpiesDB = RuntimeSpy.getFunctionSpiesDBAfterThisCall(' + harnessJSON.functionName + ', arguments, ' +
-    harnessJSON.returnVariable+')\n'
+    harnessJSON.returnVariable+', '+ harnessJSON.spiesDB+')\n'
 }
 
 var copyFunctionToTemporaryVariable = function (harnessJSON) {

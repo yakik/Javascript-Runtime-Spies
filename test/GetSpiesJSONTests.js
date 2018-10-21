@@ -15,7 +15,7 @@ mocha.describe('Spy Tests', function () {
                     functionAssignment: {
                         name: 'a',
                         content: [{ callSpiedFunctionAndStoreResult: { returnVariable: 'output' } },
-                        { reportSpiedFunctionCallingArgumentsAndResult: { functionName: 'a', returnVariable: 'output' } },
+                        { reportSpiedFunctionCallingArgumentsAndResult: { functionName: 'a', returnVariable: 'output', spiesDB:'functionSpiesDB' } },
                         { returnOutput: { returnVariable: 'output' } }]
                     }
                 }
@@ -28,7 +28,7 @@ mocha.describe('Spy Tests', function () {
         'let __tempFunction = a\n' +
         'a = function(){\n' +
         'var output = __tempFunction.apply(null, Array.from(arguments))\n' +
-        'functionSpiesDB = RuntimeSpy.getFunctionSpiesDBAfterThisCall(a, arguments, output)\n' +
+        'functionSpiesDB = RuntimeSpy.getFunctionSpiesDBAfterThisCall(a, arguments, output, functionSpiesDB)\n' +
         'return output\n' +
         '}\n' +
         '}\n'
