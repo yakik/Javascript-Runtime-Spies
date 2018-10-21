@@ -6,6 +6,7 @@ class RuntimeSpy {
 	constructor(runtimeSpyName) {
 		this.runtimeSpyName = runtimeSpyName
 		this.variableSpies = []
+		this.functionSpies = []
 		this.testedFunctionCall = 'EMPTY'
 		this.globalFunctionReturnedIndex = 0
 		this.result = 'NOTSET'
@@ -24,17 +25,15 @@ class RuntimeSpy {
 		return spyToSpyJSON({
 			testedFunctionCall: this.testedFunctionCall,
 			result: this.result,
-			variableSpies: this.getAllNonFunctionSpies(),
+			variableSpies: this.getVariableSpies(),
 			functionSpies: this.getAllFunctionSpies()
 		})
 	}
 
-	
-
 	addSpies(variablesTospy) {
 		if (variablesTospy.variables != undefined) {
 			variablesTospy.variables.forEach((variable) => {
-				this.addGlobalVariableSpy(variable)
+				this.addVariableSpy(variable)
 			})
 		}
 		if (variablesTospy.functions != undefined) {
@@ -46,11 +45,11 @@ class RuntimeSpy {
 	}
 
 	addFunctionSpy(functionSpy) {
-		this.variableSpies.push(GlobalVariableSpy.getNewFunctionSpy(functionSpy.name,
+		this.functionSpies.push(GlobalVariableSpy.getNewFunctionSpy(functionSpy.name,
 			this.runtimeSpyName, this))
 	}
 
-	addGlobalVariableSpy(variable) {
+	addVariableSpy(variable) {
 		this.variableSpies.push(GlobalVariableSpy.getNewSpy(variable.name, this.runtimeSpyName, this, variable.value))
 
 	}
@@ -59,12 +58,16 @@ class RuntimeSpy {
 		return this.variableSpies.filter(spy => spy.getName() == variableName)[0]
 	}
 
-	getAllFunctionSpies() {
-		return this.variableSpies.filter(spy => spy.getSpyType() == 'function')
+	getFunctionSpy(variableName) {
+		return this.functionSpies.filter(spy => spy.getName() == variableName)[0]
 	}
 
-	getAllNonFunctionSpies() {
-		return this.variableSpies.filter(spy => spy.getSpyType() == 'nonFunction')
+	getAllFunctionSpies() {
+		return this.functionSpies
+	}
+
+	getVariableSpies() {
+		return this.variableSpies
 	}
 
 	getCodeToEvalToSpyOnFunctions() {
@@ -82,7 +85,7 @@ class RuntimeSpy {
 	}
 
 	trackSpiedVariableChanges(callTag, spyFunctionContextGetLiteral) {
-		this.getAllNonFunctionSpies().filter(variableSpy =>
+		this.getVariableSpies().filter(variableSpy =>
 			variableSpy.getName().indexOf(globalReturnedPrefix) == -1).forEach(variableSpy => {
 				variableSpy.trackValueChanges(callTag, spyFunctionContextGetLiteral)
 			})
@@ -90,13 +93,13 @@ class RuntimeSpy {
 
 
 	reportSpiedFunctionCallAndGetResult(spiedFunctionName, callArguments, spyFunctionContextGetLiteral, originalSpiedFunction) {
-		var answer = this.getVariableSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
+		var answer = this.getFunctionSpy(spiedFunctionName).reportSpiedFunctionCallAndGetResult(callArguments, spyFunctionContextGetLiteral, originalSpiedFunction)
 		this.trackSpiedVariableChanges(answer.callTag, spyFunctionContextGetLiteral)
 		return answer.returnValue
 	}
 
 	getSpiedFunctionCallIndex(spiedFunctionName) {
-		return this.getVariableSpy(spiedFunctionName).getCallIndex()
+		return this.getFunctionSpy(spiedFunctionName).getCallIndex()
 	}
 
 	trackSpiedVariablesValues(tag, spyFunctionContextGetLiteral) {
@@ -106,7 +109,7 @@ class RuntimeSpy {
 			myTag = tag + '@' + this.getSpiedFunctionCallIndex(tag)
 		else
 			myTag = tag
-		this.getAllNonFunctionSpies().forEach(variableSpy => {
+		this.getVariableSpies().forEach(variableSpy => {
 			variableSpy.trackValueChanges(myTag, spyFunctionContextGetLiteral)
 		})
 
