@@ -1,19 +1,23 @@
 var getSpiesJSON = function (variablesToSpy) {
     var returnedJSON = []
+    returnedJSON.push({ variableDefinition: { name: 'spiesDB', value: [] } })
     if (variablesToSpy.variables != undefined)
         variablesToSpy.variables.forEach(variable => {
             returnedJSON.push(getVariableSpyJSON(variable))
         })
 
     if (variablesToSpy.functions != undefined)
-        returnedJSON.push({ variableDefinition: { name: 'functionSpiesDB', value: {} } })
         variablesToSpy.functions.forEach(functionSpy => {
             returnedJSON.push(getFunctionSpyJSON(functionSpy))
         })
     return returnedJSON
 }
 
-var getFunctionSpyJSON=function(functionSpy){
+var getVariableSpyJSON = function (variableSpy) {
+    return {reportSpiedVariableValue: {name: '\''+variableSpy.name+'\'', tag: '\'Initial\'', value:variableSpy.name,spiesDB:'spiesDB'}}
+}
+
+var getFunctionSpyJSON = function (functionSpy) {
     return {
         block: [
             { copyFunctionToTemporaryVariable: { functionName: functionSpy.name } },
@@ -21,7 +25,7 @@ var getFunctionSpyJSON=function(functionSpy){
                 functionAssignment: {
                     name: functionSpy.name,
                     content: [{ callSpiedFunctionAndStoreResult: {returnVariable: 'output'} },
-                        { reportSpiedFunctionCallingArgumentsAndResult: { functionName: functionSpy.name, returnVariable:'output', spiesDB: 'functionSpiesDB' } },
+                        { reportSpiedFunctionCallingArgumentsAndResult: { functionName: functionSpy.name, returnVariable:'output', spiesDB: 'spiesDB' } },
                     {returnOutput:{returnVariable:'output'}}]
                 }
             }

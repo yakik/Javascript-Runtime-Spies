@@ -12,48 +12,17 @@ var getHarnessCode = function (harnessJSON) {
     var javascriptCode = ''
     for (var propertyName in harnessJSON) {
         eval('javascriptCode += ' + propertyName +'(harnessJSON[propertyName])\n')
-      /*  switch (propertyName) {
-            
-            case 'copyFunctionToTemporaryVariable':
-            javascriptCode += copyFunctionToTemporaryVariable(harnessJSON[propertyName])
-                break
-            case 'callSpiedFunctionAndStoreResult':
-            javascriptCode += callSpiedFunctionAndStoreResult(harnessJSON[propertyName])
-                break
-            case 'block':
-            javascriptCode += block(harnessJSON[propertyName])
-                break
-            case 'functionHarness':
-                javascriptCode += functionHarness(harnessJSON[propertyName])
-                break
-            case 'variableDefinition':
-                javascriptCode += ariableDefinition(harnessJSON[propertyName])
-                break
-            case 'functionDefinition':
-                javascriptCode += FunctionDefinition(harnessJSON[propertyName])
-                break
-            case 'validateInputAndGetOutput':
-                javascriptCode += ValidateInputAndGetOutput(harnessJSON[propertyName])
-                break
-            case 'increaseCounterByOne':
-                javascriptCode += IncreaseCounterByOne(harnessJSON[propertyName])
-                break
-            case 'returnOutput':
-                javascriptCode += ReturnOutput(harnessJSON[propertyName])
-                break
-            case 'testFunctionAssertion':
-            javascriptCode += testFunctionAssertion(harnessJSON[propertyName])
-            break
-            default:
-                console.log('Something\'s wrong. switch didn\'t catch harnessJSON type '+propertyName)
-        }*/
     }
     return javascriptCode
 }
 
 var reportSpiedFunctionCallingArgumentsAndResult= function (harnessJSON) {
-    return 'functionSpiesDB = RuntimeSpy.getFunctionSpiesDBAfterThisCall(' + harnessJSON.functionName + ', arguments, ' +
+    return harnessJSON.spiesDB+' = RuntimeSpy.getSpiesDBAfterThisSpiedFunctionCall(\'' + harnessJSON.functionName + '\', arguments, ' +
     harnessJSON.returnVariable+', '+ harnessJSON.spiesDB+')\n'
+}
+var reportSpiedVariableValue= function (harnessJSON) {
+    return harnessJSON.spiesDB+' = RuntimeSpy.getSpiesDBAfterVariableUpdate(' + harnessJSON.name + ', '+harnessJSON.tag+', ' +
+    harnessJSON.value+', '+ harnessJSON.spiesDB+')\n'
 }
 
 var copyFunctionToTemporaryVariable = function (harnessJSON) {
