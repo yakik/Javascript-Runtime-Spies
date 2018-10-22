@@ -50,7 +50,7 @@ mocha.describe('Spy JSON to Harness JSON', function () {
                 functionHarness: [
                     {
                         variableDefinition: {
-                            name: 'a_DB',
+                            name: 'MOCK0_DB',
                             value: [{
                                 arguments: [1, 5],
                                 returnValue: 6
@@ -59,13 +59,13 @@ mocha.describe('Spy JSON to Harness JSON', function () {
                                 returnValue: 2
                             }]
                         }
-                    }, { variableDefinition: { name: 'a_counter', value: 0 } },
+                    }, { variableDefinition: { name: 'MOCK0_counter', value: 0 } },
                     {
                         functionDefinition: {
                             name: 'a',
                             content: [
-                                { validateInputAndGetOutput: { function: 'a', DB: 'a_DB', counter: 'a_counter', returnVariable: 'output' } },
-                                { increaseCounterByOne: { counter: 'a_counter' } },
+                                { validateInputAndGetOutput: { function: 'a', DB: 'MOCK0_DB', counter: 'MOCK0_counter', returnVariable: 'output' } },
+                                { increaseCounterByOne: { counter: 'MOCK0_counter' } },
                                 { returnOutput: { returnVariable: 'output' } }]
                         }
                     }

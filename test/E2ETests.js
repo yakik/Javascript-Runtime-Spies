@@ -43,17 +43,17 @@ mocha.describe('E2E Tests', function () {
             if (firstRun) {
                 var mySpy = new RuntimeSpy('mySpy')
                 mySpy.setTestFunctionCall('testFunction(a1,d1,e1)')
-                eval(RuntimeSpy.getSpiesCode({ variables: [{ name: 'd1' }, {name:'e1'}], functions: [{ name: 'a1' }] }))
+                eval(RuntimeSpy.getSpiesCode({ variables: [{ name: 'd1' }, {name:'e1', variable:e1}], functions: [{ name: 'a1' }] }))
             }
-            var b1 = a1(1, 5) + a1(5, -3) + d1 + e1[4].f// +myMap1.get('eas') 
+            var b1 = a1(1, 5) + a1(5, -3) + d1 + e1[4].f + e1[4].g(2) + e1[4].g(5)// +myMap1.get('eas') 
             if (firstRun) {
-                mySpy.addFinalResult(17)
+                mySpy.addFinalResult(38)
                 spyJSON = mySpy.getReadableHarness(spiesDB)
             }
             return b1
         }
         var a = function (x, y) { return x + y }
-        var e = [1, 2, 3, 4, { a: 2, f: 4, g: 7 }]
+        var e = [1, 2, 3, 4, { a: 2, f: 4, g:function(x){return 3*x} }]
        /* myMap.set(3, 5)
         myMap.set('eas',56)*/
         testFunction(a, 5,e)

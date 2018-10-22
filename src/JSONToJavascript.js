@@ -45,8 +45,11 @@ var variableDefinition=function(harnessJSON) {
     return javascriptCode
  }
 
-var functionDefinition=function(harnessJSON) {
-    var javascriptCode = 'var ' + harnessJSON.name + ' = function(){\n' +
+var functionDefinition = function (harnessJSON) {
+    var varRequired = true
+    if (harnessJSON.name.indexOf('.') > -1 || harnessJSON.name.indexOf('.') > -1)//leaf function
+        varRequired = false
+    var javascriptCode = (varRequired?'var ':'') + harnessJSON.name + ' = function(){\n' +
     JSONToJavascript(harnessJSON.content)+'\n}\n'
     return javascriptCode
 }

@@ -4,8 +4,8 @@ var spyJSONToHarnessJSON = function(spyJSON) {
     spyJSON.variables.forEach(variable => {
         harnessJSON.push(getVariableHarness(variable))
     });
-    spyJSON.functions.forEach(functionSpy => {
-        harnessJSON.push(getFunctionHarness(functionSpy))
+    spyJSON.functions.forEach((functionSpy,index) => {
+        harnessJSON.push(getFunctionHarness(functionSpy,index))
     });
     if (spyJSON.result != 'NOTSET' && spyJSON.testedFunctionCall != 'EMPTY')
         harnessJSON.push( { testFunctionAssertion: { result: spyJSON.result, testFunctionCall: spyJSON.testedFunctionCall } })
@@ -23,29 +23,29 @@ var getVariableHarness = function(variable){
     return returnedJSON
 }
 
-var getFunctionHarness = function(functionSpyJSON){
+var getFunctionHarness = function(functionSpyJSON,index){
     var returnedJSON = {
         functionHarness: [
-            { variableDefinition: getFunctionDBDefinition(functionSpyJSON) },
-            { variableDefinition: { name: functionSpyJSON.name + '_counter', value: 0 } },
-            { functionDefinition: getFunctionDefinition(functionSpyJSON) }]
+            { variableDefinition: getFunctionDBDefinition(functionSpyJSON,index) },
+            { variableDefinition: { name: 'MOCK'+ index + '_counter', value: 0 } },
+            { functionDefinition: getFunctionDefinition(functionSpyJSON,index) }]
     }
     return returnedJSON
 }
 
-var getFunctionDefinition = function (functionSpyJSON) {
+var getFunctionDefinition = function (functionSpyJSON,index) {
     var returnedJSON = {
             name: functionSpyJSON.name,
             content: [
-                { validateInputAndGetOutput: { function: functionSpyJSON.name, DB: functionSpyJSON.name + '_DB', counter: functionSpyJSON.name + '_counter', returnVariable: 'output' } },
-                { increaseCounterByOne: { counter: functionSpyJSON.name + '_counter' } },
+                { validateInputAndGetOutput: { function: functionSpyJSON.name, DB: 'MOCK' + index +'_DB', counter: 'MOCK' + index + '_counter', returnVariable: 'output' } },
+                { increaseCounterByOne: { counter: 'MOCK' + index + '_counter' } },
                 { returnOutput: { returnVariable: 'output' } }]
         }
         return returnedJSON
 }
 
-var getFunctionDBDefinition=function(functionSpyJSON){
-    var returnedJSON = { name: functionSpyJSON.name + '_DB', value:[] }
+var getFunctionDBDefinition=function(functionSpyJSON,index){
+    var returnedJSON = { name: 'MOCK' + index + '_DB', value:[] }
     functionSpyJSON.traffic.forEach(call => {
         returnedJSON.value.push({ arguments: call.arguments, returnValue: call.returnValue })
     })

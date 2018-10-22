@@ -1,3 +1,5 @@
+var leafFunctionsAnalysis = require('../src/LeafFunctionsAnalysis')
+
 var getSpiesJSON = function (variablesToSpy) {
     var returnedJSON = []
     returnedJSON.push({
@@ -9,7 +11,7 @@ var getSpiesJSON = function (variablesToSpy) {
     })
     if (variablesToSpy.variables != undefined)
         variablesToSpy.variables.forEach(variable => {
-            returnedJSON.push(getVariableSpyJSON(variable))
+            returnedJSON = returnedJSON.concat(getVariableSpyJSON(variable))
         })
 
     if (variablesToSpy.functions != undefined)
@@ -20,7 +22,20 @@ var getSpiesJSON = function (variablesToSpy) {
 }
 
 var getVariableSpyJSON = function (variableSpy) {
-    return { reportSpiedVariableValue: { name: '\'' + variableSpy.name + '\'', tag: '\'Initial\'', value: variableSpy.name, spiesDB: 'spiesDB' } }
+    returnedJSON = [{
+        reportSpiedVariableValue: {
+            name: '\'' + variableSpy.name + '\'',
+            tag: '\'Initial\'', value: variableSpy.name, spiesDB: 'spiesDB'
+        }
+    }
+    ]
+    var functionleaves = leafFunctionsAnalysis(variableSpy.variable)
+    functionleaves.forEach(functionLeaf => {
+        returnedJSON.push(getFunctionSpyJSON({
+            name: variableSpy.name + functionLeaf,
+        }))
+    })
+    return returnedJSON
 }
 
 var getFunctionSpyJSON = function (functionSpy) {
