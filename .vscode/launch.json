@@ -26,6 +26,22 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         },
+        ,
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "E2ETests",
+            "program": "${workspaceFolder}\\node_modules\\mocha\\bin\\_mocha",
+            "args": [
+                "--timeout",
+                "999999",
+                "--colors",
+            //    "${file}"
+                "${workspaceFolder}\\test\\E2ETests.js"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        }
         
 
     ]
