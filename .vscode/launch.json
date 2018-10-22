@@ -14,14 +14,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "JSON test",
+            "name": "GetSpiesJSONTests",
             "program": "${workspaceFolder}\\node_modules\\mocha\\bin\\_mocha",
             "args": [
                 "--timeout",
                 "999999",
                 "--colors",
             //    "${file}"
-                "${workspaceFolder}\\test\\ReadableJSONTests.js"
+                "${workspaceFolder}\\test\\GetSpiesJSONTests.js"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"

@@ -1,4 +1,4 @@
-var HarnessJSONToJavascript = function (harnessJSON) {
+var JSONToJavascript = function (harnessJSON) {
     var javascriptCode = ''
     harnessJSON.forEach(harnessPart => {
         javascriptCode += getHarnessCode(harnessPart)
@@ -33,11 +33,11 @@ var callSpiedFunctionAndStoreResult = function (harnessJSON) {
     return 'var ' + harnessJSON.returnVariable + ' = __tempFunction.apply(null, Array.from(arguments))\n'
  }
 var block = function (harnessJSON) {
-    return '{\n' + HarnessJSONToJavascript(harnessJSON)+ '}\n'
+    return '{\n' + JSONToJavascript(harnessJSON)+ '}\n'
  }
 
  var functionHarness = function (harnessJSON) {
-    return HarnessJSONToJavascript(harnessJSON)
+    return JSONToJavascript(harnessJSON)
  }
 
 var variableDefinition=function(harnessJSON) {
@@ -47,13 +47,13 @@ var variableDefinition=function(harnessJSON) {
 
 var functionDefinition=function(harnessJSON) {
     var javascriptCode = 'var ' + harnessJSON.name + ' = function(){\n' +
-    HarnessJSONToJavascript(harnessJSON.content)+'\n}\n'
+    JSONToJavascript(harnessJSON.content)+'\n}\n'
     return javascriptCode
 }
  
 var functionAssignment=function(harnessJSON) {
     var javascriptCode = harnessJSON.name + ' = function(){\n' +
-    HarnessJSONToJavascript(harnessJSON.content)+'\n}\n'
+    JSONToJavascript(harnessJSON.content)+'\n}\n'
     return javascriptCode
 }
 
@@ -78,4 +78,4 @@ var testFunctionAssertion = function (harnessJSON){
 }
 
 
-module.exports = HarnessJSONToJavascript
+module.exports = JSONToJavascript

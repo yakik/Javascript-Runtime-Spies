@@ -7,7 +7,13 @@ var expect = chai.expect
 mocha.describe('Spy Tests', function () {
 
     mocha.it('get function spies', function () {
-        var SpyJSON = [{ variableDefinition: { name: 'spiesDB', value: [] } },
+        var SpyJSON = [{
+            variableDefinition: {
+                name: 'spiesDB', value: {
+                         variables: [], functions: []
+                }
+            }
+        },
         {
             block: [
                 { copyFunctionToTemporaryVariable: { functionName: 'a' } },
@@ -23,7 +29,7 @@ mocha.describe('Spy Tests', function () {
         }
         ]
         expect(getSpiesJSON({ functions: [{ name: 'a' }] })).to.deep.equal(SpyJSON)
-        var expectedJavascript = 'var spiesDB = []\n' +
+        var expectedJavascript = 'var spiesDB = {\"variables\":[],\"functions\":[]}\n' +
             '{\n' +
             'let __tempFunction = a\n' +
             'a = function(){\n' +
@@ -36,11 +42,13 @@ mocha.describe('Spy Tests', function () {
     })
 
     mocha.it('get variable spies', function () {
-        var SpyJSON = [{ variableDefinition: { name: 'spiesDB', value: [] } }, { reportSpiedVariableValue: { name: '\'b\'', tag: '\'Initial\'', value: 'b', spiesDB: 'spiesDB' } },
+        var SpyJSON = [{ variableDefinition: { name: 'spiesDB', value: {
+                     variables: [], functions: []
+        } } }, { reportSpiedVariableValue: { name: '\'b\'', tag: '\'Initial\'', value: 'b', spiesDB: 'spiesDB' } },
         { reportSpiedVariableValue: { name: '\'c\'', tag: '\'Initial\'', value: 'c', spiesDB: 'spiesDB' } }]
 
         expect(getSpiesJSON({ variables: [{ name: 'b' }, { name: 'c' }] })).to.deep.equal(SpyJSON)
-        var expectedJavascript = 'var spiesDB = []\n' +
+        var expectedJavascript = 'var spiesDB = {\"variables\":[],\"functions\":[]}\n' +
             'spiesDB = RuntimeSpy.getSpiesDBAfterVariableUpdate(\'b\', \'Initial\', b, spiesDB)\n' +
             'spiesDB = RuntimeSpy.getSpiesDBAfterVariableUpdate(\'c\', \'Initial\', c, spiesDB)\n' 
            

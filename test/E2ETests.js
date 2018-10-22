@@ -13,10 +13,10 @@ mocha.describe('E2E Tests', function () {
         var testFunction = function (a) {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall('testFunction(a)')
-            eval(mySpy.addSpies({ functions: [ {name: 'a'} ] }).getCodeToEvalToSpyOnVariables())
+            eval(RuntimeSpy.getSpiesCode({ functions: [ {name: 'a'} ] }))
             var b = a(1, 5) + a(5, -3)
             mySpy.addFinalResult(b)
-            spyJSON = mySpy.getReadableHarness()
+            spyJSON = mySpy.getReadableHarness(spiesDB)
             return b
         }
         var a = function(x,y){return x+y}

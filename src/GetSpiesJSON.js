@@ -1,6 +1,12 @@
 var getSpiesJSON = function (variablesToSpy) {
     var returnedJSON = []
-    returnedJSON.push({ variableDefinition: { name: 'spiesDB', value: [] } })
+    returnedJSON.push({
+        variableDefinition: {
+            name: 'spiesDB', value: {
+                variables: [], functions: []
+            }
+        }
+    })
     if (variablesToSpy.variables != undefined)
         variablesToSpy.variables.forEach(variable => {
             returnedJSON.push(getVariableSpyJSON(variable))

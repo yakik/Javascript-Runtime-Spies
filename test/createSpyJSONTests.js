@@ -24,9 +24,9 @@ mocha.describe('Create Spy JSON Tests', function () {
         var testFunction = function (a) {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall("testFunction(a)")
-            eval(mySpy.addSpies({ variables: [{ name: "a", value : a }] }).getCodeToEvalToSpyOnVariables())
+            eval(RuntimeSpy.getSpiesCode({ variables: [{ name: "a", value : a }] }))
 
-            expect(mySpy.getReadableHarness()).to.deep.equal(expectedJSON)
+            expect(mySpy.getReadableHarness(spiesDB)).to.deep.equal(expectedJSON)
         }
         testFunction(2)
     })
@@ -52,8 +52,7 @@ mocha.describe('Create Spy JSON Tests', function () {
                 }, {
                     name: 'c',
                     values: [{
-                        timing: 'Initial',
-                        value: undefined
+                        timing: 'Initial'
                     }]
                 }, {
                     name: 'd',
@@ -75,9 +74,9 @@ mocha.describe('Create Spy JSON Tests', function () {
         var testFunction = function (a,b,c,d,e) {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall("testFunction(a,b,c,d,e)")
-            eval(mySpy.addSpies({ variables: [{ name:'a',value: a }, {name: 'b', value:b }, { name:'c', value:c }, { name:'d', value:d }, { name:'e',value: e }] }).getCodeToEvalToSpyOnVariables())
+            eval(RuntimeSpy.getSpiesCode({ variables: [{ name:'a',value: a }, {name: 'b', value:b }, { name:'c', value:c }, { name:'d', value:d }, { name:'e',value: e }] }))
 
-            expect(mySpy.getReadableHarness()).to.deep.equal(expectedJSON)
+            expect(mySpy.getReadableHarness(spiesDB)).to.deep.equal(expectedJSON)
         }
         testFunction(2,true,undefined,"string","string\nstring")
     })
@@ -104,12 +103,12 @@ mocha.describe('Create Spy JSON Tests', function () {
         var testFunction = function (a) {
             var mySpy = new RuntimeSpy('mySpy')
             mySpy.setTestFunctionCall('testFunction(a)')
-            eval(mySpy.addSpies({ functions: [ {name: 'a'} ] }).getCodeToEvalToSpyOnVariables())
+            eval(RuntimeSpy.getSpiesCode({ functions: [ {name: 'a'} ] }))
             b = a(1, 5) + a(5, -3)
             mySpy.addFinalResult(b)
-            spyJSON = mySpy.getReadableHarness()
+            spyJSON = mySpy.getReadableHarness(spiesDB)
             
-            expect(mySpy.getReadableHarness()).to.deep.equal(expectedJSON)
+            expect(mySpy.getReadableHarness(spiesDB)).to.deep.equal(expectedJSON)
             return b
         }
         var a = function(x,y){return x+y}
