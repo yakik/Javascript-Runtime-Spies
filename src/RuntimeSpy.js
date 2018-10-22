@@ -1,4 +1,3 @@
-var spyToSpyJSON = require('./SpyToSpyJSON')
 var getSpiesJSON = require('./GetSpiesJSON')
 var JSONToJavascript = require('./JSONToJavascript')
 

@@ -20,7 +20,7 @@ var getSpiesJSON = function (variablesToSpy) {
 }
 
 var getVariableSpyJSON = function (variableSpy) {
-    return {reportSpiedVariableValue: {name: '\''+variableSpy.name+'\'', tag: '\'Initial\'', value:variableSpy.name,spiesDB:'spiesDB'}}
+    return { reportSpiedVariableValue: { name: '\'' + variableSpy.name + '\'', tag: '\'Initial\'', value: variableSpy.name, spiesDB: 'spiesDB' } }
 }
 
 var getFunctionSpyJSON = function (functionSpy) {
@@ -30,9 +30,9 @@ var getFunctionSpyJSON = function (functionSpy) {
             {
                 functionAssignment: {
                     name: functionSpy.name,
-                    content: [{ callSpiedFunctionAndStoreResult: {returnVariable: 'output'} },
-                        { reportSpiedFunctionCallingArgumentsAndResult: { functionName: functionSpy.name, returnVariable:'output', spiesDB: 'spiesDB' } },
-                    {returnOutput:{returnVariable:'output'}}]
+                    content: [{ callSpiedFunctionAndStoreResult: { returnVariable: 'output' } },
+                    { reportSpiedFunctionCallingArgumentsAndResult: { functionName: functionSpy.name, returnVariable: 'output', spiesDB: 'spiesDB' } },
+                    { returnOutput: { returnVariable: 'output' } }]
                 }
             }
         ]
